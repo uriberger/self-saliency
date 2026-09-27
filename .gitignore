@@ -1,0 +1,28 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Emacs autosave / lock / backup files
+\#*\#
+.\#*
+*~
+
+# External repos that are CLONED and PATCHED at install time, never tracked here.
+# env/patches/ holds our changes to them; these are the working copies.
+third_party/trl_repo
+third_party/LLaMA-Factory
+third_party/ease_repo
+
+# Run artifacts. Point every launcher at a per-run subdirectory.
+checkpoint/
+outputs/
+logs/
+wandb/
+
+# Downloaded / derived corpora. The prep scripts are tracked; their output is not.
+data/
+
+# Per-sample eval records (*_samples_*.jsonl) are ~5 GB for the paper's arms and are
+# published as a release asset, not committed. The results.json files beside them ARE
+# tracked -- they are ~10 MB and are what evaluation/tables.py reads.
+evaluation/results/**/*_samples_*.jsonl
