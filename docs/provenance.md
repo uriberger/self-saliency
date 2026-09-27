@@ -11,7 +11,28 @@ placebo, mismatch, mask-free and length-guard controls, LASER, the RoPE-phase pr
 the sink-shift edits, the flow and intervention probes, the set_a–set_e corpus builders)
 stays in `A` and `V` and is deliberately **not** here.
 
-`[ ]` = not yet ported · `[x]` = ported and importable
+## Status
+
+Done, and checked against the archive by a test that fails if they ever disagree:
+
+* `selfsal/saliency/` — phi, phi_mean, the two reward heads
+* `selfsal/grounding/mask.py` — the grounded region, and the center_rect ablation's
+* `selfsal/steps/` — segmentation and the observe classifier
+
+Not yet moved: everything else in the tables below. It is all still in the archive
+repos and still runs there, so nothing is in a broken state — this repo currently holds
+the shared core and its tests.
+
+Two couplings found during the port that the tables below do not show:
+
+1. **`sink_location.py` depends on `sink_shift.py`** for attention capture — `install`,
+   `collected_map`, `_sdpa`, `_repeat_kv`, `IMAGE_TOKEN_ID` — and calls it with
+   `alpha=0.0`, i.e. it uses that module as a collector with the edit disabled. The
+   capture half belongs in `selfsal/saliency/maps.py`; the sink-shift *edit* is not in
+   the paper and stays in the archive. That split is the third merge and it is not done.
+2. **The head-selection screen and the reward segment chains differently** — see the
+   docstring of `selfsal/steps/segment.py`. Both segmenters are here; the seam is
+   recorded rather than papered over.
 
 ## selfsal/ — the method
 
