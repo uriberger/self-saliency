@@ -24,16 +24,16 @@ source "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/cluster_env.sh"
 sr1_find_submit_job || { echo "ERROR: submit_job not found under the cluster-interface paths." >&2; exit 1; }
 
 # ---------- cluster / project constants ----------
-ACCOUNT=nvr_israel_rlop
+ACCOUNT=${SLURM_ACCOUNT:?set SLURM_ACCOUNT}
 DURATION=${DURATION:-4}
 # DURATION first: it decides which partitions are eligible. A 4h request gives up
 # batch_short (MaxTime=2h); DURATION=1 gains it. See SR1_JOB_HOURS in cluster_env.sh.
 PARTITION=${PARTITION:-$(SR1_JOB_HOURS=$DURATION sr1_pick_partition)}
 REPO=${SELFSAL_ROOT:-$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." && pwd)}
-LF_DIR=/home/uberger/scratch/research/LLaMA-Factory
-CONDA_SH=/home/uberger/scratch/miniconda3/etc/profile.d/conda.sh
+LF_DIR=${SELFSAL_ROOT:-.}/../LLaMA-Factory
+CONDA_SH=${CONDA_ROOT:?set CONDA_ROOT}/etc/profile.d/conda.sh
 CONDA_ENV=sr1_coldstart
-HF_HOME=${HF_HOME:-/home/uberger/scratch/cache/hf_cache}
+HF_HOME=${HF_HOME:-${HF_HOME:?set HF_HOME}}
 
 # ---------- training defaults ----------
 CONFIG="$REPO/train/cold_start/qwen3_vl_8b_instruct_sft/train.yaml"

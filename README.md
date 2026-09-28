@@ -69,6 +69,12 @@ Three external repos are cloned and patched at install time rather than vendored
 TRL, LLaMA-Factory, and EasyR1/verl. `lmms-eval` is a pinned submodule — the suite
 needs tasks and answer-parser fixes that are not upstream.
 
+## Status
+
+Private, pending review. The paper is under double-blind review and promises code and
+weights on acceptance; **[docs/publishing.md](docs/publishing.md) is what has to happen
+first**, starting with the fact that the git history is authored under a real name.
+
 ## Citation
 
 ```bibtex

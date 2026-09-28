@@ -12,7 +12,7 @@ set -euo pipefail
 
 REPO=${SELFSAL_ROOT:-$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." && pwd)}
 ENV=${1:-saliency_r1_qwen3}
-source /home/uberger/scratch/miniconda3/etc/profile.d/conda.sh
+source ${CONDA_ROOT:?set CONDA_ROOT}/etc/profile.d/conda.sh
 conda activate "$ENV"
 
 SP=$(python -c "import transformers, os; print(os.path.dirname(transformers.__file__))")

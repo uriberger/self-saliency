@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=ease-dl
-#SBATCH --account=nvr_israel_rlop
+#SBATCH --account=${SLURM_ACCOUNT:?set SLURM_ACCOUNT}
 #SBATCH --partition=cpu_datamover
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -44,7 +44,7 @@ else
     REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 fi
 DEST="$REPO/cold_data/ease"
-PYBIN=/home/uberger/scratch/miniconda3/envs/saliency_r1_qwen3/bin
+PYBIN=${CONDA_ROOT:?set CONDA_ROOT}/envs/saliency_r1_qwen3/bin
 ONLY=""
 
 while [[ $# -gt 0 ]]; do

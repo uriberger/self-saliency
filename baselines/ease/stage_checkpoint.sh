@@ -47,7 +47,7 @@ SRC="checkpoint/coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged"
 DEST=""
 STOCK="Qwen/Qwen3-VL-8B-Instruct"
 FORCE=0
-PYBIN=${PYBIN:-/home/uberger/scratch/miniconda3/envs/ease/bin/python}
+PYBIN=${PYBIN:-${CONDA_ROOT:?set CONDA_ROOT}/envs/ease/bin/python}
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -70,7 +70,7 @@ DEST=${DEST:-"$REPO/checkpoint/$(basename "$SRC")__tf457"}
 [[ "$DEST" = /* ]] || DEST="$REPO/$DEST"
 DEST="$(cd "$(dirname "$DEST")" && pwd -P)/$(basename "$DEST")"
 
-export HF_HOME=${HF_HOME:-/home/uberger/scratch/cache/hf_cache}
+export HF_HOME=${HF_HOME:-${HF_HOME:?set HF_HOME}}
 
 echo "=========================================================================="
 echo "src   : $SRC"

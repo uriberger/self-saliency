@@ -64,7 +64,9 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 #           wrapper (oci-nrt-cs-001 and friends)
 #   slurm - stock Slurm, submits with sbatch (oci-hsg-cs-001, GB200/aarch64)
 # Force either with CLUSTER=adlr / CLUSTER=slurm.
-ADLR_CLUSTER_INTERFACE=${ADLR_CLUSTER_INTERFACE:-/lustre/fs1/portfolios/adlr/projects/adlr_other_infra/release/cluster-interface/21.1_2026-04-15_21-25-57}
+# Site-specific; set it to wherever your `submit_job` wrapper lives, or leave it unset
+# and use --direct.
+ADLR_CLUSTER_INTERFACE=${ADLR_CLUSTER_INTERFACE:-}
 if [[ -z "${CLUSTER:-}" ]]; then
     if [[ -x "$ADLR_CLUSTER_INTERFACE/submit_job" ]] || command -v submit_job >/dev/null 2>&1; then
         CLUSTER=adlr
@@ -74,7 +76,7 @@ if [[ -z "${CLUSTER:-}" ]]; then
 fi
 
 # ---------- cluster / project constants ----------
-ACCOUNT=${ACCOUNT:-nvr_israel_rlop}
+ACCOUNT=${ACCOUNT:-${SLURM_ACCOUNT:?set SLURM_ACCOUNT}}
 DURATION=${DURATION:-4}
 if [[ "$CLUSTER" == "adlr" ]]; then
     # ADLR cluster-interface tools (submit_job, etc.) on PATH.
@@ -90,10 +92,10 @@ fi
 # launched from a worktree writes results into that worktree instead of the
 # shared central tree.
 PROJECT=${PROJECT:-$(cd "$SCRIPT_DIR/../.." && pwd)}
-LMMS_EVAL_DIR=${LMMS_EVAL_DIR:-/home/uberger/scratch/research/lmms-eval}
-CONDA_SH=${CONDA_SH:-/home/uberger/scratch/miniconda3/etc/profile.d/conda.sh}
+LMMS_EVAL_DIR=${LMMS_EVAL_DIR:-${SELFSAL_ROOT:-.}/../lmms-eval}
+CONDA_SH=${CONDA_SH:-${CONDA_ROOT:?set CONDA_ROOT}/etc/profile.d/conda.sh}
 CONDA_ENV=${CONDA_ENV:-lmms_eval}
-HF_HOME=${HF_HOME:-/home/uberger/scratch/cache/hf_cache}
+HF_HOME=${HF_HOME:-${HF_HOME:?set HF_HOME}}
 # sbatch-only sizing. Per-GPU share of a GB200 node (144 CPUs / 920G split 4
 # ways), and the QOS floor: every QOS on oci-hsg-cs-001 sets MinTRES=gres/gpu=4,
 # so a job asking for fewer is rejected outright with QOSMinGRES. On ADLR

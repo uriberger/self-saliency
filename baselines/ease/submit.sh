@@ -48,7 +48,7 @@ NAME="ease-$EXP"
 # shellcheck source=/dev/null
 source "$REPO/cluster_env.sh"
 PARTITION=${PARTITION_OVERRIDE:-${PARTITION:-$(SR1_JOB_HOURS=$DURATION sr1_pick_partition)}}
-ACCOUNT=${ACCOUNT:-nvr_israel_rlop}
+ACCOUNT=${ACCOUNT:-${SLURM_ACCOUNT:?set SLURM_ACCOUNT}}
 
 sr1_find_submit_job || [[ $DRY_RUN -eq 1 ]] || {
     echo "ERROR: submit_job not found under the cluster-interface paths." >&2; exit 1; }
@@ -61,7 +61,7 @@ RUNNER="$LOG_ROOT/$NAME.runner.sh"
     echo "#!/usr/bin/env bash"
     echo "set -euo pipefail"
     printf 'cd %q\n' "$REPO"
-    echo "export HF_HOME=${HF_HOME:-/home/uberger/scratch/cache/hf_cache}"
+    echo "export HF_HOME=${HF_HOME:-${HF_HOME:?set HF_HOME}}"
     echo "export HF_HUB_OFFLINE=${HF_HUB_OFFLINE:-1}"
     # Every judge setting has to be written into the runner explicitly. submit_job
     # does not carry the submitting shell's environment into the allocation, so a

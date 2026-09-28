@@ -42,7 +42,7 @@ if [[ "$REPO" == */.worktrees/* ]]; then
 fi
 SRC="$REPO/lmms_eval_plugin/qwen3_vl_vga.py"
 
-LMMS_EVAL_DIR=${LMMS_EVAL_DIR:-/home/uberger/scratch/research/lmms-eval}
+LMMS_EVAL_DIR=${LMMS_EVAL_DIR:-${SELFSAL_ROOT:-.}/../lmms-eval}
 MODE=install
 LINK=symlink
 

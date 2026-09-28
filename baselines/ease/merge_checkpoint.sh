@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=ease-merge
-#SBATCH --account=nvr_israel_rlop
+#SBATCH --account=${SLURM_ACCOUNT:?set SLURM_ACCOUNT}
 #SBATCH --partition=cpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -48,7 +48,7 @@ STEP=124
 OUT_ROOT="$REPO/outputs/ease"
 LINK_DIR="$REPO/checkpoint"
 FORCE=0
-PYBIN=${PYBIN:-/home/uberger/scratch/miniconda3/envs/ease/bin/python}
+PYBIN=${PYBIN:-${CONDA_ROOT:?set CONDA_ROOT}/envs/ease/bin/python}
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -84,7 +84,7 @@ echo "==========================================================================
 if compgen -G "$HF/*.safetensors" > /dev/null && [[ $FORCE -eq 0 ]]; then
     echo "already merged ($(ls "$HF"/*.safetensors | wc -l) shards); pass --force to redo."
 else
-    export HF_HOME=${HF_HOME:-/home/uberger/scratch/cache/hf_cache}
+    export HF_HOME=${HF_HOME:-${HF_HOME:?set HF_HOME}}
     export HF_HUB_OFFLINE=${HF_HUB_OFFLINE:-1}
     # Not `cd ease_repo && python scripts/...` with the output piped through a
     # filter: the merger's only failure signal is a traceback or a SIGKILL, and a

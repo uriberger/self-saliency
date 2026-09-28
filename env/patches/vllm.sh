@@ -20,7 +20,7 @@
 set -euo pipefail
 
 ENV=${1:-saliency_r1_qwen3_vllm}
-source /home/uberger/scratch/miniconda3/etc/profile.d/conda.sh
+source ${CONDA_ROOT:?set CONDA_ROOT}/etc/profile.d/conda.sh
 conda activate "$ENV"
 echo "=== patch_vllm_qwen3.sh: env=$ENV ==="
 

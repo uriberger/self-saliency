@@ -36,7 +36,7 @@ A GPU node. The classifier is small, but the login node is heavily oversubscribe
 Usage (fish)
 ------------
     conda activate saliency_r1_qwen3_vllm
-    set -x HF_HOME /home/uberger/scratch/cache/hf_cache
+    set -x HF_HOME ${HF_HOME:?set HF_HOME}
     set -x HF_HUB_OFFLINE 1
 
     # smoke test, 20 chains

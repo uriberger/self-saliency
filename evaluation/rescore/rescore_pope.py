@@ -12,7 +12,7 @@ Run in the lmms_eval conda env:
 """
 import argparse, json, os, re, sys
 
-sys.path.insert(0, "/home/uberger/scratch/research/lmms-eval")
+sys.path.insert(0, "${SELFSAL_ROOT:-.}/../lmms-eval")
 from lmms_eval.tasks.pope.utils import (  # noqa: E402
     pope_process_results,
     pope_aggregate_accuracy,

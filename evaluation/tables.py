@@ -879,7 +879,7 @@ def run_paper_comparison() -> None:
     html_path.write_text(html)
     host = socket.gethostname()
     print(f"\nHTML table written to: {html_path}")
-    print(f"scp {host}:{html_path} /mnt/c/Users/uberger/Downloads/{html_name}")
+    print(f"scp {host}:{html_path} ~/Downloads/{html_name}")
 
 
 def _ratio_to_color(ratio: float) -> str:
@@ -1472,7 +1472,7 @@ def main():
     html_path.write_text(html)
     host = socket.gethostname()
     print(f"\nHTML table written to: {html_path}")
-    print(f"scp {host}:{html_path} /mnt/c/Users/uberger/Downloads/{html_name}")
+    print(f"scp {host}:{html_path} ~/Downloads/{html_name}")
 
 
 if __name__ == "__main__":

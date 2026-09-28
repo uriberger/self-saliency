@@ -237,16 +237,21 @@ sr1__drop_user_capped() {
 }
 
 # sr1_find_submit_job
-# Put the ADLR submit_job wrapper on PATH. Prefers an already-visible submit_job, then the
-# 'latest' symlink, then the newest versioned release; the tree is mounted under /lustre/fs1
-# on some clusters and /lustre/fsw on others. `[ -x ]` follows symlinks, so a broken
-# cross-filesystem symlink is skipped rather than selected. Returns non-zero if not found.
+# Put a site's `submit_job` wrapper on PATH. Prefers one already visible, then the
+# 'latest' symlink under each root in $SUBMIT_JOB_ROOTS, then the newest versioned release
+# there. `[ -x ]` follows symlinks, so a broken cross-filesystem symlink is skipped rather
+# than selected. Returns non-zero if not found, and every caller treats that as "no batch
+# scheduler here" rather than as an error -- the --direct paths need none.
+#
+# SUBMIT_JOB_ROOTS is a colon-separated list and is empty by default. It used to hold two
+# absolute paths belonging to one organisation's cluster, which is a thing that works for
+# exactly one site and fails confusingly everywhere else.
 sr1_find_submit_job() {
     command -v submit_job >/dev/null 2>&1 && return 0
+    [ -n "${SUBMIT_JOB_ROOTS:-}" ] || return 1
     local root cand
-    for root in \
-        /lustre/fs1/portfolios/adlr/projects/adlr_other_infra/release/cluster-interface \
-        /lustre/fsw/portfolios/adlr/projects/adlr_other_infra/release/cluster-interface; do
+    local IFS=:
+    for root in $SUBMIT_JOB_ROOTS; do
         for cand in "$root/latest" $(ls -1dt "$root"/*/ 2>/dev/null); do
             if [ -x "${cand%/}/submit_job" ]; then
                 export PATH="${cand%/}:$PATH"

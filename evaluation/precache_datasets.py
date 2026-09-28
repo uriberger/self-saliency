@@ -158,7 +158,7 @@ def main():
     ap.add_argument("--tasks", default=",".join(DEFAULT_TASKS), help="comma-separated task names")
     ap.add_argument(
         "--lmms-eval-dir",
-        default=os.environ.get("LMMS_EVAL_DIR", "/home/uberger/scratch/research/lmms-eval"),
+        default=os.environ.get("LMMS_EVAL_DIR", "${SELFSAL_ROOT:-.}/../lmms-eval"),
     )
     ap.add_argument("--list", action="store_true", help="resolve and print, download nothing")
     args = ap.parse_args()

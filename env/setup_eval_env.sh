@@ -21,10 +21,10 @@
 set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-CONDA_SH=${CONDA_SH:-/home/uberger/scratch/miniconda3/etc/profile.d/conda.sh}
+CONDA_SH=${CONDA_SH:-${CONDA_ROOT:?set CONDA_ROOT}/etc/profile.d/conda.sh}
 ENV_NAME=${ENV_NAME:-lmms_eval}
 PYTHON_VERSION=${PYTHON_VERSION:-3.12.13}
-LMMS_EVAL_DIR=${LMMS_EVAL_DIR:-/home/uberger/scratch/research/lmms-eval}
+LMMS_EVAL_DIR=${LMMS_EVAL_DIR:-${SELFSAL_ROOT:-.}/../lmms-eval}
 TORCH_VERSION=${TORCH_VERSION:-2.7.1}
 TORCHVISION_VERSION=${TORCHVISION_VERSION:-0.22.1}
 TORCH_INDEX=${TORCH_INDEX:-https://download.pytorch.org/whl/cu128}

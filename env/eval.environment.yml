@@ -207,4 +207,4 @@ dependencies:
       - yt-dlp==2026.7.4
       - zss==1.2.0
       - zstandard==0.25.0
-prefix: /home/uberger/scratch/miniconda3/envs/lmms_eval
+prefix: ${CONDA_ROOT:?set CONDA_ROOT}/envs/lmms_eval

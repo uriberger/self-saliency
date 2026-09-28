@@ -17,7 +17,7 @@ in the 7B baselines. Originals are backed up with a ``.mmmu_bak`` suffix.
 
 Needs the MMMU-Pro dataset for the per-question options (samples files store the
 gold answer but not the option list). Reads it from the HF cache; set
-HF_HOME=/home/uberger/scratch/cache/hf_cache and HF_HUB_OFFLINE=1 to avoid a
+HF_HOME=${HF_HOME:?set HF_HOME} and HF_HUB_OFFLINE=1 to avoid a
 network round-trip.
 
 Run from the repo root:  python scripts/rescore_mmmu_pro.py [--dry-run]

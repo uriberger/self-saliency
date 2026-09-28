@@ -131,13 +131,13 @@ for path in "$TRAIN_FILE" "$VAL_FILE"; do
 done
 
 # ── environment ─────────────────────────────────────────────────────────────
-CONDA_ROOT=${CONDA_ROOT:-/home/uberger/scratch/miniconda3}
+CONDA_ROOT=${CONDA_ROOT:-${CONDA_ROOT:?set CONDA_ROOT}}
 CONDA_ENV=${CONDA_ENV:-ease}
 # shellcheck source=/dev/null
 source "$CONDA_ROOT/etc/profile.d/conda.sh"
 set +u; conda activate "$CONDA_ENV"; set -u
 
-export HF_HOME=${HF_HOME:-/home/uberger/scratch/cache/hf_cache}
+export HF_HOME=${HF_HOME:-${HF_HOME:?set HF_HOME}}
 export HF_HUB_OFFLINE=${HF_HUB_OFFLINE:-1}
 # judged_perception.py imports their perception.py through this.
 export EASE_REPO

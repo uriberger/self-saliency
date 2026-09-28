@@ -32,19 +32,20 @@
 set -e
 
 # ADLR cluster-interface tools (submit_job, etc.) on PATH.
-export PATH="/lustre/fs1/portfolios/adlr/projects/adlr_other_infra/release/cluster-interface/21.1_2026-04-15_21-25-57:$PATH"
+# A site's batch-submission tooling, if any. Empty by default; --direct needs none.
+[ -n "${SUBMIT_JOB_BIN:-}" ] && export PATH="$SUBMIT_JOB_BIN:$PATH"
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # ---------- cluster / project constants ----------
-ACCOUNT=nvr_israel_rlop
+ACCOUNT=${SLURM_ACCOUNT:?set SLURM_ACCOUNT}
 PARTITION=${PARTITION:-batch_block1}
 DURATION=${DURATION:-4}
-PROJECT=/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning
-LMMS_EVAL_DIR=/home/uberger/scratch/research/lmms-eval
-CONDA_SH=/home/uberger/scratch/miniconda3/etc/profile.d/conda.sh
+PROJECT=${SELFSAL_ROOT:-.}/../vlm_reasoning
+LMMS_EVAL_DIR=${SELFSAL_ROOT:-.}/../lmms-eval
+CONDA_SH=${CONDA_ROOT:?set CONDA_ROOT}/etc/profile.d/conda.sh
 CONDA_ENV=lmms_eval
-HF_HOME=${HF_HOME:-/home/uberger/scratch/cache/hf_cache}
+HF_HOME=${HF_HOME:-${HF_HOME:?set HF_HOME}}
 
 # ---------- experiment defaults ----------
 MODEL="Qwen/Qwen3-VL-8B-Instruct"

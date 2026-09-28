@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=ease-env
-#SBATCH --account=nvr_israel_rlop
+#SBATCH --account=${SLURM_ACCOUNT:?set SLURM_ACCOUNT}
 #SBATCH --partition=cpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -42,7 +42,7 @@ else
     REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 fi
 
-CONDA_ROOT=/home/uberger/scratch/miniconda3
+CONDA_ROOT=${CONDA_ROOT:?set CONDA_ROOT}
 ENV_NAME=ease
 PYVER=3.12
 TORCH=2.8.0

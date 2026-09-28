@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=ease-data
-#SBATCH --account=nvr_israel_rlop
+#SBATCH --account=${SLURM_ACCOUNT:?set SLURM_ACCOUNT}
 #SBATCH --partition=cpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -59,7 +59,7 @@ MAX_PIXELS=4194304
 SEED=42
 LIMIT=0
 PROMPT_LENGTH=1
-PYBIN=${PYBIN:-/home/uberger/scratch/miniconda3/envs/ease/bin/python}
+PYBIN=${PYBIN:-${CONDA_ROOT:?set CONDA_ROOT}/envs/ease/bin/python}
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -81,7 +81,7 @@ done
 EASE_REPO="$REPO/ease_repo"
 [[ -d "$EASE_REPO" ]] || { echo "ERROR: $EASE_REPO not found." >&2; exit 1; }
 
-export HF_HOME=${HF_HOME:-/home/uberger/scratch/cache/hf_cache}
+export HF_HOME=${HF_HOME:-${HF_HOME:?set HF_HOME}}
 export HF_HUB_OFFLINE=${HF_HUB_OFFLINE:-1}
 
 mkdir -p "$(dirname "$OUT")" logs
