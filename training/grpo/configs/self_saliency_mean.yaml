@@ -1,0 +1,21 @@
+# SELF-SALIENCY_mean -- Table 7 (Appendix C), mean score 63.17.
+#
+# The saliency score's denominator becomes the map's MEAN instead of its peak. It does
+# not beat the no_sal baseline, which is the appendix's point.
+#
+# a_sal is NOT retuned by hand. GRPO normalises advantages within the group, so what
+# reaches the gradient is the reward term's SPREAD, and phi_mean's is ~12x phi's. The
+# weight is matched to phi's training pressure by
+#     a_sal_mean = a_sal * std(R_sal) / std(R_sal_mean) = 0.4 * (0.0086 / 0.105) ~ 0.033
+# measured on cold-start completions by experiments/alpha_calibration.py. Reusing 0.4
+# here would apply roughly twelve times the intended pressure and the arm would not be
+# the controlled comparison it is named as.
+#
+# Archive run: ..._merged-overlap__wov0.033_2head_trmean_saliency_r1_8k_mean_in_v2
+extends: self_saliency.yaml
+name: self_saliency_mean
+
+reward:
+  saliency:
+    alpha: 0.033
+    metric: phi_mean           # Appendix C. Historical name: mean_in_v2

@@ -1,0 +1,20 @@
+# SELF-SALIENCY -- Table 2 "Ours", mean score 64.26. The paper's headline arm.
+#
+# Archive run: grpo-coldstart_..._merged-overlap__wov0.4_2head_trmean  (checkpoint-3990)
+extends: _base.yaml
+name: self_saliency
+
+reward:
+  saliency:
+    kind: self_saliency        # phi over the policy's OWN grounded observe steps
+    alpha: 0.4                 # a_sal, tuned by sweep (Appendix A.2 footnote 4)
+    metric: phi                # Equation 1, max-normalised. Historical name: mean_in
+    layer: 22                  # Section 3.5
+    heads: [28, 31]
+    token_reduction: mean      # sal_s = mean over the step's tokens
+    regions:
+      source: dino_per_step    # ground each observe step's own sentence, per step
+      model: IDEA-Research/grounding-dino-base
+      box_threshold: 0.10
+      max_box_area: 0.5        # drop a box covering more than half the frame
+      max_union_area: null     # per-step union cap OFF

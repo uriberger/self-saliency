@@ -1,0 +1,65 @@
+# Everything the six paper arms share. An arm file overrides only what it changes,
+# so the diff between two arms IS the experimental difference.
+#
+# Every value here was read back off the runs rather than taken from a launcher
+# default -- `training_args.bin` and `adapter_config.json` in each checkpoint,
+# `trainer_state.json`'s logged diagnostics, and the sidecar logs. The defaults have
+# moved since (the launcher now defaults LoRA to q,k,v; these runs are q,v), so reading
+# them would have produced configs that do not reproduce the paper.
+
+base_model: checkpoint/coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged
+
+data:
+  dataset: peterant330/saliency-r1-8k        # 8,080 rows
+  holdout: {size: 100, seed: 42}             # -> 7,980 train
+  max_image_side: 512                        # longer side capped, aspect preserved
+
+# R = a_format*R_format + a_sal*R_sal + a_direct*R_direct + a_llm*R_llm   (Section 3.4)
+# Order is load-bearing: it is the order of `reward_funcs`, which the weight vector
+# lines up against positionally.
+reward:
+  format: {alpha: 1.0}                       # <think>...</think> then an answer
+  saliency: {alpha: 0.4}                     # overridden per arm
+  direct:   {alpha: 1.0}                     # exact match against the gold answer
+  judge:    {alpha: 1.0, model: gpt-4o-mini} # 1-5 correctness, rescaled to [0, 1]
+
+lora:                                        # Appendix A.2
+  rank: 16
+  alpha: 32
+  dropout: 0.05
+  targets: [q_proj, v_proj]
+
+optim:                                       # Appendix A.2
+  learning_rate: 1.0e-5
+  lr_scheduler: linear                       # decayed to zero
+  warmup_steps: 0
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  beta: 0.0                                  # no KL penalty: the reward is the whole signal
+
+grpo:
+  num_generations: 8                         # G = 8
+  per_device_train_batch_size: 1             # one completion per device
+  gradient_accumulation_steps: 8
+  num_train_epochs: 3
+  max_prompt_length: 2048
+  max_completion_length: 1024
+  temperature: 1.0
+  top_p: 1.0
+  repetition_penalty: 1.0                    # OFF during training sampling
+  scale_rewards: true                        # advantages / the group's own std
+  seed: 42
+
+# PROMPTS PER OPTIMIZER STEP = the number of TRAINING ranks, since
+#   completions/step = ranks * per_device_batch * grad_accum = ranks * 8
+#   prompts/step     = completions/step / G = ranks
+# and therefore  steps = 7,980 * 3 / ranks.
+#
+# This is stated outright rather than derived from the GPU layout, because the layout
+# and the rank count came apart. center_rect and question_boxes need no Grounding-DINO
+# and the launcher documents that it "gives DINO's GPU to training" -- which would be 7
+# ranks and 3,420 steps. Their checkpoints have 3,990. Deriving ranks from which
+# sidecars a run needs would silently retrain two of the five arms at a different
+# length.
+training_ranks: 6                            # -> 1,330 steps/epoch -> 3,990 total
+expect_optimizer_steps: 3990                 # asserted at startup, not decorative

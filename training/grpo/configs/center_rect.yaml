@@ -1,0 +1,33 @@
+# center rect -- Table 5, mean score 63.38 (published 63.39; the gap is rounding in
+# MME's /2800 rescale).
+#
+# Section 5.2 found attention peaks at a grid corner while human-annotated regions sit
+# near the centre. This arm asks whether that alone explains the gain: same reward, same
+# weight, but the region is a fixed centred rectangle that cannot depend on the step's
+# text. It does not reach SELF-SALIENCY, which is what licenses "the gains cannot be
+# explained by a generic center bias".
+#
+# WHERE 0.565 COMES FROM. It is the fraction that makes the rectangle the same SIZE as a
+# real per-step DINO union, so the arm differs from the real one in placement and not in
+# area: the measured union covers 0.570 of the patch grid on average, and f = 0.565 is
+# 8 x 12 patches on the modal 10 x 16 grid, covering 0.576.
+# experiments/center_rect_calibration.py is that measurement.
+#
+# WHY placement: center RATHER THAN AN INTERIOR PLACEMENT. Read off the run, not
+# assumed. Its trainer_state logs `mask/ring_frac = 0.0008` and `mask/n_placements =
+# 1.0`. Both interior placements guarantee ring_frac EXACTLY 0.000 by construction, so a
+# non-zero value rules them out; it is small and non-zero because a handful of grids in
+# the corpus are small enough that a centred rectangle reaches their border.
+#
+# Needs no detector. The logged coverage was 0.5742, against 0.576 predicted.
+#
+# Archive run: grpo-coldstart_..._merged-rect-frac
+extends: self_saliency.yaml
+name: center_rect
+
+reward:
+  saliency:
+    regions:
+      source: center_rect
+      frac: 0.565              # of the patch grid, split sqrt() across both axes
+      placement: center

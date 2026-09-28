@@ -1,0 +1,26 @@
+# No-Sal -- Table 2, mean score 63.47. The same procedure with no saliency objective,
+# so a gain over it is the reward's and not post-training's.
+#
+# HOW IT ACTUALLY RAN, which is worth knowing before changing it. The saliency reward
+# was INSTALLED and weighted zero -- `reward_weights = [1.0, 0.0, 1.0, 1.0]`, four
+# entries, and its checkpoint logs `rewards/think_overlap_reward/mean` and has a
+# Grounding-DINO sidecar log. It is not the three-function reward list that
+# `--saliency-method none` builds.
+#
+# That is equivalent, and the equivalence is not an assumption. The trainer folds
+# rewards as `impute_unscored_rewards(per_func) * weights).sum(dim=1)`, so a zero weight
+# contributes exactly zero whether the term scored a value or was masked; under the
+# older `nansum` fold it is zero either way too. The gradient is identical to dropping
+# the term, which is what the paper describes. What differs is only that DINO and the
+# step classifier still ran, costing time.
+#
+# Kept as it ran rather than "tidied" to alpha-less, because the run on disk is the one
+# the number came from.
+#
+# Archive run: grpo-coldstart_..._merged-no-saliency_saliency_r1_8k
+extends: self_saliency.yaml
+name: no_sal
+
+reward:
+  saliency:
+    alpha: 0.0

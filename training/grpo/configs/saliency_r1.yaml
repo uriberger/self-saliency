@@ -1,0 +1,37 @@
+# Saliency-R1 -- Table 2 "Prior work", mean score 63.59. Appendix D.2.
+#
+# Their reward, their corpus, our cold start: the comparison isolates the RL stage,
+# because the cold-start checkpoint this begins from is the one every arm here begins
+# from. Their released checkpoints are Qwen2.5-VL, so this is a reimplementation on
+# Qwen3-VL-8B from their public repository.
+#
+# THREE DELIBERATE DEVIATIONS from their published command, each in Appendix D.2:
+#   1. prompts and completions capped at 2,048 / 1,024 instead of 1,024 / 512, matching
+#      every other arm. Rarely active: mean completion length 162-247 tokens and under
+#      0.5% of rollouts reached the cap.
+#   2. R_direct is added, so this arm differs from ours in the attention term ALONE.
+#      Their weight of 1.0 on their own saliency reward is left as published rather than
+#      retuned to our a_sal -- hence `alpha: 1.0` here, and `reward_weights: None` (i.e.
+#      all ones) in the checkpoint.
+#   3. training-time sampling uses no repetition penalty, where their command sets 1.05.
+#
+# EIGHT TRAINING RANKS, NOT SIX. Their reward needs no detector and this run has no
+# sidecar logs at all, so all eight GPUs train: 8 prompts per step and 2,991 optimizer
+# steps for three epochs rather than 3,990. The checkpoint is checkpoint-2991, which is
+# how the rank count was recovered.
+#
+# Archive run: grpo-coldstart_..._merged-saliency-r1-qwen3  (checkpoint-2991)
+extends: _base.yaml
+name: saliency_r1
+
+reward:
+  saliency:
+    kind: saliency_r1          # their map: answer->reasoning composed with reasoning->image,
+                               # value-weighted, projected through o_proj and the unembedding,
+                               # summed over answer tokens, rectified, reshaped to the grid
+    alpha: 1.0                 # their published weight, not retuned
+    regions:
+      source: dataset_box      # the question-level box shipped with saliency-r1-8k
+
+training_ranks: 8              # -> 997 steps/epoch
+expect_optimizer_steps: 2991

@@ -1,0 +1,32 @@
+# question boxes -- Table 5, mean score 63.33.
+#
+# The other half of the ablation: keep everything, but ground the QUESTION instead of
+# the model's reasoning steps. Every observe step of a row is then scored against that
+# row's single question-level union. This is what prior work does -- target regions
+# fixed by the image and question alone -- so the gap to SELF-SALIENCY is the value of
+# conditioning on the chain the policy is generating.
+#
+# Grounding happens ONCE PER ROW, offline, before the run
+# (`training/grpo/precompute_question_boxes.py`), and the trainer loads the file instead
+# of calling a detector. It refuses a file whose box_threshold or image cap disagrees
+# with the run's rather than training against the wrong boxes -- which is why the
+# threshold below is not a guess: the file on disk records
+#   {box_threshold: 0.1, max_image_side: 512, text_column: "problem",
+#    dataset: "peterant330/saliency-r1-8k", dataset_rows: 8080}
+# and the run could not have started against anything else.
+#
+# One consequence worth stating: this changes WHICH steps are scored, not only what they
+# are scored against. A row grounds for all of its steps or for none of them, where the
+# per-step path decides that step by step.
+#
+# Archive run: grpo-coldstart_..._merged-question-boxes
+extends: self_saliency.yaml
+name: question_boxes
+
+reward:
+  saliency:
+    regions:
+      source: question_boxes
+      file: data/question_boxes/saliency_r1_8k_bt0.10.json
+      text_column: problem     # the question, not the chain
+      box_threshold: 0.10      # must equal the file's, or the trainer refuses
