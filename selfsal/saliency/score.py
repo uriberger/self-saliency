@@ -122,3 +122,36 @@ def saliency_reward(step_scores) -> float | None:
     """
     vals = [float(s) for s in step_scores if s is not None]
     return float(np.mean(vals)) if vals else None
+
+
+def auroc(step_map, mask) -> float | None:
+    """P(a random in-region patch outranks a random out-region one). 0.5 is chance.
+
+    A DIAGNOSTIC, deliberately absent from METRICS so it cannot be selected as a training
+    objective: no arm in the paper was trained on it, and offering it here would invite a
+    run that no published number describes.
+
+    It is worth reporting beside phi because it answers a question phi cannot. phi divides
+    by the map's peak, so it moves when a map merely flattens; auroc depends only on the
+    ORDER of the patches and is exactly invariant to any monotone reshaping m -> m**gamma.
+    Reading the two together is how "the region got more attention" is told apart from
+    "the map got flatter", which is the distinction Section 4.4 turns on.
+
+    Average ranks for ties: attention maps carry many near-identical near-zero patches and
+    argsort would break those ties arbitrarily, biasing the estimate.
+    """
+    v = np.asarray(step_map, dtype=np.float64).ravel()
+    m = np.asarray(mask, dtype=bool).ravel()
+    n_in = int(m.sum())
+    n_out = v.size - n_in
+    if n_in == 0 or n_out == 0:
+        return None
+    order = np.argsort(v, kind="stable")
+    ranks = np.empty(v.size, dtype=np.float64)
+    ranks[order] = np.arange(1, v.size + 1, dtype=np.float64)
+    _uniq, inv, cnt = np.unique(v, return_inverse=True, return_counts=True)
+    sums = np.zeros(cnt.size, dtype=np.float64)
+    np.add.at(sums, inv, ranks)
+    ranks = (sums / cnt)[inv]
+    u = ranks[m].sum() - n_in * (n_in + 1) / 2.0
+    return float(u / (n_in * n_out))

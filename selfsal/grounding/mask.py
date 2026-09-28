@@ -139,3 +139,22 @@ def ring_fraction(mask) -> float:
     ring[0, :] = ring[-1, :] = True
     ring[:, 0] = ring[:, -1] = True
     return float(np.logical_and(m, ring).sum()) / n_in
+
+
+def centroid_eccentricity(mask) -> float:
+    """How far the region's centroid sits from the grid centre. 0 = centre, 1 = a corner.
+
+    A DIAGNOSTIC, not a score. Section 5.3 asks whether the gain is just a centre bias,
+    and the way that would show up inside a real run is this rising over training,
+    together with its correlation with phi -- the policy naming central objects because a
+    centre-heavy map scores well for free. Reported per step by the trained-model probe
+    so the question is answerable from a run rather than only from the ablation.
+    """
+    m = np.asarray(mask, dtype=bool)
+    gh, gw = m.shape
+    ys, xs = np.nonzero(m)
+    if ys.size == 0:
+        return float("nan")
+    cy = (ys.mean() + 0.5) / gh - 0.5
+    cx = (xs.mean() + 0.5) / gw - 0.5
+    return float(np.hypot(cy, cx) / np.hypot(0.5, 0.5))

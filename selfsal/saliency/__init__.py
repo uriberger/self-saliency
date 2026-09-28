@@ -7,11 +7,11 @@ table builders run in.
 """
 
 from .heads import REWARD_HEADS, REWARD_LAYER, TOKEN_REDUCTION, head_spec
-from .score import METRICS, phi, phi_mean, resolve_metric, saliency_reward, score_step
+from .score import METRICS, auroc, phi, phi_mean, resolve_metric, saliency_reward, score_step
 
 __all__ = [
     "REWARD_HEADS", "REWARD_LAYER", "TOKEN_REDUCTION", "head_spec",
-    "METRICS", "phi", "phi_mean", "resolve_metric", "saliency_reward", "score_step",
+    "METRICS", "auroc", "phi", "phi_mean", "resolve_metric", "saliency_reward", "score_step",
     "AttentionCollector", "IMAGE_TOKEN_ID",
 ]
 

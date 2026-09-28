@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where in the picture does attention go?</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --plane: #f9f9f7;
+    --text-primary: #0b0b0b; --text-secondary: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --series-1: #2a78d6; --series-2: #eb6834;
+    --neutral-mid: #f0efec; --pole-hi: #0d366b; --pole-lo: #a32a2a;
+    --good: #0ca30c; --critical: #d03b3b; --warning: #fab219;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --plane: #0d0d0d;
+      --text-primary: #ffffff; --text-secondary: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+      --series-1: #3987e5; --series-2: #d95926;
+      --neutral-mid: #383835; --pole-hi: #9ec5f4; --pole-lo: #e08b8b;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --plane: #0d0d0d;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --series-1: #3987e5; --series-2: #d95926;
+    --neutral-mid: #383835; --pole-hi: #9ec5f4; --pole-lo: #e08b8b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--plane); }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text-primary); background: var(--plane);
+    padding: 32px 24px 72px; max-width: 1180px; margin: 0 auto; line-height: 1.5;
+  }
+  h1 { font-size: 27px; margin: 0 0 6px; letter-spacing: -0.01em; }
+  h2 { font-size: 18px; margin: 0 0 2px; letter-spacing: -0.005em; }
+  .lede { color: var(--text-secondary); font-size: 15px; max-width: 78ch; margin: 0 0 4px; }
+  .meta { color: var(--muted); font-size: 12.5px; margin-top: 10px; }
+  .sub { color: var(--text-secondary); font-size: 13px; margin: 0 0 14px; max-width: 86ch; }
+  .note { color: var(--muted); font-size: 12.5px; margin: 12px 0 0; max-width: 88ch; }
+  .card {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px 22px; margin: 22px 0;
+  }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 14px; margin: 22px 0; }
+  .kpi { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .kpi .v { font-size: 34px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
+  .kpi .k { font-size: 12.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .kpi .d { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+  .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  button {
+    font: inherit; font-size: 12.5px; color: var(--text-secondary); cursor: pointer;
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 7px; padding: 5px 11px;
+  }
+  button:hover { color: var(--text-primary); }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--text-secondary); margin: 2px 0 12px; }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .swatch { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+  table { border-collapse: collapse; font-size: 12.5px; font-variant-numeric: tabular-nums; width: 100%; }
+  th, td { text-align: right; padding: 5px 9px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--muted); font-weight: 500; }
+  .hidden { display: none; }
+  .tip {
+    position: fixed; pointer-events: none; z-index: 40; background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px 11px; font-size: 12.5px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.13); opacity: 0; transition: opacity .09s; max-width: 300px;
+  }
+  .tip b { color: var(--text-primary); } .tip i { color: var(--muted); font-style: normal; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; padding: 2px 9px 2px 7px;
+          border-radius: 999px; border: 1px solid var(--border); color: var(--text-secondary); }
+  .hyp { margin: 0 0 18px; }
+  .hyp .name { font-size: 15px; font-weight: 600; }
+  .hyp .why { color: var(--text-secondary); font-size: 13px; margin: 2px 0 8px; max-width: 84ch; }
+  .pred { display: flex; gap: 10px; align-items: baseline; font-size: 13px; padding: 3px 0; }
+  .pred .ev { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12.5px; }
+  svg text { font-family: inherit; }
+  .cap { fill: var(--muted); font-size: 11.5px; }
+  .val { fill: var(--text-secondary); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+  .lab { fill: var(--text-primary); font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="viz-root" id="root">
+
+<div class="head">
+  <div>
+    <h1>Where in the picture does attention go?</h1>
+    <p class="lede">The image border draws about <b>2.6&times; its fair share</b> of attention in
+    <b>every one of twelve image types</b> &mdash; so it is not the background. Turning the picture
+    upside down does not move it &mdash; so it is not the content. Permuting which patch embedding
+    sits in which grid slot <i>does</i> move it, and the peak follows the embedding &mdash; so it is
+    not the language model&rsquo;s position either. The mark is stamped into the patch vector by the
+    <b>vision tower</b>.</p>
+    <p class="meta" id="meta"></p>
+  </div>
+  <button id="theme">Dark</button>
+</div>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="card">
+  <div class="head"><div>
+    <h2>1 &nbsp;The border wins in all twelve types</h2>
+    <p class="sub">Enrichment = the border&rsquo;s share of the attention spent inside the picture,
+    divided by the border&rsquo;s share of the patches. <b>1.00 = its fair share</b>. Bars are the
+    mean over pictures; the whisker is a 95% bootstrap interval over pictures. Cold start,
+    150 pictures per type, at 16 heads chosen on held-out images.</p>
+  </div><button data-table="f1">Table</button></div>
+  <div id="f1"></div><div id="f1-table" class="hidden"></div>
+  <p class="note">The ordering is the argument. The <b>highest</b> is the synthetic pop-out field,
+  a uniform array of shapes where &ldquo;background&rdquo; is not a place. The <b>lowest</b> are the
+  science diagrams and math figures &mdash; the types with the most white space. That is backwards
+  for an account in which attention seeks the background.</p>
+</div>
+
+<div class="card">
+  <div class="head"><div>
+    <h2>2 &nbsp;It is a cliff, not a slope</h2>
+    <p class="sub">Enrichment by distance from the nearest edge, pooled over types. Attention does
+    not fade inward &mdash; it drops eightfold at the first step off the border and is flat all the
+    way to the centre.</p>
+  </div><button data-table="f2">Table</button></div>
+  <div id="f2"></div><div id="f2-table" class="hidden"></div>
+</div>
+
+<div class="card">
+  <div class="head"><div>
+    <h2>3 &nbsp;And it is really the top-left corner</h2>
+    <p class="sub">The border is not evenly favoured. Log scale, because the single top-left patch
+    is off any linear axis the rest would share. The dashed line is the fair share.</p>
+  </div><button data-table="f3">Table</button></div>
+  <div id="f3"></div><div id="f3-table" class="hidden"></div>
+  <p class="note">The <b>bottom row is below its fair share</b>, and one patch &mdash; the top-left,
+  which is the first image token in raster order and sits right after the image delimiter &mdash;
+  takes more than seventy times its share. A symmetric 2-D border effect has no reason to do that.</p>
+</div>
+
+<div class="card">
+  <div class="head"><div>
+    <h2>4 &nbsp;Every location, every type</h2>
+    <p class="sub">Diverging around the fair share: <span style="color:var(--series-1)">&#9632;</span>
+    blue = above, <span style="color:var(--critical)">&#9632;</span> red = below, gray = exactly 1.00.
+    Colour is on a log scale so 2&times; and &frac12;&times; sit equally far from the middle. The two
+    single-patch columns are in figure 3, on their own scale.</p>
+  </div><button data-table="f4">Table</button></div>
+  <div id="f4"></div><div id="f4-table" class="hidden"></div>
+</div>
+
+<div class="card">
+  <div class="head"><div>
+    <h2>5 &nbsp;Which heads, and which tokens were asking</h2>
+    <p class="sub">Vanilla Qwen3-VL-8B. <b>Nothing here is head-selected</b>: the two series are
+    every head in the model and the two heads the reward trains on (layer&nbsp;22, heads&nbsp;28
+    and&nbsp;31). &ldquo;Generated&rdquo; is one teacher-forced pass over prompt&nbsp;+&nbsp;answer
+    &mdash; the same construction the training reward uses.</p>
+  </div><button data-table="f5">Table</button></div>
+  <div class="legend" id="f5-legend"></div>
+  <div id="f5"></div><div id="f5-table" class="hidden"></div>
+  <p class="note">Two things this says. <b>Prefill overstates the reward&rsquo;s view by about a
+  third</b> &mdash; any saliency number measured on prompt tokens alone is an upper bound, not an
+  estimate. And <b>the two trained heads are not typical heads</b>: they lean on the border harder
+  than the model&rsquo;s average head on every token set, so <code>mean_in</code> measures where two
+  unusually edge-leaning heads look.</p>
+</div>
+
+<div class="card">
+  <div class="head"><div>
+    <h2>6 &nbsp;The causal arms</h2>
+    <p class="sub">Same picture, one thing changed, paired against its own baseline. Change in border
+    enrichment; the whisker is a 95% bootstrap interval over pictures. Cold start, 480 pictures.</p>
+  </div><button data-table="f6">Table</button></div>
+  <div id="f6"></div><div id="f6-table" class="hidden"></div>
+</div>
+
+<div class="card">
+  <div class="head"><div>
+    <h2>7 &nbsp;Does the peak follow the content, or the grid slot?</h2>
+    <p class="sub">Share of pictures whose peak patch <i>shows the baseline&rsquo;s peak content</i>
+    versus whose peak sits at the <i>same grid position</i>. For a positional effect the second is
+    high and the first is at chance.</p>
+  </div><button data-table="f7">Table</button></div>
+  <div class="legend" id="f7-legend"></div>
+  <div id="f7"></div><div id="f7-table" class="hidden"></div>
+  <p class="note"><b>Every pixel-space transform keeps the slot and abandons the content.</b> Then
+  the permutation &mdash; which touches no pixel, only which slot holds which patch vector &mdash;
+  does the exact opposite. That pair is the whole mechanism argument.</p>
+</div>
+
+<div class="card">
+  <div class="head"><div>
+    <h2>8 &nbsp;The hypotheses, scored</h2>
+    <p class="sub">H1&ndash;H4 were written down before the run. H5 was not &mdash; it is what H1 and
+    H3 become once the permutation arm is read, so this run generated it and cannot also confirm it.
+    Its predictions are written in falsifiable form so another model can fail them.</p>
+  </div></div>
+  <div id="f8"></div>
+</div>
+
+<div class="card">
+  <div class="head"><div>
+    <h2>9 &nbsp;Read this before any percentage above</h2>
+    <p class="sub">Where an attention row actually goes, over all 1,152 heads. Everything above
+    describes how the model divides up the picture&rsquo;s slice alone.</p>
+  </div><button data-table="f9">Table</button></div>
+  <div id="f9"></div><div id="f9-table" class="hidden"></div>
+  <p class="note" id="f9-note"></p>
+</div>
+
+<div class="card">
+  <h2>Caveats</h2>
+  <ul class="sub" style="margin-top:8px">
+    <li><b>One model family.</b> Qwen3-VL-8B, base and cold start. The cross-model stage is built and unrun.</li>
+    <li><b>Images capped at 512px on the long side</b>, so grids are at most 16 patches across and the
+    ring is a thick band. Halving the resolution costs 0.66 of border enrichment &mdash; resolution is
+    not neutral, and nothing above 512 was tested.</li>
+    <li><b>The arms ran on the cold start only.</b> Figure 5&rsquo;s base-vs-cold-start agreement is the
+    reason to expect they carry over, not evidence that they do.</li>
+    <li><b>It is a peak, not a sink.</b> The strongest image column takes 33&ndash;51&times; uniform but
+    its across-query variation never falls below 1.2, against a pre-registered 0.5. The word
+    &ldquo;sink&rdquo; does not fit what is on the border.</li>
+    <li>H5 is <b>post hoc</b>. Figures 1&ndash;4 and 6&ndash;7 are not.</li>
+  </ul>
+</div>
+
+</div>
+<div class="tip" id="tip"></div>
+<script>
+const DATA = __DATA__;
+const NS = "http://www.w3.org/2000/svg";
+const tip = document.getElementById("tip");
+const css = n => getComputedStyle(document.getElementById("root")).getPropertyValue(n).trim();
+const fmt = (v, d=2) => (v === null || v === undefined || !isFinite(v)) ? "–" : v.toFixed(d);
+
+function el(tag, attrs = {}, text) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+function svg(host, w, h) {
+  host.innerHTML = "";
+  const s = el("svg", {viewBox: `0 0 ${w} ${h}`, width: "100%", height: h,
+                       role: "img", style: "overflow:visible"});
+  host.appendChild(s);
+  return s;
+}
+function hover(node, html) {
+  node.style.cursor = "default";
+  node.addEventListener("pointerenter", e => {
+    tip.innerHTML = html; tip.style.opacity = 1;
+    tip.style.left = Math.min(e.clientX + 14, innerWidth - 310) + "px";
+    tip.style.top = (e.clientY + 16) + "px";
+  });
+  node.addEventListener("pointermove", e => {
+    tip.style.left = Math.min(e.clientX + 14, innerWidth - 310) + "px";
+    tip.style.top = (e.clientY + 16) + "px";
+  });
+  node.addEventListener("pointerleave", () => { tip.style.opacity = 0; });
+}
+function table(host, cols, rows) {
+  const t = document.createElement("table");
+  const hr = document.createElement("tr");
+  cols.forEach(c => { const th = document.createElement("th"); th.textContent = c; hr.appendChild(th); });
+  t.appendChild(hr);
+  rows.forEach(r => {
+    const tr = document.createElement("tr");
+    r.forEach(v => { const td = document.createElement("td"); td.textContent = v; tr.appendChild(td); });
+    t.appendChild(tr);
+  });
+  host.innerHTML = ""; host.appendChild(t);
+}
+// Rounded 4px data-end, square at the baseline, correct in BOTH directions -- the negative
+// bars in figures 3 and 6 are the whole point of those figures, so they cannot be a
+// positive bar shoved leftwards by a transform.
+function hbar(x0, x1, y, h, r = 4) {
+  const w = Math.abs(x1 - x0);
+  r = Math.max(0, Math.min(r, w, h / 2));
+  if (x1 >= x0) return `M${x0},${y} h${w - r} a${r},${r} 0 0 1 ${r},${r} v${h - 2 * r}` +
+    ` a${r},${r} 0 0 1 ${-r},${r} h${-(w - r)} Z`;
+  return `M${x0},${y} h${-(w - r)} a${r},${r} 0 0 0 ${-r},${r} v${h - 2 * r}` +
+    ` a${r},${r} 0 0 0 ${r},${r} h${w - r} Z`;
+}
+function vbar(x, yBase, yTop, w, r = 4) {
+  const h = Math.abs(yBase - yTop);
+  r = Math.max(0, Math.min(r, h, w / 2));
+  return `M${x},${yBase} v${-(h - r)} a${r},${r} 0 0 1 ${r},${-r} h${w - 2 * r}` +
+    ` a${r},${r} 0 0 1 ${r},${r} v${h - r} Z`;
+}
+function mix(a, b, t) {
+  const p = h => [1,3,5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const [r1,g1,b1] = p(a), [r2,g2,b2] = p(b);
+  const c = (x, y) => Math.round(x + (y - x) * t).toString(16).padStart(2, "0");
+  return "#" + c(r1,r2) + c(g1,g2) + c(b1,b2);
+}
+function hexOf(varName) {
+  let v = css(varName);
+  if (v.startsWith("#")) return v.length === 4 ? "#" + [...v.slice(1)].map(c => c + c).join("") : v;
+  return "#808080";
+}
+
+/* ---------------------------------------------------------------- figures */
+const cold = DATA.cold, base = DATA.base;
+const LOCS = DATA.loc_labels;
+
+document.getElementById("meta").textContent =
+  `Qwen3-VL-8B · cold start: ${cold ? cold.n_pictures : 0} pictures over ${cold ? cold.types.length : 0} image types, ` +
+  `all 36×32 heads · base model: ${base ? base.n_pictures : 0} pictures with generated answers · ` +
+  `enrichment = share of the picture's attention ÷ share of the patches, 1.00 = fair share`;
+
+/* KPI row */
+function kpis() {
+  const host = document.getElementById("kpis");
+  const g = base ? base.grid["generated tokens|trained L22 h28,31"] : null;
+  const items = [
+    ["Border, all 12 types", "12 / 12", "every type above the pre-registered 1.5×, Holm p &lt; 0.002"],
+    ["Top-left patch", fmt(cold.shape.topleft, 0) + "×", "one patch, against its 1/N fair share"],
+    ["The reward's own view", fmt(g ? g.ring : null) + "×", "generated tokens, layer 22 heads 28+31"],
+    ["Picture's share of a row", (cold.budget.image * 100).toFixed(1) + "%", "the first prompt token takes " + (cold.budget.first * 100).toFixed(0) + "%"],
+  ];
+  host.innerHTML = items.map(([k, v, d]) =>
+    `<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
+}
+
+/* Fig 1 -- per-type ring enrichment, horizontal bars */
+function f1() {
+  const rows = cold.per_type;
+  const H = 26, top = 8, left = 152, right = 66, w = 900;
+  const h = top + rows.length * H + 34;
+  const s = svg(document.getElementById("f1"), w, h);
+  const max = Math.max(...rows.map(r => r.hi)) * 1.06;
+  const x = v => left + (v / max) * (w - left - right);
+  [0, 1, 2, 3].filter(v => v <= max).forEach(v => {
+    s.appendChild(el("line", {x1: x(v), x2: x(v), y1: top, y2: top + rows.length * H,
+      stroke: v === 1 ? css("--axis") : css("--grid"), "stroke-width": 1,
+      "stroke-dasharray": v === 1 ? "3 3" : ""}));
+    s.appendChild(el("text", {x: x(v), y: h - 12, "text-anchor": "middle", class: "cap"},
+      v === 1 ? "1.00 fair share" : v.toFixed(0)));
+  });
+  rows.forEach((r, i) => {
+    const y = top + i * H, bh = 16;
+    const p = el("path", {d: hbar(x(0), x(r.E_ring), y + (H - bh) / 2, bh),
+      fill: css("--series-1")});
+    hover(p, `<b>${r.type}</b><br>ring enrichment <b>${fmt(r.E_ring)}</b>` +
+      ` <i>[${fmt(r.lo)}, ${fmt(r.hi)}]</i><br><i>${r.n} pictures · modal grid ${r.grid}` +
+      ` · the ring is ${(r.ring_area * 100).toFixed(0)}% of the patches</i>`);
+    s.appendChild(p);
+    s.appendChild(el("line", {x1: x(r.lo), x2: x(r.hi), y1: y + H / 2, y2: y + H / 2,
+      stroke: css("--surface-1"), "stroke-width": 2}));
+    s.appendChild(el("line", {x1: x(r.lo), x2: x(r.hi), y1: y + H / 2, y2: y + H / 2,
+      stroke: css("--text-primary"), "stroke-width": 1, opacity: .45}));
+    s.appendChild(el("text", {x: left - 10, y: y + H / 2 + 4, "text-anchor": "end", class: "lab"},
+      r.type.replace(/_/g, " ")));
+    s.appendChild(el("text", {x: x(r.E_ring) + 8, y: y + H / 2 + 4, class: "val"}, fmt(r.E_ring)));
+  });
+  table(document.getElementById("f1-table"),
+    ["type", "n", "grid", "ring is % of patches", "enrichment", "95% CI"],
+    rows.map(r => [r.type, r.n, r.grid, (r.ring_area * 100).toFixed(0) + "%",
+      fmt(r.E_ring), `[${fmt(r.lo)}, ${fmt(r.hi)}]`]));
+}
+
+/* Fig 2 -- the radial cliff */
+function f2() {
+  const keys = [["ring", "0 — the ring"], ["depth1", "1 step in"], ["depth2", "2 steps in"],
+                ["deep", "3+ — the middle"]];
+  const w = 640, h = 210, left = 130, top = 10, right = 60;
+  const s = svg(document.getElementById("f2"), w, h);
+  const max = Math.max(...keys.map(k => cold.radial[k[0]])) * 1.12;
+  const x = v => left + (v / max) * (w - left - right);
+  s.appendChild(el("line", {x1: x(1), x2: x(1), y1: top, y2: top + keys.length * 40,
+    stroke: css("--axis"), "stroke-width": 1, "stroke-dasharray": "3 3"}));
+  s.appendChild(el("text", {x: x(1), y: top + keys.length * 40 + 16, "text-anchor": "middle",
+    class: "cap"}, "1.00 fair share"));
+  keys.forEach(([k, label], i) => {
+    const v = cold.radial[k], y = top + i * 40;
+    const p = el("path", {d: hbar(x(0), x(v), y + 8, 20), fill: css("--series-1")});
+    hover(p, `<b>${label}</b><br>enrichment <b>${fmt(v)}</b>`);
+    s.appendChild(p);
+    s.appendChild(el("text", {x: left - 10, y: y + 22, "text-anchor": "end", class: "lab"}, label));
+    s.appendChild(el("text", {x: x(v) + 8, y: y + 22, class: "val"}, fmt(v)));
+  });
+  table(document.getElementById("f2-table"), ["distance from the edge", "enrichment"],
+    keys.map(([k, l]) => [l, fmt(cold.radial[k])]));
+}
+
+/* Fig 3 -- the edges and the two end patches, log scale */
+function f3() {
+  const keys = ["top", "bottom", "left", "right", "topleft", "botright"];
+  const vals = keys.map(k => cold.shape[k]);
+  const w = 760, left = 150, right = 70, top = 10, H = 34;
+  const h = top + keys.length * H + 34;
+  const s = svg(document.getElementById("f3"), w, h);
+  const lo = Math.log10(0.5), hi = Math.log10(Math.max(...vals) * 1.5);
+  const x = v => left + ((Math.log10(Math.max(v, 0.5)) - lo) / (hi - lo)) * (w - left - right);
+  [1, 3, 10, 30, 100].filter(v => Math.log10(v) <= hi).forEach(v => {
+    s.appendChild(el("line", {x1: x(v), x2: x(v), y1: top, y2: top + keys.length * H,
+      stroke: v === 1 ? css("--axis") : css("--grid"), "stroke-width": 1,
+      "stroke-dasharray": v === 1 ? "3 3" : ""}));
+    s.appendChild(el("text", {x: x(v), y: h - 12, "text-anchor": "middle", class: "cap"},
+      v === 1 ? "1.00 fair share" : v + "×"));
+  });
+  keys.forEach((k, i) => {
+    const v = vals[i], y = top + i * H;
+    const below = v < 1;
+    const p = el("path", {d: hbar(x(1), x(v), y + 8, 18),
+      fill: below ? css("--critical") : css("--series-1")});
+    hover(p, `<b>${LOCS[k]}</b><br>enrichment <b>${fmt(v)}</b>` +
+      (below ? "<br><i>below its fair share</i>" : ""));
+    s.appendChild(p);
+    s.appendChild(el("text", {x: left - 10, y: y + 21, "text-anchor": "end", class: "lab"}, LOCS[k]));
+    s.appendChild(el("text", {x: (below ? x(1) : x(v)) + 8, y: y + 21, class: "val"}, fmt(v)));
+  });
+  table(document.getElementById("f3-table"), ["location", "enrichment"],
+    keys.map((k, i) => [LOCS[k], fmt(vals[i])]));
+}
+
+/* Fig 4 -- the type x location heatmap */
+function f4() {
+  const cols = ["ring", "depth1", "middle", "top", "bottom", "left", "right"];
+  const rows = cold.per_type;
+  const left = 152, topPad = 30, cw = 92, ch = 30, w = left + cols.length * cw + 10;
+  const h = topPad + rows.length * ch + 46;
+  const s = svg(document.getElementById("f4"), w, h);
+  const DOM = 1;   // log10 domain, equal arms
+  const color = v => {
+    if (v === null || !isFinite(v)) return css("--neutral-mid");
+    const t = Math.max(-1, Math.min(1, Math.log10(v) / DOM));
+    return t >= 0 ? mix(hexOf("--neutral-mid"), hexOf("--pole-hi"), t)
+                  : mix(hexOf("--neutral-mid"), hexOf("--pole-lo"), -t);
+  };
+  cols.forEach((c, j) => s.appendChild(el("text",
+    {x: left + j * cw + cw / 2, y: topPad - 10, "text-anchor": "middle", class: "cap"}, LOCS[c])));
+  rows.forEach((r, i) => {
+    s.appendChild(el("text", {x: left - 10, y: topPad + i * ch + ch / 2 + 4,
+      "text-anchor": "end", class: "lab"}, r.type.replace(/_/g, " ")));
+    cols.forEach((c, j) => {
+      const v = r.profile[c];
+      const t = v === null ? 0 : Math.max(-1, Math.min(1, Math.log10(v) / DOM));
+      const g = el("g");
+      // the 2px surface gap does the separating; no stroke around the mark
+      g.appendChild(el("rect", {x: left + j * cw + 1, y: topPad + i * ch + 1,
+        width: cw - 2, height: ch - 2, rx: 3, fill: color(v)}));
+      g.appendChild(el("text", {x: left + j * cw + cw / 2, y: topPad + i * ch + ch / 2 + 4,
+        "text-anchor": "middle", "font-size": 11.5,
+        style: "font-variant-numeric:tabular-nums",
+        fill: Math.abs(t) > 0.55 ? "#ffffff" : css("--text-primary")}, fmt(v)));
+      hover(g, `<b>${r.type}</b> · ${LOCS[c]}<br>enrichment <b>${fmt(v)}</b><br>` +
+        `<i>${v >= 1 ? (fmt(v) + "× its fair share") : (fmt(1 / v) + "× BELOW its fair share")}</i>`);
+      s.appendChild(g);
+    });
+  });
+  // ramp legend
+  const lx = left, ly = topPad + rows.length * ch + 18;
+  for (let i = 0; i <= 40; i++) {
+    const t = -1 + (2 * i) / 40;
+    s.appendChild(el("rect", {x: lx + i * 5, y: ly, width: 5, height: 9,
+      fill: t >= 0 ? mix(hexOf("--neutral-mid"), hexOf("--pole-hi"), t)
+                   : mix(hexOf("--neutral-mid"), hexOf("--pole-lo"), -t)}));
+  }
+  [["0.1×", 0], ["1.00", 100], ["10×", 200]].forEach(([t, dx]) =>
+    s.appendChild(el("text", {x: lx + dx, y: ly + 24, "text-anchor": dx ? "middle" : "start",
+      class: "cap"}, t)));
+  table(document.getElementById("f4-table"), ["type", ...cols.map(c => LOCS[c])],
+    rows.map(r => [r.type, ...cols.map(c => fmt(r.profile[c]))]));
+}
+
+/* Fig 5 -- head set x token set */
+function f5() {
+  if (!base) return;
+  const heads = DATA.head_sets, toks = DATA.token_sets;
+  const colors = [css("--series-1"), css("--series-2")];
+  document.getElementById("f5-legend").innerHTML = heads.map((hn, i) =>
+    `<span><i class="swatch" style="background:${colors[i]}"></i>${hn}</span>`).join("");
+  const locs = ["ring", "top", "bottom", "middle", "topleft"];
+  const w = 900, left = 30, top = 16, gw = 168, h = 300;
+  const s = svg(document.getElementById("f5"), w, h);
+  const max = Math.max(...toks.flatMap(t => heads.flatMap(hn =>
+    locs.map(l => (base.grid[`${t}|${hn}`] || {})[l] || 0)))) * 1.1;
+  const plotH = 210;
+  const y = v => top + plotH - (Math.log10(Math.max(v, 0.3)) - Math.log10(0.3)) /
+    (Math.log10(max) - Math.log10(0.3)) * plotH;
+  [0.5, 1, 3, 10, 30].filter(v => v <= max).forEach(v => {
+    s.appendChild(el("line", {x1: left, x2: w - 10, y1: y(v), y2: y(v),
+      stroke: v === 1 ? css("--axis") : css("--grid"), "stroke-width": 1,
+      "stroke-dasharray": v === 1 ? "3 3" : ""}));
+    s.appendChild(el("text", {x: left - 6, y: y(v) + 4, "text-anchor": "end", class: "cap"},
+      v === 1 ? "1.00" : v + "×"));
+  });
+  toks.forEach((t, ti) => {
+    const gx = left + 24 + ti * (gw + 118);
+    s.appendChild(el("text", {x: gx + gw / 2, y: top + plotH + 40, "text-anchor": "middle",
+      class: "lab"}, t));
+    locs.forEach((l, li) => {
+      s.appendChild(el("text", {x: gx + li * 33 + 15, y: top + plotH + 18,
+        "text-anchor": "middle", class: "cap",
+        transform: `rotate(-32 ${gx + li * 33 + 15} ${top + plotH + 18})`}, LOCS[l]));
+      heads.forEach((hn, hi) => {
+        const v = (base.grid[`${t}|${hn}`] || {})[l];
+        if (v === undefined || !isFinite(v)) return;
+        const bx = gx + li * 33 + hi * 15, bw = 13;
+        const p = el("path", {d: vbar(bx, top + plotH, y(v), bw), fill: colors[hi]});
+        hover(p, `<b>${LOCS[l]}</b><br>${t}, ${hn}<br>enrichment <b>${fmt(v)}</b>`);
+        s.appendChild(p);
+      });
+    });
+  });
+  table(document.getElementById("f5-table"), ["tokens asking", "heads", ...locs.map(l => LOCS[l])],
+    toks.flatMap(t => heads.map(hn =>
+      [t, hn, ...locs.map(l => fmt((base.grid[`${t}|${hn}`] || {})[l]))])));
+}
+
+/* Fig 6 -- the arms */
+function f6() {
+  const arms = Object.entries(cold.arms).filter(([k]) => k !== "identity")
+    .map(([k, v]) => ({arm: k, ...v})).sort((a, b) => a.dE_ring - b.dE_ring);
+  const w = 900, left = 190, right = 80, top = 8, H = 24;
+  const h = top + arms.length * H + 34;
+  const s = svg(document.getElementById("f6"), w, h);
+  const lo = Math.min(...arms.map(a => a.dE_ring_lo)), hi = Math.max(0.3, ...arms.map(a => a.dE_ring_hi));
+  const x = v => left + ((v - lo) / (hi - lo)) * (w - left - right);
+  s.appendChild(el("line", {x1: x(0), x2: x(0), y1: top, y2: top + arms.length * H,
+    stroke: css("--axis"), "stroke-width": 1}));
+  s.appendChild(el("text", {x: x(0), y: h - 12, "text-anchor": "middle", class: "cap"}, "no change"));
+  arms.forEach((a, i) => {
+    const y = top + i * H, bh = 14, neg = a.dE_ring < 0;
+    const p = el("path", {d: hbar(x(0), x(a.dE_ring), y + (H - bh) / 2, bh),
+      fill: neg ? css("--critical") : css("--series-1")});
+    hover(p, `<b>${a.arm}</b><br>Δ border enrichment <b>${a.dE_ring > 0 ? "+" : ""}${fmt(a.dE_ring, 3)}</b>` +
+      ` <i>[${fmt(a.dE_ring_lo, 3)}, ${fmt(a.dE_ring_hi, 3)}]</i><br>` +
+      `Δ top row ${a.dE_top > 0 ? "+" : ""}${fmt(a.dE_top, 3)} · ${a.n} pictures`);
+    s.appendChild(p);
+    s.appendChild(el("text", {x: left - 12, y: y + H / 2 + 4, "text-anchor": "end", class: "lab"},
+      a.arm.replace(/_/g, " ")));
+    s.appendChild(el("text", {x: (neg ? x(a.dE_ring) - 8 : x(a.dE_ring) + 8), y: y + H / 2 + 4,
+      "text-anchor": neg ? "end" : "start", class: "val"},
+      (a.dE_ring > 0 ? "+" : "") + fmt(a.dE_ring, 2)));
+  });
+  table(document.getElementById("f6-table"),
+    ["arm", "n", "Δ ring", "95% CI", "Δ top row", "Δ bottom row"],
+    arms.map(a => [a.arm, a.n, fmt(a.dE_ring, 3), `[${fmt(a.dE_ring_lo, 3)}, ${fmt(a.dE_ring_hi, 3)}]`,
+      fmt(a.dE_top, 3), fmt(a.dE_bottom, 3)]));
+}
+
+/* Fig 7 -- follow content vs follow slot */
+function f7() {
+  const arms = Object.entries(cold.arms)
+    .filter(([k, v]) => k !== "identity" && v.follow_content !== null && v.follow_slot !== null)
+    .map(([k, v]) => ({arm: k, ...v}))
+    .sort((a, b) => b.follow_slot - a.follow_slot);
+  const c1 = css("--series-1"), c2 = css("--series-2");
+  document.getElementById("f7-legend").innerHTML =
+    `<span><i class="swatch" style="background:${c1};border-radius:999px"></i>follows the grid slot</span>` +
+    `<span><i class="swatch" style="background:${c2};border-radius:999px"></i>follows the content</span>`;
+  const w = 820, left = 210, right = 60, top = 12, H = 26;
+  const h = top + arms.length * H + 30;
+  const s = svg(document.getElementById("f7"), w, h);
+  const x = v => left + v * (w - left - right);
+  [0, .25, .5, .75, 1].forEach(v => {
+    s.appendChild(el("line", {x1: x(v), x2: x(v), y1: top, y2: top + arms.length * H,
+      stroke: css("--grid"), "stroke-width": 1}));
+    s.appendChild(el("text", {x: x(v), y: h - 10, "text-anchor": "middle", class: "cap"},
+      (v * 100).toFixed(0) + "%"));
+  });
+  arms.forEach((a, i) => {
+    const y = top + i * H + H / 2;
+    s.appendChild(el("line", {x1: x(Math.min(a.follow_slot, a.follow_content)),
+      x2: x(Math.max(a.follow_slot, a.follow_content)), y1: y, y2: y,
+      stroke: css("--axis"), "stroke-width": 2}));
+    [[a.follow_slot, c1, "grid slot"], [a.follow_content, c2, "content"]].forEach(([v, c, n]) => {
+      const g = el("g");
+      g.appendChild(el("circle", {cx: x(v), cy: y, r: 6, fill: css("--surface-1")}));
+      g.appendChild(el("circle", {cx: x(v), cy: y, r: 4.5, fill: c}));
+      hover(g, `<b>${a.arm}</b><br>follows the ${n}: <b>${(v * 100).toFixed(1)}%</b>` +
+        (a.identity_frame ? "<br><i>this arm leaves every patch showing what it showed, so the two are the same question</i>" : ""));
+      s.appendChild(g);
+    });
+    s.appendChild(el("text", {x: left - 12, y: y + 4, "text-anchor": "end", class: "lab"},
+      a.arm.replace(/_/g, " ") + (a.identity_frame ? " †" : "")));
+  });
+  s.appendChild(el("text", {x: left - 12, y: h - 10, "text-anchor": "end", class: "cap"},
+    "† same question twice"));
+  table(document.getElementById("f7-table"), ["arm", "follows the grid slot", "follows the content"],
+    arms.map(a => [a.arm, (a.follow_slot * 100).toFixed(1) + "%",
+      (a.follow_content * 100).toFixed(1) + "%"]));
+}
+
+/* Fig 8 -- the hypothesis scorecard */
+function f8() {
+  const host = document.getElementById("f8");
+  host.innerHTML = cold.hypotheses.map(hyp => {
+    const live = hyp.preds.filter(p => p.met !== null);
+    const met = live.filter(p => p.met).length;
+    const tone = met === live.length ? "--good" : met === 0 ? "--critical" : "--warning";
+    const mark = met === live.length ? "✓" : met === 0 ? "✕" : "–";
+    return `<div class="hyp">
+      <div class="name">${hyp.name}
+        <span class="chip" style="margin-left:8px">
+          <span style="color:var(${tone})">${mark}</span> ${met} of ${live.length} predictions met</span></div>
+      <div class="why">${hyp.why.replace(/\n\s*/g, " ")}</div>
+      ${hyp.preds.map(p => `<div class="pred">
+        <span style="color:var(${p.met === null ? "--muted" : p.met ? "--good" : "--critical"});width:14px">
+          ${p.met === null ? "·" : p.met ? "✓" : "✕"}</span>
+        <span>${p.text}</span><span class="ev">${p.evidence}</span></div>`).join("")}
+    </div>`;
+  }).join("");
+}
+
+/* Fig 9 -- the budget */
+function f9() {
+  const order = ["first", "pre_image", "vision_start", "image", "vision_end", "post_image"];
+  const names = {first: "the very first token", pre_image: "everything before the picture",
+    vision_start: "<vision_start>", image: "THE PICTURE", vision_end: "<vision_end>",
+    post_image: "the question + assistant header"};
+  const w = 760, left = 250, right = 60, top = 8, H = 30;
+  const h = top + order.length * H + 12;
+  const s = svg(document.getElementById("f9"), w, h);
+  const max = Math.max(...order.map(k => cold.budget[k])) * 1.1;
+  const x = v => left + (v / max) * (w - left - right);
+  order.forEach((k, i) => {
+    const v = cold.budget[k], y = top + i * H, isImg = k === "image";
+    const p = el("path", {d: hbar(x(0), Math.max(x(0) + 1, x(v)), y + 6, 17),
+      fill: isImg ? css("--series-2") : css("--series-1"), opacity: isImg ? 1 : .55});
+    hover(p, `<b>${names[k]}</b><br><b>${(v * 100).toFixed(1)}%</b> of an attention row`);
+    s.appendChild(p);
+    s.appendChild(el("text", {x: left - 10, y: y + 19, "text-anchor": "end", class: "lab"}, names[k]));
+    s.appendChild(el("text", {x: x(v) + 8, y: y + 19, class: "val"}, (v * 100).toFixed(1) + "%"));
+  });
+  document.getElementById("f9-note").innerHTML =
+    `The real sink is where the sink literature says it is &mdash; <b>outside the image</b>, on the ` +
+    `first token, at ${(cold.budget.first * 100).toFixed(0)}%. The picture gets ` +
+    `${(cold.budget.image * 100).toFixed(1)}%, and every enrichment above is a statement about how ` +
+    `the model divides up that slice. Note that "everything before the picture" contains the first ` +
+    `token, so these do not sum to 1.`;
+  table(document.getElementById("f9-table"), ["span", "share of an attention row"],
+    order.map(k => [names[k], (cold.budget[k] * 100).toFixed(2) + "%"]));
+}
+
+/* Dark mode is SELECTED, not an automatic flip: its own steps from the same ramps,
+   validated against the dark surface. The charts read colours out of CSS custom properties
+   at draw time, so switching means re-drawing -- reloading would throw the choice away. */
+function renderAll() { [kpis, f1, f2, f3, f4, f5, f6, f7, f8, f9].forEach(fn => fn()); }
+
+const stored = localStorage.getItem("sl-theme");
+if (stored) document.documentElement.setAttribute("data-theme", stored);
+else document.documentElement.removeAttribute("data-theme");   // follow the OS
+
+function themeLabel() {
+  const dark = getComputedStyle(document.getElementById("root"))
+    .getPropertyValue("--surface-1").trim().toLowerCase().startsWith("#1a");
+  document.getElementById("theme").textContent = dark ? "Light" : "Dark";
+}
+document.getElementById("theme").addEventListener("click", () => {
+  const dark = getComputedStyle(document.getElementById("root"))
+    .getPropertyValue("--surface-1").trim().toLowerCase().startsWith("#1a");
+  const next = dark ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  localStorage.setItem("sl-theme", next);
+  themeLabel(); renderAll();
+});
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+  if (!localStorage.getItem("sl-theme")) { themeLabel(); renderAll(); }
+});
+
+document.querySelectorAll("button[data-table]").forEach(b => {
+  b.addEventListener("click", () => {
+    const id = b.dataset.table;
+    const chart = document.getElementById(id), tbl = document.getElementById(id + "-table");
+    const showing = tbl.classList.toggle("hidden");
+    chart.classList.toggle("hidden", !showing);
+    b.textContent = showing ? "Table" : "Chart";
+  });
+});
+
+themeLabel();
+renderAll();
+</script>
+</body>
+</html>
