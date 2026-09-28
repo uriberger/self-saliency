@@ -1,0 +1,255 @@
+{
+  "results": {
+    "pope": {
+      "alias": "pope",
+      "pope_accuracy,none": 0.889,
+      "pope_accuracy_stderr,none": "N/A",
+      "pope_accuracy_stderr_clt,none": 0.0033114274456750186,
+      "pope_accuracy_stderr_clustered,none": "N/A",
+      "pope_precision,none": 0.9135364989369241,
+      "pope_precision_stderr,none": "N/A",
+      "pope_precision_stderr_clt,none": 0.0033114274456750186,
+      "pope_precision_stderr_clustered,none": "N/A",
+      "pope_recall,none": 0.8593333333333333,
+      "pope_recall_stderr,none": "N/A",
+      "pope_recall_stderr_clt,none": 0.0033114274456750186,
+      "pope_recall_stderr_clustered,none": "N/A",
+      "pope_f1_score,none": 0.8856063208519409,
+      "pope_f1_score_stderr,none": "N/A",
+      "pope_f1_score_stderr_clt,none": 0.0033114274456750186,
+      "pope_f1_score_stderr_clustered,none": "N/A",
+      "pope_yes_ratio,none": 0.5,
+      "pope_yes_ratio_stderr,none": "N/A",
+      "pope_yes_ratio_stderr_clt,none": 0.0033114274456750186,
+      "pope_yes_ratio_stderr_clustered,none": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "pope": []
+  },
+  "configs": {
+    "pope": {
+      "task": "pope",
+      "dataset_path": "lmms-lab/POPE",
+      "dataset_kwargs": {
+        "token": true
+      },
+      "test_split": "test",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function pope_doc_to_visual at 0x1552481a8b80>",
+      "doc_to_text": "<function pope_doc_to_text at 0x1552481a9620>",
+      "doc_to_target": "answer",
+      "process_results": "<function pope_process_results at 0x1552481aa3e0>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "pope_accuracy",
+          "aggregation": "<function pope_aggregate_accuracy at 0x1552481aade0>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "pope_precision",
+          "aggregation": "<function pope_aggregate_precision at 0x155243fcf560>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "pope_recall",
+          "aggregation": "<function pope_aggregate_recall at 0x1552501e9580>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "pope_f1_score",
+          "aggregation": "<function pope_aggregate_f1_score at 0x154da361c680>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "pope_yes_ratio",
+          "aggregation": "<function pope_aggregate_yes_ratio at 0x154da361cea0>",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_new_tokens": 4096,
+        "temperature": 0.0,
+        "top_p": 1.0,
+        "num_beams": 1,
+        "do_sample": false,
+        "until": [
+          "\n\n"
+        ],
+        "repetition_penalty": 1.05
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "metadata": [
+        {
+          "version": 0.0
+        }
+      ],
+      "lmms_eval_specific_kwargs": {
+        "default": {
+          "pre_prompt": "",
+          "post_prompt": "\nAnswer the question using a single word or phrase."
+        },
+        "plm": {
+          "pre_prompt": "",
+          "post_prompt": "\nYour response must be concise."
+        },
+        "pre_prompt": "",
+        "post_prompt": "\nAnswer the question using a single word or phrase."
+      }
+    }
+  },
+  "versions": {
+    "pope": "Yaml"
+  },
+  "n-shot": {
+    "pope": 0
+  },
+  "higher_is_better": {
+    "pope": {
+      "pope_accuracy": true,
+      "pope_precision": true,
+      "pope_recall": true,
+      "pope_f1_score": true,
+      "pope_yes_ratio": true
+    }
+  },
+  "n-samples": {
+    "pope": {
+      "original": 9000,
+      "effective": 9000
+    }
+  },
+  "config": {
+    "model": "qwen3_vl",
+    "model_args": "pretrained=/home/uberger/scratch/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-overlap__wov0.4_2head_trmean_merged",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl.Qwen3_VL (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_overlap__wov0_4_2head_trmean_merged_mnt4096_r1/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096,
+      "repetition_penalty": 1.05
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl",
+      "tasks": "pope",
+      "model_args": "pretrained=/home/uberger/scratch/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-overlap__wov0.4_2head_trmean_merged",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_overlap__wov0_4_2head_trmean_merged_mnt4096_r1",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_overlap__wov0_4_2head_trmean_merged_mnt4096_r1/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096,repetition_penalty=1.05",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_overlap__wov0_4_2head_trmean_merged_mnt4096_r1",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "eca4a80",
+  "git_branch": "main",
+  "lmms_eval_version": "main@eca4a80",
+  "date": "20260726_111832",
+  "throughput": {
+    "total_gen_tokens": 221202,
+    "total_elapsed_time": 4449.324719905853,
+    "avg_speed": 49.71585890559154,
+    "avg_rank": 0.0
+  },
+  "usage": {},
+  "efficiency": {
+    "by_task": {
+      "pope": {
+        "docs": 9000.0,
+        "docs_with_token_counts": 9000.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 856624.0,
+        "total_tokens": 856624.0,
+        "total_correct_score": 8001.0,
+        "avg_output_tokens_per_sample": 95.18044444444445,
+        "tokens_per_correct_answer": 107.06461692288464
+      }
+    },
+    "overall": {
+      "docs": 9000.0,
+      "docs_with_token_counts": 9000.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 856624.0,
+      "total_tokens": 856624.0,
+      "total_correct_score": 8001.0,
+      "avg_output_tokens_per_sample": 95.18044444444445,
+      "tokens_per_correct_answer": 107.06461692288464
+    }
+  },
+  "task_hashes": {
+    "pope": "60c35fa4f4c9d5fcbfb62ea39da88a709d0396cf53ddb30fbfff08a6c0179f97"
+  },
+  "model_source": "qwen3_vl",
+  "model_name": "/home/uberger/scratch/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-overlap__wov0.4_2head_trmean_merged",
+  "model_name_sanitized": "checkpoint__grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-overlap__wov0.4_2head_trmean_merged",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 263362.609779071,
+  "end_time": 267994.318436139,
+  "total_evaluation_time_seconds": "4631.708657067968"
+}

@@ -1,0 +1,209 @@
+{
+  "results": {
+    "algopuzzlevqa": {
+      "alias": "algopuzzlevqa",
+      "exact_match,none": 0.38722222222222225,
+      "exact_match_stderr,none": 0.011484604888210239,
+      "exact_match_stderr_clt,none": 0.011484604888210239,
+      "exact_match_stderr_clustered,none": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "algopuzzlevqa": []
+  },
+  "configs": {
+    "algopuzzlevqa": {
+      "task": "algopuzzlevqa",
+      "dataset_path": "declare-lab/AlgoPuzzleVQA",
+      "dataset_kwargs": {
+        "token": true
+      },
+      "test_split": "data",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function algopuzzlevqa_doc_to_visual at 0x155250590f40>",
+      "doc_to_text": "<function algopuzzlevqa_doc_to_text at 0x155250591440>",
+      "doc_to_target": "answer",
+      "process_results": "<function algopuzzlevqa_process_results at 0x155250591620>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_new_tokens": 4096,
+        "until": [
+          "\n\n"
+        ],
+        "repetition_penalty": 1.05
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "metadata": [
+        {
+          "version": 0.0
+        }
+      ],
+      "lmms_eval_specific_kwargs": {
+        "default": {
+          "pre_prompt": "",
+          "post_prompt": "\nAnswer with the option's letter from the given choices directly."
+        },
+        "qwen3_vl": {
+          "pre_prompt": "Question: ",
+          "post_prompt": "\nAnswer with the option letter only."
+        }
+      }
+    }
+  },
+  "versions": {
+    "algopuzzlevqa": "Yaml"
+  },
+  "n-shot": {
+    "algopuzzlevqa": 0
+  },
+  "higher_is_better": {
+    "algopuzzlevqa": {
+      "exact_match": true
+    }
+  },
+  "n-samples": {
+    "algopuzzlevqa": {
+      "original": 1800,
+      "effective": 1800
+    }
+  },
+  "config": {
+    "model": "qwen3_vl",
+    "model_args": "pretrained=/home/uberger/scratch/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-saliency-r1-qwen3_merged",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl.Qwen3_VL (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_saliency_r1_qwen3_merged_mnt4096_r1/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096,
+      "repetition_penalty": 1.05
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl",
+      "tasks": "algopuzzlevqa",
+      "model_args": "pretrained=/home/uberger/scratch/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-saliency-r1-qwen3_merged",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_saliency_r1_qwen3_merged_mnt4096_r1",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_saliency_r1_qwen3_merged_mnt4096_r1/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096,repetition_penalty=1.05",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_saliency_r1_qwen3_merged_mnt4096_r1",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "9f8009e",
+  "git_branch": "main",
+  "lmms_eval_version": "main@9f8009e",
+  "date": "20260723_034029",
+  "throughput": {
+    "total_gen_tokens": 402786,
+    "total_elapsed_time": 8609.082939863205,
+    "avg_speed": 46.78616791283929,
+    "avg_rank": 0.0
+  },
+  "usage": {},
+  "efficiency": {
+    "by_task": {
+      "algopuzzlevqa": {
+        "docs": 1800.0,
+        "docs_with_token_counts": 967.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 1806245.0,
+        "total_tokens": 1806245.0,
+        "total_correct_score": 697.0,
+        "avg_output_tokens_per_sample": 1867.8852119958635,
+        "tokens_per_correct_answer": 2591.4562410329986
+      }
+    },
+    "overall": {
+      "docs": 1800.0,
+      "docs_with_token_counts": 967.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 1806245.0,
+      "total_tokens": 1806245.0,
+      "total_correct_score": 697.0,
+      "avg_output_tokens_per_sample": 1867.8852119958635,
+      "tokens_per_correct_answer": 2591.4562410329986
+    }
+  },
+  "task_hashes": {
+    "algopuzzlevqa": "d9d362eed96338ca997bac02dd5e20bf35dbc0a8d6ab47b220280d8bfeea7273"
+  },
+  "model_source": "qwen3_vl",
+  "model_name": "/home/uberger/scratch/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-saliency-r1-qwen3_merged",
+  "model_name_sanitized": "checkpoint__grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-saliency-r1-qwen3_merged",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 226125.767109513,
+  "end_time": 236455.728040412,
+  "total_evaluation_time_seconds": "10329.960930899018"
+}

@@ -1,0 +1,301 @@
+{
+  "results": {
+    "omnispatial_test": {
+      "alias": "omnispatial_test",
+      "omnispatial_motion_analysis,none": 0.5780346820809249,
+      "omnispatial_motion_analysis_stderr,none": "N/A",
+      "omnispatial_motion_analysis_stderr_clt,none": "N/A",
+      "omnispatial_motion_analysis_stderr_clustered,none": "N/A",
+      "omnispatial,none": 0.47423352902804955,
+      "omnispatial_stderr,none": "N/A",
+      "omnispatial_stderr_clt,none": "N/A",
+      "omnispatial_stderr_clustered,none": "N/A",
+      "omnispatial_manipulation,none": 0.6351351351351351,
+      "omnispatial_manipulation_stderr,none": "N/A",
+      "omnispatial_manipulation_stderr_clt,none": "N/A",
+      "omnispatial_manipulation_stderr_clustered,none": "N/A",
+      "omnispatial_traffic_analysis,none": 0.5294117647058824,
+      "omnispatial_traffic_analysis_stderr,none": "N/A",
+      "omnispatial_traffic_analysis_stderr_clt,none": "N/A",
+      "omnispatial_traffic_analysis_stderr_clustered,none": "N/A",
+      "omnispatial_localization,none": 0.6476190476190476,
+      "omnispatial_localization_stderr,none": "N/A",
+      "omnispatial_localization_stderr_clt,none": "N/A",
+      "omnispatial_localization_stderr_clustered,none": "N/A",
+      "omnispatial_geospatial_strategy,none": 0.5,
+      "omnispatial_geospatial_strategy_stderr,none": "N/A",
+      "omnispatial_geospatial_strategy_stderr_clt,none": "N/A",
+      "omnispatial_geospatial_strategy_stderr_clustered,none": "N/A",
+      "omnispatial_geometric_reasoning,none": 0.2967741935483871,
+      "omnispatial_geometric_reasoning_stderr,none": "N/A",
+      "omnispatial_geometric_reasoning_stderr_clt,none": "N/A",
+      "omnispatial_geometric_reasoning_stderr_clustered,none": "N/A",
+      "omnispatial_pattern_recognition,none": 0.32989690721649484,
+      "omnispatial_pattern_recognition_stderr,none": "N/A",
+      "omnispatial_pattern_recognition_stderr_clt,none": "N/A",
+      "omnispatial_pattern_recognition_stderr_clustered,none": "N/A",
+      "omnispatial_allocentric,none": 0.3404255319148936,
+      "omnispatial_allocentric_stderr,none": "N/A",
+      "omnispatial_allocentric_stderr_clt,none": "N/A",
+      "omnispatial_allocentric_stderr_clustered,none": "N/A",
+      "omnispatial_hypothetical,none": 0.43373493975903615,
+      "omnispatial_hypothetical_stderr,none": "N/A",
+      "omnispatial_hypothetical_stderr_clt,none": "N/A",
+      "omnispatial_hypothetical_stderr_clustered,none": "N/A",
+      "omnispatial_egocentric,none": 0.6862745098039216,
+      "omnispatial_egocentric_stderr,none": "N/A",
+      "omnispatial_egocentric_stderr_clt,none": "N/A",
+      "omnispatial_egocentric_stderr_clustered,none": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "omnispatial_test": []
+  },
+  "configs": {
+    "omnispatial_test": {
+      "task": "omnispatial_test",
+      "dataset_path": "pangyyyyy/OmniSpatial",
+      "dataset_kwargs": {
+        "token": true,
+        "cache_dir": "omnispatial"
+      },
+      "test_split": "test",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function omnispatial_doc_to_visual at 0x15525001ac00>",
+      "doc_to_text": "<function omnispatial_doc_to_text at 0x155250074cc0>",
+      "doc_to_target": "gt",
+      "process_results": "<function omnispatial_process_results at 0x155243ff9ee0>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "omnispatial",
+          "aggregation": "<function omnispatial_aggregate_results at 0x155243ffa3e0>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "omnispatial_motion_analysis",
+          "aggregation": "<function omnispatial_group_aggregate_results at 0x15524a1ed300>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "omnispatial_manipulation",
+          "aggregation": "<function omnispatial_group_aggregate_results at 0x15524a1ef060>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "omnispatial_traffic_analysis",
+          "aggregation": "<function omnispatial_group_aggregate_results at 0x15524a1ef4c0>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "omnispatial_localization",
+          "aggregation": "<function omnispatial_group_aggregate_results at 0x154d9fdf1080>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "omnispatial_geospatial_strategy",
+          "aggregation": "<function omnispatial_group_aggregate_results at 0x154d9fdf1b20>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "omnispatial_geometric_reasoning",
+          "aggregation": "<function omnispatial_group_aggregate_results at 0x154d9fdf2840>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "omnispatial_pattern_recognition",
+          "aggregation": "<function omnispatial_group_aggregate_results at 0x15524a1ed4e0>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "omnispatial_allocentric",
+          "aggregation": "<function omnispatial_group_aggregate_results at 0x15524a1ee8e0>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "omnispatial_hypothetical",
+          "aggregation": "<function omnispatial_group_aggregate_results at 0x155243ff8400>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "omnispatial_egocentric",
+          "aggregation": "<function omnispatial_group_aggregate_results at 0x155243ff9d00>",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_new_tokens": 4096,
+        "temperature": 0.0,
+        "top_p": 1.0,
+        "num_beams": 1,
+        "do_sample": false,
+        "until": [
+          "\n\n"
+        ]
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "metadata": {
+        "prompt_type": "manual_cot",
+        "eval_type": "re"
+      }
+    }
+  },
+  "versions": {
+    "omnispatial_test": "Yaml"
+  },
+  "n-shot": {
+    "omnispatial_test": 0
+  },
+  "higher_is_better": {
+    "omnispatial_test": {
+      "omnispatial": true,
+      "omnispatial_motion_analysis": true,
+      "omnispatial_manipulation": true,
+      "omnispatial_traffic_analysis": true,
+      "omnispatial_localization": true,
+      "omnispatial_geospatial_strategy": true,
+      "omnispatial_geometric_reasoning": true,
+      "omnispatial_pattern_recognition": true,
+      "omnispatial_allocentric": true,
+      "omnispatial_hypothetical": true,
+      "omnispatial_egocentric": true
+    }
+  },
+  "n-samples": {
+    "omnispatial_test": {
+      "original": 1533,
+      "effective": 1533
+    }
+  },
+  "config": {
+    "model": "qwen3_vl",
+    "model_args": "pretrained=Qwen/Qwen3-VL-8B-Instruct",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl.Qwen3_VL (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl",
+      "tasks": "omnispatial_test",
+      "model_args": "pretrained=Qwen/Qwen3-VL-8B-Instruct",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "2f59b2f",
+  "git_branch": "main",
+  "lmms_eval_version": "main@2f59b2f",
+  "date": "20260724_221706",
+  "throughput": {
+    "total_gen_tokens": 149818,
+    "total_elapsed_time": 2858.138042449951,
+    "avg_speed": 52.418042017165256,
+    "avg_rank": 0.0
+  },
+  "usage": {},
+  "efficiency": {
+    "by_task": {
+      "omnispatial_test": {
+        "docs": 1533.0,
+        "docs_with_token_counts": 439.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 557427.0,
+        "total_tokens": 557427.0,
+        "total_correct_score": 0.0,
+        "avg_output_tokens_per_sample": 1269.7653758542142,
+        "tokens_per_correct_answer": null
+      }
+    },
+    "overall": {
+      "docs": 1533.0,
+      "docs_with_token_counts": 439.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 557427.0,
+      "total_tokens": 557427.0,
+      "total_correct_score": 0.0,
+      "avg_output_tokens_per_sample": 1269.7653758542142,
+      "tokens_per_correct_answer": null
+    }
+  },
+  "task_hashes": {
+    "omnispatial_test": "a0962bcc70ed176ad972f2a59bff894f114eabd8094e94f635f2178821787fbf"
+  },
+  "model_source": "qwen3_vl",
+  "model_name": "Qwen/Qwen3-VL-8B-Instruct",
+  "model_name_sanitized": "Qwen__Qwen3-VL-8B-Instruct",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 112189.572262597,
+  "end_time": 115250.622986054,
+  "total_evaluation_time_seconds": "3061.0507234570105"
+}

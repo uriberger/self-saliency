@@ -1,0 +1,224 @@
+{
+  "results": {
+    "wemath_testmini_reasoning": {
+      "alias": "wemath_testmini_reasoning",
+      "wemath_loose,none": "68.57%",
+      "wemath_loose_stderr,none": "N/A",
+      "wemath_loose_stderr_clt,none": "N/A",
+      "wemath_loose_stderr_clustered,none": "N/A",
+      "wemath_strict,none": "51.62%",
+      "wemath_strict_stderr,none": "N/A",
+      "wemath_strict_stderr_clt,none": "N/A",
+      "wemath_strict_stderr_clustered,none": "N/A",
+      "acc_score,none": 0.7425287356321839,
+      "acc_score_stderr,none": 0.010485067351885691,
+      "acc_score_stderr_clt,none": 0.010485067351885691,
+      "acc_score_stderr_clustered,none": "N/A",
+      "format_score,none": 0.006436781609195403,
+      "format_score_stderr,none": 0.0017138600725854027,
+      "format_score_stderr_clt,none": 0.0017138600725854027,
+      "format_score_stderr_clustered,none": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "wemath_testmini_reasoning": []
+  },
+  "configs": {
+    "wemath_testmini_reasoning": {
+      "task": "wemath_testmini_reasoning",
+      "dataset_path": "We-Math/We-Math",
+      "test_split": "testmini",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function wemath_doc_to_visual at 0x154df835a340>",
+      "doc_to_text": "<function wemath_doc_to_text_cot at 0x154df8359e40>",
+      "doc_to_target": "answer",
+      "doc_to_messages": "<function wemath_doc_to_messages_cot at 0x154df8359b20>",
+      "process_results": "<function wemath_reasoning_process_results at 0x154df835a8e0>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc_score",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "format_score",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "wemath_loose",
+          "aggregation": "<function wemath_aggregate_results_loose at 0x154df835ae80>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "wemath_strict",
+          "aggregation": "<function wemath_aggregate_results_strict at 0x154df835b380>",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_new_tokens": 4096,
+        "until": [
+          "\n\n"
+        ],
+        "repetition_penalty": 1.05
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "auto_strip_thinking": false
+    }
+  },
+  "versions": {
+    "wemath_testmini_reasoning": "Yaml"
+  },
+  "n-shot": {
+    "wemath_testmini_reasoning": 0
+  },
+  "higher_is_better": {
+    "wemath_testmini_reasoning": {
+      "acc_score": true,
+      "format_score": true,
+      "wemath_loose": true,
+      "wemath_strict": true
+    }
+  },
+  "n-samples": {
+    "wemath_testmini_reasoning": {
+      "original": 1740,
+      "effective": 1740
+    }
+  },
+  "config": {
+    "model": "qwen3_vl",
+    "model_args": "pretrained=/home/uberger/scratch/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-no-saliency_saliency_r1_8k_merged",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl.Qwen3_VL (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_no_saliency_saliency_r1_8k_merged_mnt4096_r1/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096,
+      "repetition_penalty": 1.05
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl",
+      "tasks": "wemath_testmini_reasoning",
+      "model_args": "pretrained=/home/uberger/scratch/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-no-saliency_saliency_r1_8k_merged",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_no_saliency_saliency_r1_8k_merged_mnt4096_r1",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_no_saliency_saliency_r1_8k_merged_mnt4096_r1/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096,repetition_penalty=1.05",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_no_saliency_saliency_r1_8k_merged_mnt4096_r1",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "d7db8e3",
+  "git_branch": "main",
+  "lmms_eval_version": "main@d7db8e3",
+  "date": "20260916_222312",
+  "throughput": {
+    "total_gen_tokens": 126239,
+    "total_elapsed_time": 2420.2550778388977,
+    "avg_speed": 52.15937822253089,
+    "avg_rank": 0.0
+  },
+  "usage": {},
+  "efficiency": {
+    "by_task": {
+      "wemath_testmini_reasoning": {
+        "docs": 1740.0,
+        "docs_with_token_counts": 1740.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 1091757.0,
+        "total_tokens": 1091757.0,
+        "total_correct_score": 1292.0,
+        "avg_output_tokens_per_sample": 627.446551724138,
+        "tokens_per_correct_answer": 845.0131578947369
+      }
+    },
+    "overall": {
+      "docs": 1740.0,
+      "docs_with_token_counts": 1740.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 1091757.0,
+      "total_tokens": 1091757.0,
+      "total_correct_score": 1292.0,
+      "avg_output_tokens_per_sample": 627.446551724138,
+      "tokens_per_correct_answer": 845.0131578947369
+    }
+  },
+  "task_hashes": {
+    "wemath_testmini_reasoning": "a6889e6f90bf137bd7911db576c941785be14e332b3cea7e7a56d66d74d29a7b"
+  },
+  "model_source": "qwen3_vl",
+  "model_name": "/home/uberger/scratch/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-no-saliency_saliency_r1_8k_merged",
+  "model_name_sanitized": "checkpoint__grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-no-saliency_saliency_r1_8k_merged",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 1059848.290475452,
+  "end_time": 1063167.077586624,
+  "total_evaluation_time_seconds": "3318.787111171987",
+  "reasoning_parser_version": "2026-09-16-mcq-cue"
+}

@@ -1,0 +1,221 @@
+{
+  "results": {
+    "realworldqa": {
+      "alias": "realworldqa",
+      "exact_match,none": 0.6836601307189543,
+      "exact_match_stderr,none": 0.016824819471281883,
+      "exact_match_stderr_clt,none": 0.016824819471281883,
+      "exact_match_stderr_clustered,none": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "realworldqa": []
+  },
+  "configs": {
+    "realworldqa": {
+      "task": "realworldqa",
+      "tag": [
+        "public_eval_qwen3_5_family"
+      ],
+      "dataset_path": "lmms-lab-encoder/RealWorldQA",
+      "dataset_kwargs": {
+        "token": true
+      },
+      "test_split": "test",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function realworldqa_doc_to_visual at 0x155243f800e0>",
+      "doc_to_text": "<function realworldqa_doc_to_text at 0x155243f80040>",
+      "doc_to_target": "answer",
+      "process_results": "<function realworldqa_process_results at 0x155250219760>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_new_tokens": 4096,
+        "temperature": 0.0,
+        "top_p": 1.0,
+        "num_beams": 1,
+        "do_sample": false,
+        "until": [
+          "\n\n"
+        ]
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "metadata": [
+        {
+          "version": 0.0
+        }
+      ],
+      "lmms_eval_specific_kwargs": {
+        "default": {
+          "pre_prompt": "",
+          "post_prompt": ""
+        },
+        "gpt4v": {
+          "pre_prompt": "",
+          "post_prompt": ""
+        },
+        "xcomposer2_4khd": {
+          "pre_prompt": "[UNUSED_TOKEN_146]user\nQuestion: ",
+          "post_prompt": "[UNUSED_TOKEN_145]\n[UNUSED_TOKEN_146]assistant\nThe answer is"
+        },
+        "pre_prompt": "",
+        "post_prompt": ""
+      },
+      "auto_strip_thinking": false
+    }
+  },
+  "versions": {
+    "realworldqa": "Yaml"
+  },
+  "n-shot": {
+    "realworldqa": 0
+  },
+  "higher_is_better": {
+    "realworldqa": {
+      "exact_match": true
+    }
+  },
+  "n-samples": {
+    "realworldqa": {
+      "original": 765,
+      "effective": 765
+    }
+  },
+  "config": {
+    "model": "qwen3_vl_vga",
+    "model_args": "pretrained=Qwen/Qwen3-VL-8B-Instruct",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl_vga.Qwen3_VL_VGA (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl_vga",
+      "tasks": "realworldqa",
+      "model_args": "pretrained=Qwen/Qwen3-VL-8B-Instruct",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "31fffc7",
+  "git_branch": "main",
+  "lmms_eval_version": "main@31fffc7",
+  "date": "20260912_011205",
+  "throughput": {
+    "total_gen_tokens": 384,
+    "total_elapsed_time": 34.230520486831665,
+    "avg_speed": 11.21805904609961,
+    "avg_rank": 0.0
+  },
+  "usage": {},
+  "efficiency": {
+    "by_task": {
+      "realworldqa": {
+        "docs": 765.0,
+        "docs_with_token_counts": 765.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 1540.0,
+        "total_tokens": 1540.0,
+        "total_correct_score": 523.0,
+        "avg_output_tokens_per_sample": 2.0130718954248366,
+        "tokens_per_correct_answer": 2.9445506692160612
+      }
+    },
+    "overall": {
+      "docs": 765.0,
+      "docs_with_token_counts": 765.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 1540.0,
+      "total_tokens": 1540.0,
+      "total_correct_score": 523.0,
+      "avg_output_tokens_per_sample": 2.0130718954248366,
+      "tokens_per_correct_answer": 2.9445506692160612
+    }
+  },
+  "task_hashes": {
+    "realworldqa": "a0d8b4ab58adef2abf20da47c7db7c531912ec84c9639c50dd9a93475c287266"
+  },
+  "model_source": "qwen3_vl_vga",
+  "model_name": "Qwen/Qwen3-VL-8B-Instruct",
+  "model_name_sanitized": "Qwen__Qwen3-VL-8B-Instruct",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 1853848.3945447,
+  "end_time": 1853958.629070741,
+  "total_evaluation_time_seconds": "110.23452604096383"
+}

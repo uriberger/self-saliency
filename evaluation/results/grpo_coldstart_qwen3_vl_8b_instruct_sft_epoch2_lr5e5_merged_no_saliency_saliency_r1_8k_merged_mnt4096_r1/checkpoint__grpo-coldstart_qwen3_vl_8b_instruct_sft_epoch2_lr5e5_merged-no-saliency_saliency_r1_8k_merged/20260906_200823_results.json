@@ -1,0 +1,224 @@
+{
+  "results": {
+    "illusionvqa_soft_localization": {
+      "alias": "illusionvqa_soft_localization",
+      "exact_match,flexible-extract": 0.415,
+      "exact_match_stderr,flexible-extract": 0.015589035185604625,
+      "exact_match_stderr_clt,flexible-extract": 0.015589035185604594,
+      "exact_match_stderr_clustered,flexible-extract": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "illusionvqa_soft_localization": []
+  },
+  "configs": {
+    "illusionvqa_soft_localization": {
+      "task": "illusionvqa_soft_localization",
+      "tag": "illusionvqa",
+      "dataset_path": "csebuetnlp/illusionVQA-Soft-Localization",
+      "test_split": "test",
+      "fewshot_split": "train",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "image",
+      "doc_to_text": "<function illusionvqa_doc_to_text at 0x155244998540>",
+      "doc_to_target": "<function illusionvqa_doc_to_target at 0x155244998c20>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_new_tokens": 4096,
+        "temperature": 0.0,
+        "do_sample": false,
+        "until": [
+          "\n\n"
+        ],
+        "repetition_penalty": 1.05
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "flexible-extract",
+          "filter": [
+            {
+              "function": "<class 'utils.MultiChoiceRegexFilter'>",
+              "group_select": 0,
+              "ignore_case": true,
+              "ignore_punctuation": true,
+              "regex_pattern": "([A-Z])\\."
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "score_key": "score",
+      "lmms_eval_specific_kwargs": {
+        "default": {
+          "prompt_format": "mcq",
+          "pre_prompt": "You'll be given an image, an instruction and some options. You have to select the correct one. Do not explain your reasoning. Answer with only the letter which corresponds to the correct option. Do not repeat the entire answer.",
+          "post_prompt": ""
+        },
+        "prompt_format": "mcq",
+        "pre_prompt": "You'll be given an image, an instruction and some options. You have to select the correct one. Do not explain your reasoning. Answer with only the letter which corresponds to the correct option. Do not repeat the entire answer.",
+        "post_prompt": ""
+      },
+      "auto_strip_thinking": false
+    }
+  },
+  "versions": {
+    "illusionvqa_soft_localization": "Yaml"
+  },
+  "n-shot": {
+    "illusionvqa_soft_localization": 0
+  },
+  "higher_is_better": {
+    "illusionvqa_soft_localization": {
+      "exact_match": true
+    }
+  },
+  "n-samples": {
+    "illusionvqa_soft_localization": {
+      "original": 1000,
+      "effective": 1000
+    }
+  },
+  "config": {
+    "model": "qwen3_vl",
+    "model_args": "pretrained=/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-no-saliency_saliency_r1_8k_merged",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl.Qwen3_VL (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_no_saliency_saliency_r1_8k_merged_mnt4096_r1/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096,
+      "repetition_penalty": 1.05
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl",
+      "tasks": "illusionvqa_soft_localization",
+      "model_args": "pretrained=/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-no-saliency_saliency_r1_8k_merged",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_no_saliency_saliency_r1_8k_merged_mnt4096_r1",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_no_saliency_saliency_r1_8k_merged_mnt4096_r1/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096,repetition_penalty=1.05",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_no_saliency_saliency_r1_8k_merged_mnt4096_r1",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "2c7ac24",
+  "git_branch": "main",
+  "lmms_eval_version": "main@2c7ac24",
+  "date": "20260906_200823",
+  "throughput": {
+    "total_gen_tokens": 57939,
+    "total_elapsed_time": 1128.5263929367065,
+    "avg_speed": 51.34040316879812,
+    "avg_rank": 0.0
+  },
+  "usage": {},
+  "efficiency": {
+    "by_task": {
+      "illusionvqa_soft_localization": {
+        "docs": 1000.0,
+        "docs_with_token_counts": 1000.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 225716.0,
+        "total_tokens": 225716.0,
+        "total_correct_score": 415.0,
+        "avg_output_tokens_per_sample": 225.716,
+        "tokens_per_correct_answer": 543.8939759036144
+      }
+    },
+    "overall": {
+      "docs": 1000.0,
+      "docs_with_token_counts": 1000.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 225716.0,
+      "total_tokens": 225716.0,
+      "total_correct_score": 415.0,
+      "avg_output_tokens_per_sample": 225.716,
+      "tokens_per_correct_answer": 543.8939759036144
+    }
+  },
+  "task_hashes": {
+    "illusionvqa_soft_localization": "1fb923da4284a8fbf451b3553ce5404d321b69c0b94aa3ad35e7c3afce52f217"
+  },
+  "model_source": "qwen3_vl",
+  "model_name": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-no-saliency_saliency_r1_8k_merged",
+  "model_name_sanitized": "checkpoint__grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-no-saliency_saliency_r1_8k_merged",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 126014.575623381,
+  "end_time": 127220.91037727,
+  "total_evaluation_time_seconds": "1206.3347538890084"
+}

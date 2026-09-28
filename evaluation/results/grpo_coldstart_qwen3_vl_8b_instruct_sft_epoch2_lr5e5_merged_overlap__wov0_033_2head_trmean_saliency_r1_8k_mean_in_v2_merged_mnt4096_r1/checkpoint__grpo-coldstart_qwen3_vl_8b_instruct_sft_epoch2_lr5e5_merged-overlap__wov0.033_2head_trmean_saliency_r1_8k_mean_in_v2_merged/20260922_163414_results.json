@@ -1,0 +1,274 @@
+{
+  "results": {
+    "mmstar": {
+      "alias": "mmstar",
+      "coarse perception,none": 0.7705887874041615,
+      "coarse perception_stderr,none": "N/A",
+      "coarse perception_stderr_clt,none": 0.027513851933031314,
+      "coarse perception_stderr_clustered,none": "N/A",
+      "average,none": 0.7026291560370737,
+      "average_stderr,none": "N/A",
+      "average_stderr_clt,none": 0.011880660758842967,
+      "average_stderr_clustered,none": "N/A",
+      "fine-grained perception,none": 0.6218005404077622,
+      "fine-grained perception_stderr,none": "N/A",
+      "fine-grained perception_stderr_clt,none": 0.03127799950463661,
+      "fine-grained perception_stderr_clustered,none": "N/A",
+      "instance reasoning,none": 0.7681551530772263,
+      "instance reasoning_stderr,none": "N/A",
+      "instance reasoning_stderr_clt,none": 0.02690933759495385,
+      "instance reasoning_stderr_clustered,none": "N/A",
+      "logical reasoning,none": 0.7306830683068307,
+      "logical reasoning_stderr,none": "N/A",
+      "logical reasoning_stderr_clt,none": 0.02736749750486359,
+      "logical reasoning_stderr_clustered,none": "N/A",
+      "math,none": 0.7894279604383855,
+      "math_stderr,none": "N/A",
+      "math_stderr_clt,none": 0.02534897002097912,
+      "math_stderr_clustered,none": "N/A",
+      "science & technology,none": 0.5351194265880758,
+      "science & technology_stderr,none": "N/A",
+      "science & technology_stderr_clt,none": 0.03162125257572558,
+      "science & technology_stderr_clustered,none": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "mmstar": []
+  },
+  "configs": {
+    "mmstar": {
+      "task": "mmstar",
+      "tag": [
+        "public_eval_qwen3_5_family"
+      ],
+      "dataset_path": "Lin-Chen/MMStar",
+      "dataset_kwargs": {
+        "token": true
+      },
+      "test_split": "val",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function mmstar_doc_to_visual at 0x1554344d4720>",
+      "doc_to_text": "<function mmstar_doc_to_text at 0x1554344d62a0>",
+      "doc_to_target": "answer",
+      "process_results": "<function mmstar_process_results at 0x1554344d6ac0>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "coarse perception",
+          "aggregation": "<function mmstar_aggregate_results at 0x1554343bb600>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "fine-grained perception",
+          "aggregation": "<function mmstar_aggregate_results at 0x15545faa7060>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "instance reasoning",
+          "aggregation": "<function mmstar_aggregate_results at 0x1554344742c0>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "logical reasoning",
+          "aggregation": "<function mmstar_aggregate_results at 0x155434475260>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "science & technology",
+          "aggregation": "<function mmstar_aggregate_results at 0x155434475bc0>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "math",
+          "aggregation": "<function mmstar_aggregate_results at 0x155434476520>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "average",
+          "aggregation": "<function mmstar_aggregate_results at 0x155434476e80>",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "\n\n"
+        ],
+        "do_sample": false,
+        "max_new_tokens": 4096,
+        "repetition_penalty": 1.05
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "metadata": [
+        {
+          "version": 0.0
+        }
+      ],
+      "lmms_eval_specific_kwargs": {
+        "default": {
+          "pre_prompt": "",
+          "post_prompt": "\nAnswer with the option's letter from the given choices directly"
+        },
+        "qwen3_vl": {
+          "pre_prompt": "Question: ",
+          "post_prompt": "Answer with the option letter only."
+        }
+      },
+      "auto_strip_thinking": false
+    }
+  },
+  "versions": {
+    "mmstar": "Yaml"
+  },
+  "n-shot": {
+    "mmstar": 0
+  },
+  "higher_is_better": {
+    "mmstar": {
+      "coarse perception": true,
+      "fine-grained perception": true,
+      "instance reasoning": true,
+      "logical reasoning": true,
+      "science & technology": true,
+      "math": true,
+      "average": true
+    }
+  },
+  "n-samples": {
+    "mmstar": {
+      "original": 1500,
+      "effective": 1500
+    }
+  },
+  "config": {
+    "model": "qwen3_vl",
+    "model_args": "pretrained=/home/uberger/scratch/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-overlap__wov0.033_2head_trmean_saliency_r1_8k_mean_in_v2_merged",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl.Qwen3_VL (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_overlap__wov0_033_2head_trmean_saliency_r1_8k_mean_in_v2_merged_mnt4096_r1/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096,
+      "repetition_penalty": 1.05
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl",
+      "tasks": "mmstar",
+      "model_args": "pretrained=/home/uberger/scratch/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-overlap__wov0.033_2head_trmean_saliency_r1_8k_mean_in_v2_merged",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_overlap__wov0_033_2head_trmean_saliency_r1_8k_mean_in_v2_merged_mnt4096_r1",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_overlap__wov0_033_2head_trmean_saliency_r1_8k_mean_in_v2_merged_mnt4096_r1/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096,repetition_penalty=1.05",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_overlap__wov0_033_2head_trmean_saliency_r1_8k_mean_in_v2_merged_mnt4096_r1",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "31fffc75",
+  "git_branch": "main",
+  "lmms_eval_version": "main@31fffc75",
+  "date": "20260922_163414",
+  "throughput": {
+    "total_gen_tokens": 59314,
+    "total_elapsed_time": 2187.0687913894653,
+    "avg_speed": 27.12031749230771,
+    "avg_rank": 0.0
+  },
+  "usage": {},
+  "efficiency": {
+    "by_task": {
+      "mmstar": {
+        "docs": 1500.0,
+        "docs_with_token_counts": 1500.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 559140.0,
+        "total_tokens": 559140.0,
+        "total_correct_score": 0.0,
+        "avg_output_tokens_per_sample": 372.76,
+        "tokens_per_correct_answer": null
+      }
+    },
+    "overall": {
+      "docs": 1500.0,
+      "docs_with_token_counts": 1500.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 559140.0,
+      "total_tokens": 559140.0,
+      "total_correct_score": 0.0,
+      "avg_output_tokens_per_sample": 372.76,
+      "tokens_per_correct_answer": null
+    }
+  },
+  "task_hashes": {
+    "mmstar": "74585533388c8f519af743fcfa952aa1c2e0ee4d6276c19dbc440b945501266c"
+  },
+  "model_source": "qwen3_vl",
+  "model_name": "/home/uberger/scratch/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-overlap__wov0.033_2head_trmean_saliency_r1_8k_mean_in_v2_merged",
+  "model_name_sanitized": "checkpoint__grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-overlap__wov0.033_2head_trmean_saliency_r1_8k_mean_in_v2_merged",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 189262.523735436,
+  "end_time": 192366.873414902,
+  "total_evaluation_time_seconds": "3104.3496794659877"
+}

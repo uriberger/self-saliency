@@ -1,0 +1,249 @@
+{
+  "results": {
+    "mathverse_testmini_vision_only": {
+      "alias": "mathverse_testmini_vision_only",
+      "gpt_eval_score,none": 0.33756345177664976,
+      "gpt_eval_score_stderr,none": "N/A",
+      "gpt_eval_score_stderr_clt,none": 0.01685630908702165,
+      "gpt_eval_score_stderr_clustered,none": "N/A",
+      "submission,none": null,
+      "submission_stderr,none": "N/A",
+      "submission_stderr_clt,none": "N/A",
+      "submission_stderr_clustered,none": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "mathverse_testmini_vision_only": []
+  },
+  "configs": {
+    "mathverse_testmini_vision_only": {
+      "task": "mathverse_testmini_vision_only",
+      "dataset_path": "CaraJ/MathVerse-lmmseval",
+      "dataset_name": "testmini_version_split",
+      "dataset_kwargs": {
+        "token": false
+      },
+      "test_split": "vision_only",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function mathverse_doc_to_visual at 0x155243f7ef20>",
+      "doc_to_text": "<function mathverse_doc_to_text at 0x154da5a00400>",
+      "doc_to_target": "answer",
+      "process_results": "<function mathverse_process_results at 0x154da5a009a0>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "gpt_eval_score",
+          "aggregation": "<function mathverse_aggregate_results_eval at 0x154da5a01080>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "submission",
+          "aggregation": "<function mathverse_aggregate_results_submission at 0x154da5a014e0>",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "ASSISTANT:"
+        ],
+        "max_new_tokens": 4096,
+        "temperature": 0.0,
+        "top_p": 0,
+        "num_beams": 1,
+        "do_sample": false
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "lmms_eval_specific_kwargs": {
+        "default": {
+          "shot_type": "format-prompt",
+          "query_type": "query_wo"
+        },
+        "shot_type": "format-prompt",
+        "query_type": "query_wo"
+      },
+      "model_specific_generation_kwargs": {
+        "llava": {
+          "image_aspect_ratio": "original"
+        }
+      },
+      "auto_strip_thinking": false
+    }
+  },
+  "versions": {
+    "mathverse_testmini_vision_only": "Yaml"
+  },
+  "n-shot": {
+    "mathverse_testmini_vision_only": 0
+  },
+  "higher_is_better": {
+    "mathverse_testmini_vision_only": {
+      "gpt_eval_score": true,
+      "submission": true
+    }
+  },
+  "n-samples": {
+    "mathverse_testmini_vision_only": {
+      "original": 788,
+      "effective": 788
+    }
+  },
+  "config": {
+    "model": "qwen3_vl_vga",
+    "model_args": "pretrained=Qwen/Qwen3-VL-8B-Instruct",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl_vga.Qwen3_VL_VGA (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl_vga",
+      "tasks": "mathverse_testmini_vision_only",
+      "model_args": "pretrained=Qwen/Qwen3-VL-8B-Instruct",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "31fffc7",
+  "git_branch": "main",
+  "lmms_eval_version": "main@31fffc7",
+  "date": "20260913_191929",
+  "throughput": {
+    "total_gen_tokens": 24539,
+    "total_elapsed_time": 547.0543224811554,
+    "avg_speed": 44.85660562684852,
+    "avg_rank": 0.0
+  },
+  "usage": {
+    "total": {
+      "input_tokens": 74326,
+      "output_tokens": 394,
+      "reasoning_tokens": 0,
+      "total_tokens": 74720,
+      "n_api_calls": 197
+    },
+    "by_task": {
+      "mathverse_testmini_vision_only": {
+        "input_tokens": 74326,
+        "output_tokens": 394,
+        "reasoning_tokens": 0,
+        "total_tokens": 74720,
+        "n_api_calls": 197
+      }
+    },
+    "by_source": {
+      "judge": {
+        "input_tokens": 74326,
+        "output_tokens": 394,
+        "reasoning_tokens": 0,
+        "total_tokens": 74720,
+        "n_api_calls": 197
+      }
+    },
+    "budget_exceeded": false,
+    "budget_total_tokens": null
+  },
+  "efficiency": {
+    "by_task": {
+      "mathverse_testmini_vision_only": {
+        "docs": 788.0,
+        "docs_with_token_counts": 788.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 75903.0,
+        "total_tokens": 75903.0,
+        "total_correct_score": 266.0,
+        "avg_output_tokens_per_sample": 96.32360406091371,
+        "tokens_per_correct_answer": 285.3496240601504
+      }
+    },
+    "overall": {
+      "docs": 788.0,
+      "docs_with_token_counts": 788.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 75903.0,
+      "total_tokens": 75903.0,
+      "total_correct_score": 266.0,
+      "avg_output_tokens_per_sample": 96.32360406091371,
+      "tokens_per_correct_answer": 285.3496240601504
+    }
+  },
+  "task_hashes": {
+    "mathverse_testmini_vision_only": "a124f38586de583efcf0e7647058077308502918d28e3f77ed6b2e8c4d337da7"
+  },
+  "model_source": "qwen3_vl_vga",
+  "model_name": "Qwen/Qwen3-VL-8B-Instruct",
+  "model_name_sanitized": "Qwen__Qwen3-VL-8B-Instruct",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 868493.945450519,
+  "end_time": 869481.65686668,
+  "total_evaluation_time_seconds": "987.711416161037"
+}

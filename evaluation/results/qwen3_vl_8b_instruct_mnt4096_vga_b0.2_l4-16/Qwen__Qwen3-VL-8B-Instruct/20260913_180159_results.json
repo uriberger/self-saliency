@@ -1,0 +1,202 @@
+{
+  "results": {
+    "logicvista_reasoning": {
+      "alias": "logicvista_reasoning",
+      "acc_score,none": 0.5133928571428571,
+      "acc_score_stderr,none": 0.023640703125014716,
+      "acc_score_stderr_clt,none": 0.023640703125014716,
+      "acc_score_stderr_clustered,none": "N/A",
+      "format_score,none": 0.802232142857143,
+      "format_score_stderr,none": 0.0009937681769264708,
+      "format_score_stderr_clt,none": 0.0009937681769264708,
+      "format_score_stderr_clustered,none": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "logicvista_reasoning": []
+  },
+  "configs": {
+    "logicvista_reasoning": {
+      "task": "logicvista_reasoning",
+      "dataset_path": "lscpku/LogicVista",
+      "test_split": "test",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function logicvista_doc_to_visual at 0x154dbd7da2a0>",
+      "doc_to_text": "<function logicvista_doc_to_text_cot at 0x154dbd7d9f80>",
+      "doc_to_target": "answer",
+      "doc_to_messages": "<function make_reasoning_doc_to_messages.<locals>._doc_to_messages at 0x154dbd7d9e40>",
+      "process_results": "<function make_reasoning_process_results.<locals>._process_results at 0x154dbd7da660>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc_score",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "format_score",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_new_tokens": 4096,
+        "until": [
+          "\n\n"
+        ]
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "auto_strip_thinking": false
+    }
+  },
+  "versions": {
+    "logicvista_reasoning": "Yaml"
+  },
+  "n-shot": {
+    "logicvista_reasoning": 0
+  },
+  "higher_is_better": {
+    "logicvista_reasoning": {
+      "acc_score": true,
+      "format_score": true
+    }
+  },
+  "n-samples": {
+    "logicvista_reasoning": {
+      "original": 448,
+      "effective": 448
+    }
+  },
+  "config": {
+    "model": "qwen3_vl_vga",
+    "model_args": "pretrained=Qwen/Qwen3-VL-8B-Instruct",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl_vga.Qwen3_VL_VGA (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl_vga",
+      "tasks": "logicvista_reasoning",
+      "model_args": "pretrained=Qwen/Qwen3-VL-8B-Instruct",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "31fffc7",
+  "git_branch": "main",
+  "lmms_eval_version": "main@31fffc7",
+  "date": "20260913_180159",
+  "throughput": {
+    "total_gen_tokens": 185988,
+    "total_elapsed_time": 3841.869196176529,
+    "avg_speed": 48.4108100778385,
+    "avg_rank": 0.0
+  },
+  "usage": {},
+  "efficiency": {
+    "by_task": {
+      "logicvista_reasoning": {
+        "docs": 448.0,
+        "docs_with_token_counts": 448.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 807174.0,
+        "total_tokens": 807174.0,
+        "total_correct_score": 55.0,
+        "avg_output_tokens_per_sample": 1801.7276785714287,
+        "tokens_per_correct_answer": 14675.89090909091
+      }
+    },
+    "overall": {
+      "docs": 448.0,
+      "docs_with_token_counts": 448.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 807174.0,
+      "total_tokens": 807174.0,
+      "total_correct_score": 55.0,
+      "avg_output_tokens_per_sample": 1801.7276785714287,
+      "tokens_per_correct_answer": 14675.89090909091
+    }
+  },
+  "task_hashes": {
+    "logicvista_reasoning": "8f627b02fc833940f7acc0ad54b9ccaf1e3345b99d75a539ac334ea9c8d67b7a"
+  },
+  "model_source": "qwen3_vl_vga",
+  "model_name": "Qwen/Qwen3-VL-8B-Instruct",
+  "model_name_sanitized": "Qwen__Qwen3-VL-8B-Instruct",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 863843.509018708,
+  "end_time": 868424.774553475,
+  "total_evaluation_time_seconds": "4581.26553476695",
+  "reasoning_parser_version": "2026-09-16-mcq-cue"
+}
