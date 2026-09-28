@@ -9,13 +9,15 @@ from .mask import box_area, center_rect_mask, centroid_eccentricity, raster_unio
 
 __all__ = [
     "box_area", "center_rect_mask", "centroid_eccentricity", "raster_union", "ring_fraction", "union_mask",
-    "ground", "ground_local", "ground_served", "GROUNDING_DINO_HF_ID",
+    "ground", "ground_local", "ground_served", "ground_scored", "ground_claim",
+    "GROUNDING_DINO_HF_ID",
     "DEFAULT_BOX_THRESHOLD",
 ]
 
 
 def __getattr__(name):
-    if name in ("ground", "ground_local", "ground_served", "load_local",
+    if name in ("ground", "ground_local", "ground_served", "ground_scored",
+                "ground_claim", "load_local",
                 "GROUNDING_DINO_HF_ID", "DEFAULT_BOX_THRESHOLD"):
         from . import dino
         return getattr(dino, name)

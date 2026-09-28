@@ -168,3 +168,60 @@ def ground(images, texts, box_threshold: float = DEFAULT_BOX_THRESHOLD,
                   flush=True)
     return ground_local(images, texts, box_threshold=box_threshold,
                         batch_size=batch_size, hf_id=hf_id, device=device)
+
+
+def ground_scored(images, texts, box_threshold: float = DEFAULT_BOX_THRESHOLD,
+                  batch_size: int = DEFAULT_BATCH_SIZE,
+                  hf_id: str = GROUNDING_DINO_HF_ID, device: str | None = None):
+    """Like `ground_local`, but keeps each box's confidence.
+
+    -> one list of (box, score) per (image, text) pair.
+
+    The head-selection screen needs the scores because it stores boxes once at a LOW
+    threshold and then filters at several higher ones offline -- re-running the detector
+    per threshold over Visual-CoT would be the expensive half of the screen repeated for
+    nothing. The reward path does not need them: it grounds at one threshold and the
+    detector has already applied it.
+    """
+    import torch
+
+    proc, model, device = load_local(hf_id, device)
+    prompts = [_as_prompt(t) for t in texts]
+    out: list = [None] * len(images)
+
+    def run_chunk(start: int, n: int):
+        imgs = images[start:start + n]
+        inputs = proc(images=imgs, text=prompts[start:start + n], return_tensors="pt",
+                      padding=True, truncation=True, max_length=256).to(device)
+        with torch.no_grad():
+            outputs = model(**inputs)
+        results = proc.post_process_grounded_object_detection(
+            outputs, inputs.input_ids,
+            threshold=float(box_threshold), text_threshold=float(box_threshold),
+            target_sizes=[(im.size[1], im.size[0]) for im in imgs])
+        for j, res in enumerate(results):
+            w, h = imgs[j].size
+            out[start + j] = [
+                ([x1 / w, y1 / h, x2 / w, y2 / h], float(score))
+                for (x1, y1, x2, y2), score in zip(res["boxes"].tolist(),
+                                                   res["scores"].tolist())]
+
+    start, size = 0, int(batch_size)
+    while start < len(images):
+        n = min(size, len(images) - start)
+        while True:
+            try:
+                run_chunk(start, n)
+                break
+            except torch.cuda.OutOfMemoryError:
+                if n == 1:
+                    raise
+                torch.cuda.empty_cache()
+                n = max(1, n // 2)
+        start += n
+    return out
+
+
+def ground_claim(image, text, box_threshold: float = DEFAULT_BOX_THRESHOLD, **kw):
+    """One image, one phrase, scored. -> [(box, score), ...]."""
+    return ground_scored([image], [text], box_threshold=box_threshold, **kw)[0]

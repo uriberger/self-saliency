@@ -1,0 +1,53 @@
+### model
+model_name_or_path: Qwen/Qwen3-VL-8B-Instruct
+
+### method
+stage: sft
+do_train: true
+finetuning_type: lora
+lora_rank: 128
+lora_target: all
+deepspeed: training/coldstart/configs/ds_z3.json
+
+repetition_penalty: 1.05
+# default_system + the SFT targets carry the <think>...</think> structure (as in the
+# original Qwen2.5-VL recipe, which used the plain non-reasoning qwen2_vl template).
+default_system: "A conversation between user and assistant. The user asks a question, and the assistant solves it. The assistant first thinks about the reasoning process in the mind and then provides the user with the answer. The reasoning process and answer are enclosed within <think></think> tags, i.e., <think>\nThis is my reasoning.\n</think>\nThis is my answer."
+
+### dataset
+dataset: saliency_r1_llava_cot_full, saliency_r1_mulberry_sft_full
+dataset_dir: data/coldstart/Saliency-R1-cold   # override with --dataset-dir; see docs/install.md
+template: qwen3_vl_nothink  # Instruct (non-reasoning) variant; SFT targets carry literal <think> tags. Encodes identically to qwen3_vl for these targets.
+cutoff_len: 16384
+overwrite_cache: true
+preprocessing_num_workers: 128
+
+### output
+output_dir: checkpoint/coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5
+logging_steps: 10
+save_steps: 500
+save_total_limit: 3
+# Resumability (submit_job autoresume across the wall limit): keep full trainer state
+# (optimizer/scheduler/RNG) so a relaunch resumes mid-run, and DON'T wipe the output dir.
+save_only_model: false
+save_strategy: 'steps'
+plot_loss: true
+overwrite_output_dir: false
+report_to: wandb
+run_name: coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5
+
+### train
+per_device_train_batch_size: 8
+gradient_accumulation_steps: 1
+learning_rate: 5.0e-5
+num_train_epochs: 2
+lr_scheduler_type: cosine
+warmup_ratio: 0.05
+bf16: true
+ddp_timeout: 540000000
+
+### eval
+val_size: 0
+per_device_eval_batch_size: 8
+eval_strategy: 'no'
+eval_steps: 10000000
