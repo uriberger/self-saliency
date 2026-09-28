@@ -1,6 +1,22 @@
 # Copyright 2026 NVIDIA. Apache-2.0.
-"""Localising the objects a reasoning step mentions (Section 3.3)."""
+"""Localising the objects a reasoning step mentions (Section 3.3).
 
-from .mask import (box_area, center_rect_mask, raster_union, ring_fraction, union_mask)
+`dino` pulls in transformers and is imported lazily, so the mask helpers stay usable in
+a numpy-only environment.
+"""
 
-__all__ = ["box_area", "center_rect_mask", "raster_union", "ring_fraction", "union_mask"]
+from .mask import box_area, center_rect_mask, raster_union, ring_fraction, union_mask
+
+__all__ = [
+    "box_area", "center_rect_mask", "raster_union", "ring_fraction", "union_mask",
+    "ground", "ground_local", "ground_served", "GROUNDING_DINO_HF_ID",
+    "DEFAULT_BOX_THRESHOLD",
+]
+
+
+def __getattr__(name):
+    if name in ("ground", "ground_local", "ground_served", "load_local",
+                "GROUNDING_DINO_HF_ID", "DEFAULT_BOX_THRESHOLD"):
+        from . import dino
+        return getattr(dino, name)
+    raise AttributeError(name)
