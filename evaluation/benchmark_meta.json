@@ -1,0 +1,234 @@
+{
+  "algopuzzlevqa": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "chartqa": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "cv_bench": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "dailyclue": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "hallusion_bench_image": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "hrbench4k": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "hrbench8k": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "illusionvqa_soft_localization": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "logicvista_reasoning": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "mathverse_testmini_vision_only": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "mathvision_reason_testmini": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "mathvision_testmini": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "mathvista_testmini_cot": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "mathvista_testmini_format": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "mathvista_testmini_solution": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "mme": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "mmerealworld": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "mmk12": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "mmmu_pro_standard": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "mmmu_pro_vision": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "mmstar": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "omnispatial_test": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "p3": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "pope": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "realworldqa": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "scienceqa_img": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "visulogic": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "vstar_bench": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  },
+  "wemath_testmini_reasoning": {
+    "best_model": "",
+    "best_score": null,
+    "best_source": "",
+    "similar_model": "",
+    "similar_score": null,
+    "similar_source": ""
+  }
+}

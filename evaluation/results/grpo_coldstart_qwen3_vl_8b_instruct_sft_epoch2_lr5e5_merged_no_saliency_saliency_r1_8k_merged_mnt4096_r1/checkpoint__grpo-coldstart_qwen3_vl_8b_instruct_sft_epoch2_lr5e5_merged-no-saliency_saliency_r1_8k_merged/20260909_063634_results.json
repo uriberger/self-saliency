@@ -1,0 +1,248 @@
+{
+  "results": {
+    "dailyclue": {
+      "alias": "dailyclue",
+      "daily_commonsense,none": 33.888888888888886,
+      "daily_commonsense_stderr,none": "N/A",
+      "daily_commonsense_stderr_clt,none": 0.03537849691554228,
+      "daily_commonsense_stderr_clustered,none": "N/A",
+      "dailyclue_overall,none": 32.88288288288288,
+      "dailyclue_overall_stderr,none": "N/A",
+      "dailyclue_overall_stderr_clt,none": 0.018217583432088274,
+      "dailyclue_overall_stderr_clustered,none": "N/A",
+      "location,none": 15.5,
+      "location_stderr,none": "N/A",
+      "location_stderr_clt,none": 0.025654742819715196,
+      "location_stderr_clustered,none": "N/A",
+      "science,none": 40.65040650406504,
+      "science_stderr,none": "N/A",
+      "science_stderr_clt,none": 0.044469413889651796,
+      "science_stderr_clustered,none": "N/A",
+      "spatial,none": 47.239263803680984,
+      "spatial_stderr,none": "N/A",
+      "spatial_stderr_clt,none": 0.039223782906109894,
+      "spatial_stderr_clustered,none": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "dailyclue": []
+  },
+  "configs": {
+    "dailyclue": {
+      "task": "dailyclue",
+      "dataset_path": "/home/uberger/scratch/cache/hf_cache/dailyclue_hf",
+      "dataset_kwargs": {
+        "load_from_disk": true
+      },
+      "test_split": "train",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function dailyclue_doc_to_visual at 0x155244518b80>",
+      "doc_to_text": "<function dailyclue_doc_to_text at 0x155244519b20>",
+      "doc_to_target": "ground_truth",
+      "process_results": "<function dailyclue_process_results at 0x15524451ab60>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "dailyclue_overall",
+          "aggregation": "<function dailyclue_aggregate_overall at 0x15524451bba0>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "daily_commonsense",
+          "aggregation": "<function dailyclue_aggregate at 0x1552445f0b80>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "location",
+          "aggregation": "<function dailyclue_aggregate at 0x1552445f1b20>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "spatial",
+          "aggregation": "<function dailyclue_aggregate at 0x1552445f2c00>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "science",
+          "aggregation": "<function dailyclue_aggregate at 0x1552445f3ba0>",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_new_tokens": 4096,
+        "temperature": 0.1,
+        "do_sample": true,
+        "until": [
+          "\n\n"
+        ],
+        "repetition_penalty": 1.05
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "metadata": [
+        {
+          "version": 0.0
+        }
+      ],
+      "lmms_eval_specific_kwargs": {
+        "default": {
+          "mode": "c"
+        },
+        "mode": "c"
+      },
+      "auto_strip_thinking": false
+    }
+  },
+  "versions": {
+    "dailyclue": "Yaml"
+  },
+  "n-shot": {
+    "dailyclue": 0
+  },
+  "higher_is_better": {
+    "dailyclue": {
+      "dailyclue_overall": true,
+      "daily_commonsense": true,
+      "location": true,
+      "spatial": true,
+      "science": true
+    }
+  },
+  "n-samples": {
+    "dailyclue": {
+      "original": 666,
+      "effective": 666
+    }
+  },
+  "config": {
+    "model": "qwen3_vl",
+    "model_args": "pretrained=/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-no-saliency_saliency_r1_8k_merged",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl.Qwen3_VL (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_no_saliency_saliency_r1_8k_merged_mnt4096_r1/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096,
+      "repetition_penalty": 1.05
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl",
+      "tasks": "dailyclue",
+      "model_args": "pretrained=/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-no-saliency_saliency_r1_8k_merged",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_no_saliency_saliency_r1_8k_merged_mnt4096_r1",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_no_saliency_saliency_r1_8k_merged_mnt4096_r1/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096,repetition_penalty=1.05",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_no_saliency_saliency_r1_8k_merged_mnt4096_r1",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "2c7ac24",
+  "git_branch": "main",
+  "lmms_eval_version": "main@2c7ac24",
+  "date": "20260909_063634",
+  "throughput": {
+    "total_gen_tokens": 96958,
+    "total_elapsed_time": 1777.2185080051422,
+    "avg_speed": 54.55603774283869,
+    "avg_rank": 0.0
+  },
+  "usage": {},
+  "efficiency": {
+    "by_task": {
+      "dailyclue": {
+        "docs": 666.0,
+        "docs_with_token_counts": 666.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 378975.0,
+        "total_tokens": 378975.0,
+        "total_correct_score": 0.0,
+        "avg_output_tokens_per_sample": 569.0315315315315,
+        "tokens_per_correct_answer": null
+      }
+    },
+    "overall": {
+      "docs": 666.0,
+      "docs_with_token_counts": 666.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 378975.0,
+      "total_tokens": 378975.0,
+      "total_correct_score": 0.0,
+      "avg_output_tokens_per_sample": 569.0315315315315,
+      "tokens_per_correct_answer": null
+    }
+  },
+  "task_hashes": {
+    "dailyclue": "c1c4b438e1d42a50ac907be72e3526e8f09d17995efd96a77b8b1e4e4b5808f9"
+  },
+  "model_source": "qwen3_vl",
+  "model_name": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/saliency_r1/checkpoint/grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-no-saliency_saliency_r1_8k_merged",
+  "model_name_sanitized": "checkpoint__grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-no-saliency_saliency_r1_8k_merged",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 4217129.348001865,
+  "end_time": 4219321.727432823,
+  "total_evaluation_time_seconds": "2192.37943095807"
+}

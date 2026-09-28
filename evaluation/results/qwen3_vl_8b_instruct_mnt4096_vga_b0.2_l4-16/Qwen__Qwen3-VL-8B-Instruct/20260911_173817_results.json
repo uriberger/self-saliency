@@ -1,0 +1,246 @@
+{
+  "results": {
+    "dailyclue": {
+      "alias": "dailyclue",
+      "daily_commonsense,none": 40.0,
+      "daily_commonsense_stderr,none": "N/A",
+      "daily_commonsense_stderr_clt,none": 0.0366166918618412,
+      "daily_commonsense_stderr_clustered,none": "N/A",
+      "dailyclue_overall,none": 34.234234234234236,
+      "dailyclue_overall_stderr,none": "N/A",
+      "dailyclue_overall_stderr_clt,none": 0.018400067954349054,
+      "dailyclue_overall_stderr_clustered,none": "N/A",
+      "location,none": 18.5,
+      "location_stderr,none": "N/A",
+      "location_stderr_clt,none": 0.027525684670556598,
+      "location_stderr_clustered,none": "N/A",
+      "science,none": 36.58536585365854,
+      "science_stderr,none": "N/A",
+      "science_stderr_clt,none": 0.043608237215565414,
+      "science_stderr_clustered,none": "N/A",
+      "spatial,none": 45.39877300613497,
+      "spatial_stderr,none": "N/A",
+      "spatial_stderr_clt,none": 0.039117019046771846,
+      "spatial_stderr_clustered,none": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "dailyclue": []
+  },
+  "configs": {
+    "dailyclue": {
+      "task": "dailyclue",
+      "dataset_path": "/home/uberger/scratch/cache/hf_cache/dailyclue_hf",
+      "dataset_kwargs": {
+        "load_from_disk": true
+      },
+      "test_split": "train",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function dailyclue_doc_to_visual at 0x154dbd549d00>",
+      "doc_to_text": "<function dailyclue_doc_to_text at 0x154dbd54aca0>",
+      "doc_to_target": "ground_truth",
+      "process_results": "<function dailyclue_process_results at 0x154dbd54bce0>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "dailyclue_overall",
+          "aggregation": "<function dailyclue_aggregate_overall at 0x154dbd580d60>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "daily_commonsense",
+          "aggregation": "<function dailyclue_aggregate at 0x154dbd581c60>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "location",
+          "aggregation": "<function dailyclue_aggregate at 0x154dbd582c00>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "spatial",
+          "aggregation": "<function dailyclue_aggregate at 0x154dbd583ba0>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "science",
+          "aggregation": "<function dailyclue_aggregate at 0x154dbd598b80>",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_new_tokens": 4096,
+        "temperature": 0.1,
+        "do_sample": true,
+        "until": [
+          "\n\n"
+        ]
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "metadata": [
+        {
+          "version": 0.0
+        }
+      ],
+      "lmms_eval_specific_kwargs": {
+        "default": {
+          "mode": "c"
+        },
+        "mode": "c"
+      },
+      "auto_strip_thinking": false
+    }
+  },
+  "versions": {
+    "dailyclue": "Yaml"
+  },
+  "n-shot": {
+    "dailyclue": 0
+  },
+  "higher_is_better": {
+    "dailyclue": {
+      "dailyclue_overall": true,
+      "daily_commonsense": true,
+      "location": true,
+      "spatial": true,
+      "science": true
+    }
+  },
+  "n-samples": {
+    "dailyclue": {
+      "original": 666,
+      "effective": 666
+    }
+  },
+  "config": {
+    "model": "qwen3_vl_vga",
+    "model_args": "pretrained=Qwen/Qwen3-VL-8B-Instruct",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl_vga.Qwen3_VL_VGA (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl_vga",
+      "tasks": "dailyclue",
+      "model_args": "pretrained=Qwen/Qwen3-VL-8B-Instruct",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "31fffc7",
+  "git_branch": "main",
+  "lmms_eval_version": "main@31fffc7",
+  "date": "20260911_173817",
+  "throughput": {
+    "total_gen_tokens": 47216,
+    "total_elapsed_time": 1031.7995975017548,
+    "avg_speed": 45.76082420881125,
+    "avg_rank": 0.0
+  },
+  "usage": {},
+  "efficiency": {
+    "by_task": {
+      "dailyclue": {
+        "docs": 666.0,
+        "docs_with_token_counts": 666.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 227984.0,
+        "total_tokens": 227984.0,
+        "total_correct_score": 0.0,
+        "avg_output_tokens_per_sample": 342.3183183183183,
+        "tokens_per_correct_answer": null
+      }
+    },
+    "overall": {
+      "docs": 666.0,
+      "docs_with_token_counts": 666.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 227984.0,
+      "total_tokens": 227984.0,
+      "total_correct_score": 0.0,
+      "avg_output_tokens_per_sample": 342.3183183183183,
+      "tokens_per_correct_answer": null
+    }
+  },
+  "task_hashes": {
+    "dailyclue": "c1c4b438e1d42a50ac907be72e3526e8f09d17995efd96a77b8b1e4e4b5808f9"
+  },
+  "model_source": "qwen3_vl_vga",
+  "model_name": "Qwen/Qwen3-VL-8B-Instruct",
+  "model_name_sanitized": "Qwen__Qwen3-VL-8B-Instruct",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 2470350.827648811,
+  "end_time": 2471764.365970509,
+  "total_evaluation_time_seconds": "1413.5383216980845"
+}

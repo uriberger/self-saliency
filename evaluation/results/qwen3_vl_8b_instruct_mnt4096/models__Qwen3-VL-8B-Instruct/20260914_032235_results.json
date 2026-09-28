@@ -1,0 +1,211 @@
+{
+  "results": {
+    "vstar_bench": {
+      "alias": "vstar_bench",
+      "vstar_direct_attributes_acc,none": [],
+      "vstar_direct_attributes_acc_stderr,none": [],
+      "vstar_overall_acc,none": 84.29319371727748,
+      "vstar_overall_acc_stderr,none": "N/A",
+      "vstar_overall_acc_stderr_clt,none": 0.02639753641484949,
+      "vstar_overall_acc_stderr_clustered,none": "N/A",
+      "vstar_relative_position_acc,none": [],
+      "vstar_relative_position_acc_stderr,none": []
+    }
+  },
+  "group_subtasks": {
+    "vstar_bench": []
+  },
+  "configs": {
+    "vstar_bench": {
+      "task": "vstar_bench",
+      "dataset_path": "lmms-lab-encoder/vstar-bench",
+      "test_split": "test",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function vstar_doc_to_visual at 0x155435890c20>",
+      "doc_to_text": "<function vstar_doc_to_text at 0x155435890fe0>",
+      "doc_to_target": "label",
+      "process_results": "<function vstar_process_results at 0x155435891620>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "vstar_overall_acc",
+          "aggregation": "<function vstar_aggregate_results at 0x155435893e20>",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_new_tokens": 4096,
+        "temperature": 0.0,
+        "top_p": 1.0,
+        "num_beams": 1,
+        "do_sample": false,
+        "until": [
+          "\n\n"
+        ]
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "metadata": [
+        {
+          "version": 0.0
+        }
+      ],
+      "lmms_eval_specific_kwargs": {
+        "default": {
+          "pre_prompt": "",
+          "post_prompt": "\nAnswer with the option's letter from the given choices directly."
+        },
+        "pre_prompt": "",
+        "post_prompt": "\nAnswer with the option's letter from the given choices directly."
+      },
+      "auto_strip_thinking": false
+    }
+  },
+  "versions": {
+    "vstar_bench": "Yaml"
+  },
+  "n-shot": {
+    "vstar_bench": 0
+  },
+  "higher_is_better": {
+    "vstar_bench": {
+      "vstar_overall_acc": true
+    }
+  },
+  "n-samples": {
+    "vstar_bench": {
+      "original": 191,
+      "effective": 191
+    }
+  },
+  "config": {
+    "model": "qwen3_vl",
+    "model_args": "pretrained=/home/uberger/scratch/models/Qwen3-VL-8B-Instruct,max_pixels=3211264",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl.Qwen3_VL (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl",
+      "tasks": "vstar_bench",
+      "model_args": "pretrained=/home/uberger/scratch/models/Qwen3-VL-8B-Instruct,max_pixels=3211264",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "31fffc75",
+  "git_branch": "main",
+  "lmms_eval_version": "main@31fffc75",
+  "date": "20260914_032235",
+  "throughput": {
+    "total_gen_tokens": 91,
+    "total_elapsed_time": 18.75215983390808,
+    "avg_speed": 4.852774336716762,
+    "avg_rank": 0.0
+  },
+  "usage": {},
+  "efficiency": {
+    "by_task": {
+      "vstar_bench": {
+        "docs": 191.0,
+        "docs_with_token_counts": 191.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 740.0,
+        "total_tokens": 740.0,
+        "total_correct_score": 0.0,
+        "avg_output_tokens_per_sample": 3.8743455497382198,
+        "tokens_per_correct_answer": null
+      }
+    },
+    "overall": {
+      "docs": 191.0,
+      "docs_with_token_counts": 191.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 740.0,
+      "total_tokens": 740.0,
+      "total_correct_score": 0.0,
+      "avg_output_tokens_per_sample": 3.8743455497382198,
+      "tokens_per_correct_answer": null
+    }
+  },
+  "task_hashes": {
+    "vstar_bench": "cc753786d1cb7b3a2990cd1d32eeb505ee6d3be5d1a8792f4578099c447b352a"
+  },
+  "model_source": "qwen3_vl",
+  "model_name": "/home/uberger/scratch/models/Qwen3-VL-8B-Instruct",
+  "model_name_sanitized": "models__Qwen3-VL-8B-Instruct",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 341785.942378981,
+  "end_time": 341941.69029538,
+  "total_evaluation_time_seconds": "155.7479163990356"
+}

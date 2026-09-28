@@ -1,0 +1,207 @@
+{
+  "results": {
+    "algopuzzlevqa": {
+      "alias": "algopuzzlevqa",
+      "exact_match,none": 0.3277777777777778,
+      "exact_match_stderr,none": 0.011067017691557015,
+      "exact_match_stderr_clt,none": 0.011067017691557015,
+      "exact_match_stderr_clustered,none": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "algopuzzlevqa": []
+  },
+  "configs": {
+    "algopuzzlevqa": {
+      "task": "algopuzzlevqa",
+      "dataset_path": "declare-lab/AlgoPuzzleVQA",
+      "dataset_kwargs": {
+        "token": true
+      },
+      "test_split": "data",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function algopuzzlevqa_doc_to_visual at 0x155237f62a20>",
+      "doc_to_text": "<function algopuzzlevqa_doc_to_text at 0x155237f60a40>",
+      "doc_to_target": "answer",
+      "process_results": "<function algopuzzlevqa_process_results at 0x155237f607c0>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_new_tokens": 4096,
+        "until": [
+          "\n\n"
+        ]
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "metadata": [
+        {
+          "version": 0.0
+        }
+      ],
+      "lmms_eval_specific_kwargs": {
+        "default": {
+          "pre_prompt": "",
+          "post_prompt": "\nAnswer with the option's letter from the given choices directly."
+        },
+        "qwen3_vl": {
+          "pre_prompt": "Question: ",
+          "post_prompt": "\nAnswer with the option letter only."
+        }
+      }
+    }
+  },
+  "versions": {
+    "algopuzzlevqa": "Yaml"
+  },
+  "n-shot": {
+    "algopuzzlevqa": 0
+  },
+  "higher_is_better": {
+    "algopuzzlevqa": {
+      "exact_match": true
+    }
+  },
+  "n-samples": {
+    "algopuzzlevqa": {
+      "original": 1800,
+      "effective": 1800
+    }
+  },
+  "config": {
+    "model": "qwen3_vl",
+    "model_args": "pretrained=Qwen/Qwen3-VL-8B-Instruct",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl.Qwen3_VL (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl",
+      "tasks": "algopuzzlevqa",
+      "model_args": "pretrained=Qwen/Qwen3-VL-8B-Instruct",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "9f8009e",
+  "git_branch": "main",
+  "lmms_eval_version": "main@9f8009e",
+  "date": "20260722_162416",
+  "throughput": {
+    "total_gen_tokens": 1681,
+    "total_elapsed_time": 184.34872460365295,
+    "avg_speed": 9.11858763120887,
+    "avg_rank": 0.0
+  },
+  "usage": {},
+  "efficiency": {
+    "by_task": {
+      "algopuzzlevqa": {
+        "docs": 1800.0,
+        "docs_with_token_counts": 1800.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 6624.0,
+        "total_tokens": 6624.0,
+        "total_correct_score": 590.0,
+        "avg_output_tokens_per_sample": 3.68,
+        "tokens_per_correct_answer": 11.227118644067797
+      }
+    },
+    "overall": {
+      "docs": 1800.0,
+      "docs_with_token_counts": 1800.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 6624.0,
+      "total_tokens": 6624.0,
+      "total_correct_score": 590.0,
+      "avg_output_tokens_per_sample": 3.68,
+      "tokens_per_correct_answer": 11.227118644067797
+    }
+  },
+  "task_hashes": {
+    "algopuzzlevqa": "d9d362eed96338ca997bac02dd5e20bf35dbc0a8d6ab47b220280d8bfeea7273"
+  },
+  "model_source": "qwen3_vl",
+  "model_name": "Qwen/Qwen3-VL-8B-Instruct",
+  "model_name_sanitized": "Qwen__Qwen3-VL-8B-Instruct",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 22668.926000749,
+  "end_time": 23018.178780763,
+  "total_evaluation_time_seconds": "349.25278001399784"
+}

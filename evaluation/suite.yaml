@@ -1,0 +1,98 @@
+# The 25-benchmark evaluation suite (Table 1), and the protocol of Appendix A.3.
+#
+# Every paper column was produced by running this list against one checkpoint. The task
+# names are the pinned lmms-eval fork's, which do not all match the benchmark's published
+# name -- `benchmark:` is the name in Table 1 and `task:` is what lmms-eval answers to.
+# Where they differ, `why:` says what was chosen and on what grounds, because several of
+# those choices change the number by more than the effects the paper reports.
+
+protocol:                      # Appendix A.3
+  temperature: 0
+  num_beams: 1
+  max_new_tokens: 4096
+  repetition_penalty: 1.05
+  batch_size: 1
+  dtype: bfloat16
+  # Saliency-R1's system prompt. The cold start was supervised against it, so evaluating
+  # without it measures a different policy -- see selfsal/data/prompt.py.
+  system_prompt: selfsal.data.prompt.SYSTEM_PROMPT
+  # lmms-eval's Qwen default: 1,605,632 px = 2,048 visual tokens at 28x28.
+  max_pixels: 1605632
+  # Raised to 4,096 visual tokens for the three benchmarks whose SUBJECT is resolution.
+  # Evaluating them at the default budget measures the downsampler, not the model.
+  max_pixels_highres: 3211264
+  highres_tasks: [mmerealworld, hrbench4k, hrbench8k]
+
+benchmarks:
+
+  # ---- Mathematical reasoning ------------------------------------------------
+  - {benchmark: MathVista,   task: mathvista_testmini_cot,          split: testmini}
+  - {benchmark: MathVision,  task: mathvision_testmini,             split: testmini}
+  - benchmark: MathVerse
+    task: mathverse_testmini_vision_only
+    split: testmini vision only
+    why: >
+      788 items. EASE's column is "MathVerseV", its appendix defining it as the
+      vision-centric subset where solving the problem requires the image. That is this
+      version, not `mathverse_testmini` (3,940 = the five non-text-only versions, the
+      "All" column), which also carries Text-Dominant and Text-Lite -- where the diagram
+      is restated in the question and the image is not required at all.
+  - {benchmark: WeMath,      task: wemath_testmini_reasoning,       split: testmini}
+  - benchmark: MMK12
+    task: mmk12
+    why: >
+      MM-EUREKA's own 2,000-item test split, added in this fork. Upstream's `k12` task is
+      NOT MMK12 despite the release notes saying so: 500 rows, maths only, no id overlap
+      with either MMK12 split.
+
+  # ---- Logical & algorithmic puzzles -----------------------------------------
+  - {benchmark: LogicVista,      task: logicvista_reasoning}
+  - {benchmark: AlgoPuzzleVQA,   task: algopuzzlevqa}
+  - {benchmark: VisuLogic,       task: visulogic}
+  - {benchmark: DailyClue,       task: dailyclue}
+
+  # ---- Spatial & 3D reasoning ------------------------------------------------
+  - benchmark: CV-Bench
+    task: cv_bench
+    why: 2D and 3D in one task; cv_bench_2d / cv_bench_3d are the halves.
+  - benchmark: OmniSpatial
+    task: omnispatial_test
+    split: test
+    why: >
+      The task declares itself `omnispatial_test`. "omni_spatial" is a name that never
+      existed, and a column under it is always empty.
+
+  # ---- High-resolution visual search -----------------------------------------
+  - {benchmark: "V*",          task: vstar_bench,  why: 191 items, both categories.}
+  - benchmark: HR-Bench 4K
+    task: hrbench4k
+    why: >
+      Listed by split rather than as the `hrbench` group. A group name never appears as a
+      task key in a results.json, so a column named after it is always empty and the
+      driver re-runs it on every resume.
+  - {benchmark: HR-Bench 8K,   task: hrbench8k}
+  - {benchmark: MME-RealWorld, task: mmerealworld}
+
+  # ---- Hallucination & visual illusions --------------------------------------
+  - {benchmark: POPE,           task: pope}
+  - benchmark: HallusionBench
+    task: hallusion_bench_image
+    split: image
+    why: 951 items; the 178-item non_image split is text only.
+  - {benchmark: IllusionVQA,    task: illusionvqa_soft_localization, split: soft localization}
+
+  # ---- Fine-grained perception & chart reading -------------------------------
+  - {benchmark: ChartQA,        task: chartqa}
+  - {benchmark: SalBench,       task: p3, split: p3}
+
+  # ---- General & knowledge-intensive VQA -------------------------------------
+  - {benchmark: MMStar,         task: mmstar}
+  - benchmark: MME
+    task: mme
+    why: >
+      Scored as (accuracy + accuracy_plus) * 100 over its categories, and rescaled by
+      /2800 into [0, 100] before entering the mean. It asks two questions per image, so
+      the IMAGE is the bootstrap unit -- see stats.py.
+  - {benchmark: RealWorldQA,    task: realworldqa}
+  - {benchmark: MMMU-Pro,       task: mmmu_pro_standard, split: standard}
+  - {benchmark: ScienceQA-IMG,  task: scienceqa_img, split: img}

@@ -1,0 +1,219 @@
+{
+  "results": {
+    "mmk12": {
+      "alias": "mmk12",
+      "llm_as_judge_eval,none": 0.6825,
+      "llm_as_judge_eval_stderr,none": 0.010411583719001105,
+      "llm_as_judge_eval_stderr_clt,none": 0.010411583719001105,
+      "llm_as_judge_eval_stderr_clustered,none": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "mmk12": []
+  },
+  "configs": {
+    "mmk12": {
+      "task": "mmk12",
+      "tag": "visual_reasoning_collection",
+      "dataset_path": "FanqingM/MMK12",
+      "test_split": "test",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function k12_doc_to_visual at 0x1554358904a0>",
+      "doc_to_text": "<function k12_doc_to_text at 0x1554358907c0>",
+      "doc_to_target": "answer",
+      "process_results": "<function k12_process_results at 0x154fe650e5c0>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "llm_as_judge_eval",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "ASSISTANT:"
+        ],
+        "max_new_tokens": 4096
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "auto_strip_thinking": false
+    }
+  },
+  "versions": {
+    "mmk12": "Yaml"
+  },
+  "n-shot": {
+    "mmk12": 0
+  },
+  "higher_is_better": {
+    "mmk12": {
+      "llm_as_judge_eval": true
+    }
+  },
+  "n-samples": {
+    "mmk12": {
+      "original": 2000,
+      "effective": 2000
+    }
+  },
+  "config": {
+    "model": "qwen3_vl",
+    "model_args": "pretrained=/home/uberger/scratch/models/Qwen3-VL-8B-Instruct",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl.Qwen3_VL (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl",
+      "tasks": "mmk12",
+      "model_args": "pretrained=/home/uberger/scratch/models/Qwen3-VL-8B-Instruct",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "31fffc75",
+  "git_branch": "main",
+  "lmms_eval_version": "main@31fffc75",
+  "date": "20260914_013655",
+  "throughput": {
+    "total_gen_tokens": 149669,
+    "total_elapsed_time": 5518.610128164291,
+    "avg_speed": 27.120777972004674,
+    "avg_rank": 0.0
+  },
+  "usage": {
+    "total": {
+      "input_tokens": 584508,
+      "output_tokens": 500,
+      "reasoning_tokens": 0,
+      "total_tokens": 585008,
+      "n_api_calls": 250
+    },
+    "by_task": {
+      "mmk12": {
+        "input_tokens": 584508,
+        "output_tokens": 500,
+        "reasoning_tokens": 0,
+        "total_tokens": 585008,
+        "n_api_calls": 250
+      }
+    },
+    "by_source": {
+      "judge": {
+        "input_tokens": 584508,
+        "output_tokens": 500,
+        "reasoning_tokens": 0,
+        "total_tokens": 585008,
+        "n_api_calls": 250
+      }
+    },
+    "budget_exceeded": false,
+    "budget_total_tokens": null
+  },
+  "efficiency": {
+    "by_task": {
+      "mmk12": {
+        "docs": 2000.0,
+        "docs_with_token_counts": 599.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 1103080.0,
+        "total_tokens": 1103080.0,
+        "total_correct_score": 0.0,
+        "avg_output_tokens_per_sample": 1841.5358931552587,
+        "tokens_per_correct_answer": null
+      }
+    },
+    "overall": {
+      "docs": 2000.0,
+      "docs_with_token_counts": 599.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 1103080.0,
+      "total_tokens": 1103080.0,
+      "total_correct_score": 0.0,
+      "avg_output_tokens_per_sample": 1841.5358931552587,
+      "tokens_per_correct_answer": null
+    }
+  },
+  "task_hashes": {
+    "mmk12": "c53a9e50e4a738435ff01bfcfb2d817cbe483875b9dd72c25d0bbe0b69abc911"
+  },
+  "model_source": "qwen3_vl",
+  "model_name": "/home/uberger/scratch/models/Qwen3-VL-8B-Instruct",
+  "model_name_sanitized": "models__Qwen3-VL-8B-Instruct",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 335446.470575324,
+  "end_time": 341716.455029476,
+  "total_evaluation_time_seconds": "6269.984454152"
+}

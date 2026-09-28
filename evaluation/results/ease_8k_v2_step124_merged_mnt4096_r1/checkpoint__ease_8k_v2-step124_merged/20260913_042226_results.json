@@ -1,0 +1,214 @@
+{
+  "results": {
+    "visulogic": {
+      "alias": "visulogic",
+      "visulogic_acc,none": 0.244,
+      "visulogic_acc_stderr,none": "N/A",
+      "visulogic_acc_stderr_clt,none": 0.013588548437881386,
+      "visulogic_acc_stderr_clustered,none": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "visulogic": []
+  },
+  "configs": {
+    "visulogic": {
+      "task": "visulogic",
+      "dataset_path": "VisuLogic/VisuLogic",
+      "dataset_kwargs": {
+        "data_files": "data.jsonl"
+      },
+      "test_split": "train",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function visulogic_doc_to_visual at 0x1552445d9a80>",
+      "doc_to_text": "<function visulogic_doc_to_text at 0x15554f6db600>",
+      "doc_to_target": "<function visulogic_doc_to_target at 0x155245b09bc0>",
+      "process_results": "<function visulogic_process_results at 0x15523817dee0>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "visulogic_acc",
+          "aggregation": "<function visulogic_aggregate_acc at 0x155245b0a520>",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_new_tokens": 4096,
+        "temperature": 0.0,
+        "do_sample": false,
+        "until": [
+          "\n\n"
+        ],
+        "repetition_penalty": 1.05
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "metadata": [
+        {
+          "version": 0.0
+        }
+      ],
+      "lmms_eval_specific_kwargs": {
+        "default": {
+          "pre_prompt": "",
+          "post_prompt": "\nAnswer with the option letter only."
+        },
+        "qwen_vl": {
+          "pre_prompt": "",
+          "post_prompt": " Answer:"
+        },
+        "pre_prompt": "",
+        "post_prompt": "\nAnswer with the option letter only."
+      },
+      "auto_strip_thinking": false
+    }
+  },
+  "versions": {
+    "visulogic": "Yaml"
+  },
+  "n-shot": {
+    "visulogic": 0
+  },
+  "higher_is_better": {
+    "visulogic": {
+      "visulogic_acc": true
+    }
+  },
+  "n-samples": {
+    "visulogic": {
+      "original": 1000,
+      "effective": 1000
+    }
+  },
+  "config": {
+    "model": "qwen3_vl",
+    "model_args": "pretrained=/home/uberger/scratch/research/saliency_r1/checkpoint/ease_8k_v2-step124_merged",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl.Qwen3_VL (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/ease_8k_v2_step124_merged_mnt4096_r1/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096,
+      "repetition_penalty": 1.05
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl",
+      "tasks": "visulogic",
+      "model_args": "pretrained=/home/uberger/scratch/research/saliency_r1/checkpoint/ease_8k_v2-step124_merged",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/ease_8k_v2_step124_merged_mnt4096_r1",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/ease_8k_v2_step124_merged_mnt4096_r1/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096,repetition_penalty=1.05",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/home/uberger/scratch/research/vlm_reasoning/results/lmms_eval/ease_8k_v2_step124_merged_mnt4096_r1",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "31fffc7",
+  "git_branch": "main",
+  "lmms_eval_version": "main@31fffc7",
+  "date": "20260913_042226",
+  "throughput": {
+    "total_gen_tokens": 110624,
+    "total_elapsed_time": 2104.7969624996185,
+    "avg_speed": 52.55803859989657,
+    "avg_rank": 0.0
+  },
+  "usage": {},
+  "efficiency": {
+    "by_task": {
+      "visulogic": {
+        "docs": 1000.0,
+        "docs_with_token_counts": 1000.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 795461.0,
+        "total_tokens": 795461.0,
+        "total_correct_score": 0.0,
+        "avg_output_tokens_per_sample": 795.461,
+        "tokens_per_correct_answer": null
+      }
+    },
+    "overall": {
+      "docs": 1000.0,
+      "docs_with_token_counts": 1000.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 795461.0,
+      "total_tokens": 795461.0,
+      "total_correct_score": 0.0,
+      "avg_output_tokens_per_sample": 795.461,
+      "tokens_per_correct_answer": null
+    }
+  },
+  "task_hashes": {
+    "visulogic": "1fb923da4284a8fbf451b3553ce5404d321b69c0b94aa3ad35e7c3afce52f217"
+  },
+  "model_source": "qwen3_vl",
+  "model_name": "/home/uberger/scratch/research/saliency_r1/checkpoint/ease_8k_v2-step124_merged",
+  "model_name_sanitized": "checkpoint__ease_8k_v2-step124_merged",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 1599064.963331954,
+  "end_time": 1601204.253547529,
+  "total_evaluation_time_seconds": "2139.2902155749034"
+}

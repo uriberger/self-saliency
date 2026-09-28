@@ -1,0 +1,349 @@
+{
+  "results": {
+    "p3": {
+      "alias": "p3",
+      "exact_match,none": 0.432985708767864,
+      "exact_match_stderr,none": "N/A",
+      "exact_match_stderr_clt,none": 0.009739836076098978,
+      "exact_match_stderr_clustered,none": "N/A",
+      "sample_precision,none": 0.4329857044380083,
+      "sample_precision_stderr,none": "N/A",
+      "sample_precision_stderr_clt,none": 0.00973983597870062,
+      "sample_precision_stderr_clustered,none": "N/A",
+      "sample_recall,none": 0.432985708767864,
+      "sample_recall_stderr,none": "N/A",
+      "sample_recall_stderr_clt,none": 0.009739836076098978,
+      "sample_recall_stderr_clustered,none": "N/A",
+      "sample_f1,none": 0.4329857044380083,
+      "sample_f1_stderr,none": "N/A",
+      "sample_f1_stderr_clt,none": 0.00973983597870062,
+      "sample_f1_stderr_clustered,none": "N/A",
+      "all_cat_precision,none": 0.7693008861152718,
+      "all_cat_precision_stderr,none": "N/A",
+      "all_cat_precision_stderr_clt,none": "N/A",
+      "all_cat_precision_stderr_clustered,none": "N/A",
+      "all_cat_recall,none": 0.4255227483286359,
+      "all_cat_recall_stderr,none": "N/A",
+      "all_cat_recall_stderr_clt,none": "N/A",
+      "all_cat_recall_stderr_clustered,none": "N/A",
+      "all_cat_f1,none": 0.4085146954089463,
+      "all_cat_f1_stderr,none": "N/A",
+      "all_cat_f1_stderr_clt,none": "N/A",
+      "all_cat_f1_stderr_clustered,none": "N/A",
+      "orientation_precision,none": 0.7844827585868757,
+      "orientation_precision_stderr,none": "N/A",
+      "orientation_precision_stderr_clt,none": "N/A",
+      "orientation_precision_stderr_clustered,none": "N/A",
+      "orientation_recall,none": 0.2106481481457101,
+      "orientation_recall_stderr,none": "N/A",
+      "orientation_recall_stderr_clt,none": "N/A",
+      "orientation_recall_stderr_clustered,none": "N/A",
+      "orientation_f1,none": 0.3321167849776893,
+      "orientation_f1_stderr,none": "N/A",
+      "orientation_f1_stderr_clt,none": "N/A",
+      "orientation_f1_stderr_clustered,none": "N/A",
+      "color_precision,none": 0.5704787234004622,
+      "color_precision_stderr,none": "N/A",
+      "color_precision_stderr_clt,none": "N/A",
+      "color_precision_stderr_clustered,none": "N/A",
+      "color_recall,none": 0.9694915254127741,
+      "color_recall_stderr,none": "N/A",
+      "color_recall_stderr_clt,none": "N/A",
+      "color_recall_stderr_clustered,none": "N/A",
+      "color_f1,none": 0.7182921677867568,
+      "color_f1_stderr,none": "N/A",
+      "color_f1_stderr_clt,none": "N/A",
+      "color_f1_stderr_clustered,none": "N/A",
+      "size_precision,none": 0.9529411763584775,
+      "size_precision_stderr,none": "N/A",
+      "size_precision_stderr_clt,none": "N/A",
+      "size_precision_stderr_clustered,none": "N/A",
+      "size_recall,none": 0.09642857142742346,
+      "size_recall_stderr,none": "N/A",
+      "size_recall_stderr_clt,none": "N/A",
+      "size_recall_stderr_clustered,none": "N/A",
+      "size_f1,none": 0.17513513346239298,
+      "size_f1_stderr,none": "N/A",
+      "size_f1_stderr_clt,none": "N/A",
+      "size_f1_stderr_clustered,none": "N/A"
+    }
+  },
+  "group_subtasks": {
+    "p3": []
+  },
+  "configs": {
+    "p3": {
+      "task": "p3",
+      "dataset_path": "salbench-vlm/salbench",
+      "dataset_name": "P3",
+      "dataset_kwargs": {
+        "token": true
+      },
+      "test_split": "test",
+      "full_docs": false,
+      "process_results_use_image": false,
+      "doc_to_visual": "<function p3o3_doc_to_visual at 0x155243f831a0>",
+      "doc_to_text": "<function p3o3_doc_to_text at 0x154dec0940e0>",
+      "doc_to_target": "answer",
+      "process_results": "<function p3_process_results at 0x154dec095080>",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "<function aggregate_per_sample_score at 0x154dec0960c0>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "sample_precision",
+          "aggregation": "<function aggregate_per_sample_score at 0x154dec096f20>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "sample_recall",
+          "aggregation": "<function aggregate_per_sample_score at 0x154dec097d80>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "sample_f1",
+          "aggregation": "<function aggregate_per_sample_score at 0x154dec0a0c20>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "all_cat_precision",
+          "aggregation": "<function p3_aggregate_all_category_precision at 0x154dec0a1e40>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "all_cat_recall",
+          "aggregation": "<function p3_aggregate_all_category_recall at 0x154dec0a2d40>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "all_cat_f1",
+          "aggregation": "<function p3_aggregate_all_category_f1 at 0x154dec0a3c40>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "orientation_precision",
+          "aggregation": "<function aggregate_per_category_precision at 0x154dec0ac720>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "orientation_recall",
+          "aggregation": "<function aggregate_per_category_recall at 0x154dec0ad620>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "orientation_f1",
+          "aggregation": "<function aggregate_per_category_f1 at 0x154dec0ae520>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "color_precision",
+          "aggregation": "<function aggregate_per_category_precision at 0x154dec0af240>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "color_recall",
+          "aggregation": "<function aggregate_per_category_recall at 0x154dec0bc180>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "color_f1",
+          "aggregation": "<function aggregate_per_category_f1 at 0x154dec0bd080>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "size_precision",
+          "aggregation": "<function aggregate_per_category_precision at 0x154dec0bdda0>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "size_recall",
+          "aggregation": "<function aggregate_per_category_recall at 0x154dec0beca0>",
+          "higher_is_better": true
+        },
+        {
+          "metric": "size_f1",
+          "aggregation": "<function aggregate_per_category_f1 at 0x154dec0bfba0>",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_new_tokens": 4096,
+        "until": [
+          "\n\n"
+        ]
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "score_key": "score",
+      "metadata": [
+        {
+          "version": 0.0
+        }
+      ],
+      "auto_strip_thinking": false
+    }
+  },
+  "versions": {
+    "p3": "Yaml"
+  },
+  "n-shot": {
+    "p3": 0
+  },
+  "higher_is_better": {
+    "p3": {
+      "exact_match": true,
+      "sample_precision": true,
+      "sample_recall": true,
+      "sample_f1": true,
+      "all_cat_precision": true,
+      "all_cat_recall": true,
+      "all_cat_f1": true,
+      "orientation_precision": true,
+      "orientation_recall": true,
+      "orientation_f1": true,
+      "color_precision": true,
+      "color_recall": true,
+      "color_f1": true,
+      "size_precision": true,
+      "size_recall": true,
+      "size_f1": true
+    }
+  },
+  "n-samples": {
+    "p3": {
+      "original": 2589,
+      "effective": 2589
+    }
+  },
+  "config": {
+    "model": "qwen3_vl_vga",
+    "model_args": "pretrained=Qwen/Qwen3-VL-8B-Instruct",
+    "model_backend": "lmms_eval.models.chat.qwen3_vl_vga.Qwen3_VL_VGA (chat)",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16/cache",
+    "limit": null,
+    "offset": 0,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {
+      "max_new_tokens": 4096
+    },
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234,
+    "resolved_cli_args": {
+      "config": "",
+      "model": "qwen3_vl_vga",
+      "tasks": "p3",
+      "model_args": "pretrained=Qwen/Qwen3-VL-8B-Instruct",
+      "launcher_args": null,
+      "num_fewshot": null,
+      "batch_size": "1",
+      "max_batch_size": null,
+      "device": null,
+      "output_path": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16",
+      "limit": null,
+      "offset": 0,
+      "use_cache": "/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16/cache",
+      "cache_requests": null,
+      "check_integrity": false,
+      "write_out": false,
+      "log_samples": true,
+      "wandb_log_samples": false,
+      "swanlab_log_samples": false,
+      "log_samples_suffix": "model_outputs",
+      "system_instruction": null,
+      "apply_chat_template": false,
+      "fewshot_as_multiturn": false,
+      "show_config": false,
+      "include_path": null,
+      "gen_kwargs": "max_new_tokens=4096",
+      "reasoning_tags": "[[\"<think>\", \"</think>\"], [\"<analysis>\", \"</analysis>\"]]",
+      "verbosity": "INFO",
+      "wandb_args": "",
+      "swanlab_args": "",
+      "timezone": "Asia/Singapore",
+      "hf_hub_log_args": ",output_path=/lustre/fs1/portfolios/nvr/projects/nvr_israel_rlop/users/uberger/research/vlm_reasoning/results/lmms_eval/qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16",
+      "predict_only": false,
+      "seed": [
+        0,
+        1234,
+        1234,
+        1234
+      ],
+      "trust_remote_code": false,
+      "process_with_media": false,
+      "agentic_trace_mode": "basic",
+      "force_simple": false,
+      "tui": false,
+      "repeats": 1,
+      "baseline": null,
+      "max_tokens": null,
+      "power_analysis": false,
+      "effect_size": 0.03,
+      "alpha": 0.05,
+      "power": 0.8,
+      "correlation": 0.5,
+      "std_a": null,
+      "std_b": null
+    }
+  },
+  "git_hash": "31fffc7",
+  "git_branch": "main",
+  "lmms_eval_version": "main@31fffc7",
+  "date": "20260911_122928",
+  "throughput": {
+    "total_gen_tokens": 1296,
+    "total_elapsed_time": 91.22486925125122,
+    "avg_speed": 14.206652315725016,
+    "avg_rank": 0.0
+  },
+  "usage": {},
+  "efficiency": {
+    "by_task": {
+      "p3": {
+        "docs": 2589.0,
+        "docs_with_token_counts": 2589.0,
+        "total_input_tokens": 0.0,
+        "total_output_tokens": 5178.0,
+        "total_tokens": 5178.0,
+        "total_correct_score": 1121.0,
+        "avg_output_tokens_per_sample": 2.0,
+        "tokens_per_correct_answer": 4.619090098126673
+      }
+    },
+    "overall": {
+      "docs": 2589.0,
+      "docs_with_token_counts": 2589.0,
+      "total_input_tokens": 0.0,
+      "total_output_tokens": 5178.0,
+      "total_tokens": 5178.0,
+      "total_correct_score": 1121.0,
+      "avg_output_tokens_per_sample": 2.0,
+      "tokens_per_correct_answer": 4.619090098126673
+    }
+  },
+  "task_hashes": {
+    "p3": "077e4528396451c021667bc909e1d6314de924ab8a24d1677809a4a1e069e1c8"
+  },
+  "model_source": "qwen3_vl_vga",
+  "model_name": "Qwen/Qwen3-VL-8B-Instruct",
+  "model_name_sanitized": "Qwen__Qwen3-VL-8B-Instruct",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 1192151.662698284,
+  "end_time": 1192343.75467102,
+  "total_evaluation_time_seconds": "192.09197273594327"
+}
