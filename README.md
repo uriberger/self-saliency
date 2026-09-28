@@ -36,18 +36,34 @@ or a `TODO(publish)` comment, so nothing ships silently:
 - **arXiv link and the BibTeX entry.**
 - **Hugging Face links** for the released checkpoints (one repository per arm —
   see `docs/publishing.md` on `main`).
-- **The teaser video's step label reads `glimpse`**, which is the internal name
-  of a saliency-map variant (`fig1_steps_video.py --map`), not a term that
-  appears in the paper. Re-render with a label a reader will understand.
 
 Delete the banner element once they are all done.
 
 ## Where the assets came from
 
 Figures 1–5 are rendered straight from `self_saliency_final.pdf` at ~1800 px
-wide and converted to WebP. The teaser is `chain.mp4` from the multi-step
-figure run. Regenerating either means re-running the extraction against the
-current PDF — the figures are not hand-edited.
+wide and converted to WebP. Regenerating them means re-running the extraction
+against the current PDF — they are not hand-edited.
+
+The teaser is `fig1_steps_video.py` in the research repository, on
+CV-Bench row 167:
+
+```
+--run-dir outputs/saliency_viz/fig1d-search --model ours \
+--sample sample_167_row000167 \
+--smooth 1.0 --upsample map --overlay-mode alpha --alpha 0.8 \
+--map-label "" \
+--question "Estimate the real-world distances between objects in this image. \
+Which object is closer to the chair (red box), the bookcase (blue box) or the \
+table (green box)? (A) bookcase (B) table"
+```
+
+`--map-label ""` drops the `step k of n · glimpse` suffix; `glimpse` is an
+internal saliency-map name and means nothing to a reader. The overlay knobs
+were recovered by matching the earlier render pixel-for-pixel, so the clip is
+that render with the label removed and nothing else changed. `--smooth` is
+cosmetic and its sigma is in patches, so it does not carry over to a sample on
+a different grid.
 
 ## Editing
 
