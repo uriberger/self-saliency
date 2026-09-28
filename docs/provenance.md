@@ -13,26 +13,39 @@ stays in `A` and `V` and is deliberately **not** here.
 
 ## Status
 
-Done, and checked against the archive by a test that fails if they ever disagree:
+Everything below is ported. The repository is self-contained: no file reaches into the
+archive repos, and `tests/test_no_archive_dependencies.py` fails if one starts to --
+which matters because every archive path still exists on the machine this was ported on,
+so a missed rewiring would run the archive's code and look correct here while failing
+everywhere else. It caught eleven hardcoded paths.
 
-* `selfsal/saliency/` — phi, phi_mean, the two reward heads
-* `selfsal/grounding/mask.py` — the grounded region, and the center_rect ablation's
-* `selfsal/steps/` — segmentation and the observe classifier
+Checked against the originals rather than eyeballed:
 
-Not yet moved: everything else in the tables below. It is all still in the archive
-repos and still runs there, so nothing is in a broken state — this repo currently holds
-the shared core and its tests.
+| what | how |
+|---|---|
+| phi, phi_mean, the regions, the rectangle | 600 randomised grids x 3 map dtypes x 6 filter settings |
+| Appendix A.1 segmentation | 4,000 randomised chains |
+| image preparation | 42 cases over 7 sizes x 6 image modes, pixel-identical |
+| attention capture | the fused path, and that the explicit softmax reproduces it |
+| the six arm configs | against `training_args.bin`, `adapter_config.json`, `trainer_state.json` and the reached step count |
+| the 25-benchmark suite | all ten arms reproduce their published mean |
 
-Two couplings found during the port that the tables below do not show:
+Four things the port turned up that were not visible from the outside:
 
-1. **`sink_location.py` depends on `sink_shift.py`** for attention capture — `install`,
-   `collected_map`, `_sdpa`, `_repeat_kv`, `IMAGE_TOKEN_ID` — and calls it with
-   `alpha=0.0`, i.e. it uses that module as a collector with the edit disabled. The
-   capture half belongs in `selfsal/saliency/maps.py`; the sink-shift *edit* is not in
-   the paper and stays in the archive. That split is the third merge and it is not done.
-2. **The head-selection screen and the reward segment chains differently** — see the
-   docstring of `selfsal/steps/segment.py`. Both segmenters are here; the seam is
-   recorded rather than papered over.
+1. **The image resize was never bicubic.** `resize(..., 2)` with a comment saying BICUBIC;
+   PIL's 2 is BILINEAR. Every published image was resized bilinearly. Following the
+   comment would have changed every patch grid's contents.
+2. **`phi` and `phi_mean` ran at different precisions** on the same map -- one divided in
+   the map's dtype, the other had already upcast. Both are float64 now.
+3. **Head selection and the reward segment chains differently.** See
+   `selfsal/steps/segment.py`; both segmenters are here and the seam is recorded.
+4. **The Saliency-R1 arm generated in-process, not through vLLM** (`use_vllm=False`),
+   which is how all eight of its GPUs could train.
+
+What deliberately did NOT come across, and is intact in the archive: the gradient and
+GLIMPSE saliency maps, the AUROC and roll-null metrics, the placebo, mask-free,
+mismatched-box and length-guard controls, the attention-intervention and sink-shift
+experiments, the RoPE-phase probes, and the set_a-set_e corpus builders.
 
 ## selfsal/ — the method
 

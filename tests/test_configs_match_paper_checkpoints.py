@@ -259,3 +259,52 @@ def test_question_boxes_threshold_matches_its_box_file(cfgmod):
     assert built["text_column"] == regions["text_column"]
     assert built["dataset"] == cfg["data"]["dataset"]
     assert int(built["max_image_side"]) == int(cfg["data"]["max_image_side"])
+
+
+@pytest.mark.parametrize("arm", list(CHECKPOINTS))
+def test_generation_backend_matches(arm, cfgmod):
+    """vLLM or in-process, as the run actually did it.
+
+    Not cosmetic. vLLM occupies a GPU of its own, so an arm that generates in-process has
+    that card available for training -- which is how Saliency-R1 fits 8 training ranks on
+    8 GPUs while our arms fit 6. Get this wrong and the launcher either demands a ninth
+    GPU or silently reduces the rank count, and the rank count sets the step count.
+    """
+    cfg = cfgmod.load_arm(arm)
+    want = bool(_training_args(arm).get("use_vllm"))
+    got = cfg.get("generation", "vllm") == "vllm"
+    assert got == want, (
+        f"{arm}: the run had use_vllm={want}, the config says generation="
+        f"{cfg.get('generation', 'vllm')!r}")
+
+
+@pytest.mark.parametrize("arm", list(CHECKPOINTS))
+def test_emitted_flags_carry_the_alphas_and_the_lora(arm, cfgmod):
+    """What `run.sh` hands the trainer must still be the arm.
+
+    config.py builds the command line, and everything above checks the config. This
+    checks the projection of it -- the step between "the config is right" and "the
+    trainer was told the right thing", which is where a launcher usually goes wrong.
+    """
+    cfg = cfgmod.load_arm(arm)
+    flags = cfgmod.training_flags(cfg, "/tmp/out")
+
+    def value_of(flag):
+        return flags[flags.index(flag) + 1] if flag in flags else None
+
+    lora = cfg["lora"]
+    assert value_of("--lora_r") == str(lora["rank"])
+    assert value_of("--lora_alpha") == str(lora["alpha"])
+    i = flags.index("--lora_target_modules")
+    assert flags[i + 1:i + 1 + len(lora["targets"])] == lora["targets"]
+
+    weights = cfgmod.reward_weights(cfg)
+    if weights is None:
+        assert "--reward_weights" not in flags, (
+            f"{arm} ran with reward_weights=None (all ones); passing them explicitly "
+            f"would be equivalent but would not be what the checkpoint records")
+    else:
+        i = flags.index("--reward_weights")
+        assert [float(x) for x in flags[i + 1:i + 1 + len(weights)]] == weights
+
+    assert ("--use_vllm" in flags) == (cfg.get("generation", "vllm") == "vllm")

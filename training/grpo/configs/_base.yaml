@@ -61,5 +61,11 @@ grpo:
 # ranks and 3,420 steps. Their checkpoints have 3,990. Deriving ranks from which
 # sidecars a run needs would silently retrain two of the five arms at a different
 # length.
+# Generation backend. vLLM runs as a sidecar on its own GPU; `hf` generates in-process
+# with the policy, which frees that GPU for training. Read back off each run's
+# training_args.bin (`use_vllm`), not assumed -- the Saliency-R1 arm is `hf`, which is
+# how all eight of its GPUs could train.
+generation: vllm
+
 training_ranks: 6                            # -> 1,330 steps/epoch -> 3,990 total
 expect_optimizer_steps: 3990                 # asserted at startup, not decorative

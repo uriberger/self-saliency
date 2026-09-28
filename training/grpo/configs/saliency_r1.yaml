@@ -33,5 +33,7 @@ reward:
     regions:
       source: dataset_box      # the question-level box shipped with saliency-r1-8k
 
+generation: hf                 # use_vllm=False in its training_args.bin; no sidecars at
+                               # all, which is what leaves all eight GPUs for training
 training_ranks: 8              # -> 997 steps/epoch
 expect_optimizer_steps: 2991

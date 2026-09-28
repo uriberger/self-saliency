@@ -11,8 +11,17 @@ work fixes the target regions from the image and question alone — here they ar
 derived from the text the policy is generating, which is what makes the two pressures
 in Figure 1 complementary: say things that can be grounded, and look at what you say.
 
-Start at **[docs/reproduce.md](docs/reproduce.md)**: one row per table and figure,
-each pointing at the config that produced it.
+Start at **[docs/reproduce.md](docs/reproduce.md)**: one row per table and figure, each
+pointing at the config that produced it. [docs/install.md](docs/install.md) is the setup,
+and [docs/provenance.md](docs/provenance.md) says where every file came from and what was
+checked against what.
+
+```bash
+pytest                                              # 2,300+ CPU tests, no GPU
+python -m training.grpo.config --all                # the six arms of the paper
+bash training/grpo/run.sh self_saliency --dry-run   # the plan, without launching
+python evaluation/tables.py                         # rebuild Table 2 from banked results
+```
 
 ## Layout
 
