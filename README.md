@@ -31,11 +31,13 @@ plan the site only builds once the repository is public.
 unresolved. Every one of those is also marked inline with `<mark class="todo">`
 or a `TODO(publish)` comment, so nothing ships silently:
 
-- **Authors and affiliations.** The paper PDF is anonymised for review, so the
-  author list could not be read out of it.
-- **arXiv link and the BibTeX entry.**
+- **arXiv link and ID** — the link button, the `arXiv:` field of the BibTeX
+  entry, and the `citation_arxiv_id` / `citation_pdf_url` meta tags.
 - **Hugging Face links** for the released checkpoints (one repository per arm —
   see `docs/publishing.md` on `main`).
+
+Authors are filled in. They carry no homepage links; add them by wrapping each
+name in the `.authors` paragraph in an `<a>`.
 
 Delete the banner element once they are all done.
 
@@ -60,10 +62,14 @@ table (green box)? (A) bookcase (B) table"
 
 `--map-label ""` drops the `step k of n · glimpse` suffix; `glimpse` is an
 internal saliency-map name and means nothing to a reader. The overlay knobs
-were recovered by matching the earlier render pixel-for-pixel, so the clip is
-that render with the label removed and nothing else changed. `--smooth` is
-cosmetic and its sigma is in patches, so it does not carry over to a sample on
-a different grid.
+were not recorded anywhere and were recovered by sweeping against an earlier
+render until a frame matched pixel-for-pixel.
+
+That command reproduces this clip as long as the script is at `ec94522` or
+later. Frames are 1346×716; an earlier render of the same sample was 694 tall,
+because `355c4ef` reserved a footer line and centred the chain against the
+picture. `--smooth` is cosmetic and its sigma is in patches, so it does not
+carry over to a sample on a different grid.
 
 ## Editing
 

@@ -16,6 +16,12 @@
 <meta property="og:image" content="https://uriberger.github.io/self-saliency/static/images/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 
+<!-- Google Scholar. TODO(publish): add citation_arxiv_id and citation_pdf_url. -->
+<meta name="citation_title" content="Look Where You Say You're Looking: Self-Grounded Attention for Visual Reasoning">
+<meta name="citation_author" content="Berger, Uri">
+<meta name="citation_author" content="Chechik, Gal">
+<meta name="citation_author" content="Dalal, Gal">
+
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='none' stroke='%232a78d6' stroke-width='3'/><circle cx='16' cy='16' r='4' fill='%232a78d6'/></svg>">
 <link rel="stylesheet" href="static/css/index.css">
 </head>
@@ -31,8 +37,7 @@
   <div class="wrap">
     <strong>Placeholder content &mdash; not ready to publish.</strong>
     <ul>
-      <li>Author list, affiliations and personal links (the PDF is anonymised, so they could not be read from it).</li>
-      <li>arXiv link and ID, and the <code>@article</code> BibTeX entry.</li>
+      <li>arXiv link and ID, and the <code>arXiv:</code> field of the BibTeX entry.</li>
       <li>Hugging Face links for the released checkpoints.</li>
     </ul>
   </div>
@@ -48,14 +53,19 @@
   <h1>Look Where You Say You&rsquo;re Looking</h1>
   <p class="subtitle">Self-Grounded Attention for Visual Reasoning</p>
 
-  <p class="venue"><mark class="todo">Preprint &middot; under review</mark></p>
+  <p class="venue">Preprint &middot; under review</p>
 
-  <!-- TODO(publish): real names, ORCID/homepage links, and affiliation markers. -->
+  <!-- Homepage/ORCID links can be added by wrapping each name in an <a>. -->
   <p class="authors">
-    <mark class="todo">First Author<sup>1</sup>, Second Author<sup>1,2</sup>, Third Author<sup>2</sup></mark>
+    Uri Berger<sup>1,2</sup>,
+    Gal Chechik<sup>3,4</sup>,
+    Gal Dalal<sup>3</sup>
   </p>
   <p class="affil">
-    <mark class="todo"><sup>1</sup>Affiliation One &nbsp;&nbsp; <sup>2</sup>Affiliation Two</mark>
+    <sup>1</sup>University of Melbourne &nbsp;
+    <sup>2</sup>The Hebrew University of Jerusalem &nbsp;
+    <sup>3</sup>NVIDIA Research &nbsp;
+    <sup>4</sup>Bar-Ilan University
   </p>
 
   <ul class="links">
@@ -492,11 +502,11 @@
 <section class="wrap" id="bibtex" aria-labelledby="bibtex-h">
   <h2 id="bibtex-h">BibTeX</h2>
   <div class="prose">
-<!-- TODO(publish): replace with the real entry once the preprint is posted. -->
-<pre><code>@article{TODO_selfsaliency,
+<!-- TODO(publish): fill in the arXiv ID once the preprint is posted. -->
+<pre><code>@article{berger2026selfsaliency,
   title   = {Look Where You Say You're Looking:
              Self-Grounded Attention for Visual Reasoning},
-  author  = {TODO},
+  author  = {Berger, Uri and Chechik, Gal and Dalal, Gal},
   journal = {arXiv preprint arXiv:TODO},
   year    = {2026}
 }</code></pre>
