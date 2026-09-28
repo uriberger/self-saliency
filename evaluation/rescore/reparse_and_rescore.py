@@ -17,8 +17,8 @@ import json
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from run_experiment import is_correct, parse_response  # noqa: E402
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from experiments.head_selection.generate import is_correct, parse_response  # noqa: E402
 
 TARGET_PREFIXES = (
     "qwen2_5_vl_7b_instruct-",

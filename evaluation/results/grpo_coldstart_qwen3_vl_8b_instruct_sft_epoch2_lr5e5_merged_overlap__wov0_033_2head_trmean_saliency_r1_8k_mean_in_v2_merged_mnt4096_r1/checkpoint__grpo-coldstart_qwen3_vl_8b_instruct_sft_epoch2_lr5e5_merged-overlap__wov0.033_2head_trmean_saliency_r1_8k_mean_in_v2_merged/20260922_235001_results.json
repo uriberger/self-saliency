@@ -219,5 +219,6 @@
   "chat_template_sha": null,
   "start_time": 68791.907973639,
   "end_time": 74430.800095799,
-  "total_evaluation_time_seconds": "5638.892122160003"
+  "total_evaluation_time_seconds": "5638.892122160003",
+  "reasoning_parser_version": "2026-09-16-mcq-cue"
 }

@@ -2,13 +2,13 @@
   "results": {
     "logicvista_reasoning": {
       "alias": "logicvista_reasoning",
-      "acc_score,none": 0.5513392857142857,
-      "acc_score_stderr,none": 0.0235241927801154,
-      "acc_score_stderr_clt,none": 0.0235241927801154,
+      "acc_score,none": 0.546875,
+      "acc_score_stderr,none": 0.023545032029653405,
+      "acc_score_stderr_clt,none": 0.023545032029653405,
       "acc_score_stderr_clustered,none": "N/A",
       "format_score,none": 0.021428571428571432,
       "format_score_stderr,none": 0.006109308822930163,
-      "format_score_stderr_clt,none": 0.006109308822930164,
+      "format_score_stderr_clt,none": 0.006109308822930163,
       "format_score_stderr_clustered,none": "N/A"
     }
   },
@@ -199,5 +199,6 @@
   "chat_template_sha": null,
   "start_time": 553480.696165893,
   "end_time": 555550.006626019,
-  "total_evaluation_time_seconds": "2069.3104601260275"
+  "total_evaluation_time_seconds": "2069.3104601260275",
+  "reasoning_parser_version": "2026-09-16-mcq-cue"
 }

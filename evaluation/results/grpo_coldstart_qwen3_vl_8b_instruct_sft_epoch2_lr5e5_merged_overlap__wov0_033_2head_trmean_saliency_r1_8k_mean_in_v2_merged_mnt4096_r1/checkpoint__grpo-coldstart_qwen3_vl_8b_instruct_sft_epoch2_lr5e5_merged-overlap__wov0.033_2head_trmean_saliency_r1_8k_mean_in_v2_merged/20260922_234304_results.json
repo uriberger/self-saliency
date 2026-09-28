@@ -204,5 +204,6 @@
   "chat_template_sha": null,
   "start_time": 1971526.970603376,
   "end_time": 1972913.470710227,
-  "total_evaluation_time_seconds": "1386.5001068511046"
+  "total_evaluation_time_seconds": "1386.5001068511046",
+  "mathvision_parser_version": "2026-09-17-option-letter"
 }

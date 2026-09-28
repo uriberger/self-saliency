@@ -7,8 +7,8 @@
       "acc_score_stderr_clt,none": 0.02360295347518352,
       "acc_score_stderr_clustered,none": "N/A",
       "format_score,none": 0.010714285714285716,
-      "format_score_stderr,none": 0.00434955644658351,
-      "format_score_stderr_clt,none": 0.00434955644658351,
+      "format_score_stderr,none": 0.004349556446583509,
+      "format_score_stderr_clt,none": 0.004349556446583509,
       "format_score_stderr_clustered,none": "N/A"
     }
   },
@@ -199,5 +199,6 @@
   "chat_template_sha": null,
   "start_time": 316199.927905787,
   "end_time": 317941.278529831,
-  "total_evaluation_time_seconds": "1741.3506240439601"
+  "total_evaluation_time_seconds": "1741.3506240439601",
+  "reasoning_parser_version": "2026-09-16-mcq-cue"
 }

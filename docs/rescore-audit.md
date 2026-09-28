@@ -1,7 +1,14 @@
 # Re-score audit: the six unstamped cells
 
-Run on branch `rescore/parser-stamp-audit`. **Dry run only — nothing was written**, to the
-repository or to the archive. `--apply` was never passed.
+Run on branch `rescore/parser-stamp-audit`, then **applied**. The ten paper arms were
+re-scored on the three benchmarks with a versioned answer reader; every one of their
+cells now carries the pinned reader's version. The pre-re-score state is kept beside each
+rewritten file as `*.orig_buggy_parse.bak` (18 files).
+
+Non-paper runs in the archive were left alone. One of them moved 38.00 -> 37.00 and lost
+an answer, which the re-score script itself flags as impossible for a fix that only adds
+readings. That is unexplained, it is outside every paper arm, and it is the reason this
+was applied per-arm rather than across the whole tree.
 
 ## What this was checking
 
@@ -56,11 +63,11 @@ reproduce the paper's absolute mean ranks exactly (it handles ties more crudely)
 deltas are computed the same way before and after, so they are comparable with each
 other; the absolute values in the paper are not restated here.
 
-## What was not done, and why
+## Provenance
 
-No version stamp was written into any of the six files. The scorer did not produce one,
-and writing a provenance record by hand that claims otherwise is worse than the gap it
-would paper over.
+No stamp was written by hand. The re-score script produced every one of them by actually
+re-reading the stored answers, which is the only thing that makes a version label mean
+anything.
 
 ## The underlying gap
 

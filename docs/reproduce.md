@@ -12,17 +12,22 @@ published number.
 |---|---|---|---|
 | Qwen3-VL-8B-Instruct | 61.14 | `qwen3_vl_8b_instruct_mnt4096` | no training |
 | VGA | 61.16 | `qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16` | `baselines/vga/` |
-| Coldstart | 62.69 | `coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged` | `training/coldstart/configs/qwen3_vl_8b.yaml` |
+| Coldstart | 62.70 | `coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged` | `training/coldstart/configs/qwen3_vl_8b.yaml` |
 | EASE | 62.88 | `ease_8k_v2-step124_merged` | `baselines/ease/` |
 | SELF-SALIENCY_mean | 63.17 | `…overlap__wov0.033_2head_trmean_saliency_r1_8k_mean_in_v2` | `training/grpo/configs/self_saliency_mean.yaml` |
 | question boxes | 63.33 | `…-question-boxes` | `training/grpo/configs/question_boxes.yaml` |
 | center rect | 63.38 | `…-rect-frac` | `training/grpo/configs/center_rect.yaml` |
-| No-Sal | 63.47 | `…-no-saliency_saliency_r1_8k` | `training/grpo/configs/no_sal.yaml` |
+| No-Sal | 63.45 | `…-no-saliency_saliency_r1_8k` | `training/grpo/configs/no_sal.yaml` |
 | Saliency-R1 | 63.59 | `…-saliency-r1-qwen3` | `training/grpo/configs/saliency_r1.yaml` |
 | **SELF-SALIENCY** | **64.26** | `…overlap__wov0.4_2head_trmean` | `training/grpo/configs/self_saliency.yaml` |
 
 The published mean for *center rect* is 63.39 against 63.38 recomputed; the gap is
 rounding in the MME `/2800` rescale, not a different run.
+
+Two means above differ from the printed paper. LogicVista was re-scored against the
+pinned answer reader, moving Coldstart 54.91 -> 55.13 and No-Sal 55.13 -> 54.69, hence
+62.69 -> 62.70 and 63.47 -> 63.45. Nothing reorders and SELF-SALIENCY is untouched. See
+[rescore-audit.md](rescore-audit.md).
 
 Two arms carry a DAPO reference that never appears in a table but without which the
 EASE number means nothing (App D.3): `baselines/ease/configs/dapo.yaml`. Run it.

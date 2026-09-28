@@ -23,8 +23,8 @@ import json
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from run_experiment import extract_mcq_choice, is_correct, parse_mcq_options  # noqa: E402
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from experiments.head_selection.generate import extract_mcq_choice, is_correct, parse_mcq_options  # noqa: E402
 
 
 def _rescore(final_answer: str, ground_truth, old: bool, question: str | None = None) -> bool:

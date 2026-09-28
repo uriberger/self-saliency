@@ -55,14 +55,20 @@ TABLE_1 = {
     "mmstar", "mme", "realworldqa", "mmmu_pro_standard", "scienceqa_img",
 }
 
-#: run directory -> (paper label, published mean score over the 25 benchmarks)
+#: run directory -> (paper label, expected mean over the 25 benchmarks).
+#:
+#: Two of these are NOT the printed figure. LogicVista was re-scored against the pinned
+#: answer parser (docs/rescore-audit.md): Coldstart 54.91 -> 55.13 and No-Sal 55.13 ->
+#: 54.69, which moves their means by +0.01 and -0.02. The published figures are kept in
+#: PUBLISHED below so the difference is recorded rather than quietly absorbed. Nothing
+#: reorders and SELF-SALIENCY is untouched.
 PAPER_ARMS = {
     "grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_overlap__wov0_4_2head_trmean_merged_mnt4096_r1":
         ("SELF-SALIENCY", 64.26),
     "grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_saliency_r1_qwen3_merged_mnt4096_r1":
         ("Saliency-R1", 63.59),
     "grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_no_saliency_saliency_r1_8k_merged_mnt4096_r1":
-        ("No-Sal", 63.47),
+        ("No-Sal", 63.45),   # published 63.47
     "grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_rect_frac_merged_mnt4096_r1":
         ("center rect", 63.38),
     "grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_question_boxes_merged_mnt4096_r1":
@@ -70,10 +76,15 @@ PAPER_ARMS = {
     "grpo_coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_overlap__wov0_033_2head_trmean_saliency_r1_8k_mean_in_v2_merged_mnt4096_r1":
         ("SELF-SALIENCY_mean", 63.17),
     "ease_8k_v2_step124_merged_mnt4096_r1": ("EASE", 62.88),
-    "coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_mnt4096_r1": ("Coldstart", 62.69),
+    "coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged_mnt4096_r1": ("Coldstart", 62.70),   # published 62.69
     "qwen3_vl_8b_instruct_mnt4096_vga_b0.2_l4-16": ("VGA", 61.16),
     "qwen3_vl_8b_instruct_mnt4096": ("Qwen3-VL-8B-Instruct", 61.14),
 }
+
+
+#: What Table 2 / Table 7 print, for the two arms the re-score moved.
+PUBLISHED = {"No-Sal": 63.47, "Coldstart": 62.69}
+MAX_RESCORE_DRIFT = 0.03
 
 
 # --- 1. the suite -----------------------------------------------------------
@@ -189,29 +200,74 @@ def test_parsers_point_inside_the_submodule(tables):
             f"submodule")
 
 
-def test_banked_results_carry_a_parser_stamp(tables):
-    """A banked number with no stamp cannot be told apart from a stale one."""
+def test_banked_results_are_scored_by_the_pinned_parser(tables):
+    """Every cell the table would actually USE carries the pinned parser's version.
+
+    Two details this gets right that an obvious version would not.
+
+    The stamp sits at the JSON's TOP level, beside `results`, not inside the per-task
+    metrics. Looking in the wrong place makes the check vacuous.
+
+    Only the WINNING file per (run, task) matters. The collector takes the latest
+    timestamp, so a superseded file left in the tree is not a stale number -- it is a
+    number nothing reads. Flagging those would train the reader to ignore this test.
+    """
     results = EVAL / "results"
     if not results.is_dir():
         pytest.skip("no banked results")
 
-    stamp_keys = {stamp for _s, stamp, *_r in
-                  ((v[0], v[1], v[2], v[3]) for v in tables.PARSERS.values())}
-    unstamped = []
+    # marker metric -> (stamp key, expected version)
+    expected = {marker: (stamp_key, fallback)
+                for marker, (_src, stamp_key, fallback, _cmd) in tables.PARSERS.items()}
+
+    winning: dict[tuple[str, str], tuple[str, dict]] = {}
     for path in results.rglob("*results.json"):
+        run = path.relative_to(results).parts[0]
+        timestamp = path.name.split("_results")[0]
         try:
             blob = json.loads(path.read_text())
         except Exception:
             continue
-        results_block = blob.get("results") if isinstance(blob, dict) else None
-        if not isinstance(results_block, dict):
+        if not isinstance(blob, dict):
             continue
-        for task, metrics in results_block.items():
+        for task, metrics in (blob.get("results") or {}).items():
             if not isinstance(metrics, dict):
                 continue
-            for marker in tables.PARSERS:
-                if marker in metrics and not (stamp_keys & set(metrics)):
-                    unstamped.append(f"{path.parent.name}/{task}")
-    assert not unstamped, (
-        f"{len(unstamped)} banked task results were produced by a versioned scorer but "
-        f"carry no version stamp, e.g. {sorted(set(unstamped))[:5]}")
+            if not any(marker in metrics for marker in expected):
+                continue
+            key = (run, task)
+            if key not in winning or timestamp > winning[key][0]:
+                winning[key] = (timestamp, blob)
+
+    assert winning, "no versioned task results found; this check is inert"
+
+    stale = []
+    for (run, task), (_ts, blob) in sorted(winning.items()):
+        metrics = blob["results"][task]
+        for marker, (stamp_key, want) in expected.items():
+            if marker in metrics and blob.get(stamp_key) != want:
+                stale.append(f"{run}/{task}: {blob.get(stamp_key)!r} != {want!r}")
+    assert not stale, (
+        f"{len(stale)} banked cell(s) were scored by a parser other than the pinned "
+        f"one:\n  " + "\n  ".join(stale[:8]))
+
+
+def test_rescore_drift_from_the_published_figures_is_small(tables, scores):
+    """The two re-scored arms must stay within a rounding step of what was printed.
+
+    This is not a formality. If a future re-score moved one of these by a point, the
+    repository and the paper would disagree materially and someone has to decide which is
+    right. Catching it here makes that a decision rather than a discovery.
+    """
+    task_lists = tables.load_lmms_eval_suite()
+    for run, (label, expected) in PAPER_ARMS.items():
+        if label not in PUBLISHED:
+            continue
+        per_task = scores.get(run)
+        assert per_task is not None
+        values = [per_task[t] / 28.0 if t == "mme" else per_task[t] for t in task_lists]
+        got = sum(values) / len(values)
+        drift = abs(got - PUBLISHED[label])
+        assert drift < MAX_RESCORE_DRIFT, (
+            f"{label}: re-scored mean {got:.3f} is {drift:.3f} from the published "
+            f"{PUBLISHED[label]}, past the {MAX_RESCORE_DRIFT} rounding allowance")
