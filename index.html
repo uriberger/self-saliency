@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Self-Saliency &mdash; Look Where You Say You're Looking</title>
+<meta name="description" content="Self-Saliency post-trains a vision-language model to put its visual attention inside the image regions its own reasoning chain just named. Best mean score, best mean rank and most wins across a 25-benchmark visual-reasoning suite.">
+
+<!-- TODO(publish): confirm this is the final Pages URL before the social card is scraped. -->
+<link rel="canonical" href="https://uriberger.github.io/self-saliency/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Self-Saliency: Look Where You Say You're Looking">
+<meta property="og:description" content="Grounding a VLM's own reasoning chain, and rewarding it for attending to the regions it just described.">
+<meta property="og:url" content="https://uriberger.github.io/self-saliency/">
+<meta property="og:image" content="https://uriberger.github.io/self-saliency/static/images/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='none' stroke='%232a78d6' stroke-width='3'/><circle cx='16' cy='16' r='4' fill='%232a78d6'/></svg>">
+<link rel="stylesheet" href="static/css/index.css">
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ====================================================================
+     TODO(publish): delete this entire banner once the placeholders below
+     are filled in. Each item is also marked inline with <mark class="todo">.
+     ==================================================================== -->
+<div class="todo-banner" id="todo-banner">
+  <div class="wrap">
+    <strong>Placeholder content &mdash; not ready to publish.</strong>
+    <ul>
+      <li>Author list, affiliations and personal links (the PDF is anonymised, so they could not be read from it).</li>
+      <li>arXiv link and ID, and the <code>@article</code> BibTeX entry.</li>
+      <li>Hugging Face links for the released checkpoints.</li>
+      <li>The teaser video's step label still reads <code>glimpse</code>, an internal map name.</li>
+    </ul>
+  </div>
+</div>
+
+<button class="theme-toggle" id="theme-toggle" type="button"
+        aria-label="Switch between light and dark theme">&#9681;</button>
+
+<main id="main">
+
+<!-- ================================ hero ================================ -->
+<header class="hero wrap">
+  <h1>Look Where You Say You&rsquo;re Looking</h1>
+  <p class="subtitle">Self-Grounded Attention for Visual Reasoning</p>
+
+  <p class="venue"><mark class="todo">Preprint &middot; under review</mark></p>
+
+  <!-- TODO(publish): real names, ORCID/homepage links, and affiliation markers. -->
+  <p class="authors">
+    <mark class="todo">First Author<sup>1</sup>, Second Author<sup>1,2</sup>, Third Author<sup>2</sup></mark>
+  </p>
+  <p class="affil">
+    <mark class="todo"><sup>1</sup>Affiliation One &nbsp;&nbsp; <sup>2</sup>Affiliation Two</mark>
+  </p>
+
+  <ul class="links">
+    <li><a aria-disabled="true" title="TODO(publish): arXiv link">
+      <svg class="ico-stroke" viewBox="0 0 16 16" aria-hidden="true"><path d="M9.2 1.6H4.4a1 1 0 00-1 1v10.8a1 1 0 001 1h7.2a1 1 0 001-1V5zM9.2 1.6V5h3.4M5.7 8.4h4.6M5.7 10.8h3.2"/></svg>
+      Paper</a></li>
+    <li><a href="https://github.com/uriberger/self-saliency">
+      <svg class="ico-fill" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0a8 8 0 00-2.5 15.6c.4.07.55-.17.55-.38v-1.3C3.83 14.3 3.35 13 3.35 13c-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.23 1.88.87 2.34.67.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 014 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.14.46.55.38A8 8 0 008 0z"/></svg>
+      Code</a></li>
+    <li><a aria-disabled="true" title="TODO(publish): Hugging Face links">
+      <svg class="ico-stroke" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l6.3 3.1L8 7.7 1.7 4.6zM1.7 8l6.3 3.1L14.3 8M1.7 11.4l6.3 3.1 6.3-3.1"/></svg>
+      Weights</a></li>
+    <li><a href="#bibtex">
+      <svg class="ico-stroke" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.1 2.2c-2 0-2.7 1.2-2.7 2.7v1.3c0 1-.5 1.5-1.4 1.8.9.3 1.4.8 1.4 1.8v1.3c0 1.5.7 2.7 2.7 2.7M9.9 2.2c2 0 2.7 1.2 2.7 2.7v1.3c0 1 .5 1.5 1.4 1.8-.9.3-1.4.8-1.4 1.8v1.3c0 1.5-.7 2.7-2.7 2.7"/></svg>
+      BibTeX</a></li>
+  </ul>
+</header>
+
+<!-- ============================== teaser ================================ -->
+<section class="wrap" aria-labelledby="teaser-h">
+  <h2 id="teaser-h">One chain, step by step</h2>
+  <figure class="fig-narrow">
+    <div class="fig fig--dark">
+      <video id="teaser" playsinline muted loop controls preload="metadata"
+             poster="static/images/chain-poster.webp">
+        <source src="static/videos/chain.mp4" type="video/mp4">
+        Your browser cannot play this video. It shows a three-step reasoning
+        chain, with the model's visual attention moving to the region each step
+        names.
+      </video>
+    </div>
+    <figcaption>
+      A single <b>Self-Saliency</b> rollout on a spatial-reasoning question.
+      As the chain moves from <i>&ldquo;the chair is on the right side&rdquo;</i>
+      to <i>&ldquo;the table is in the foreground&rdquo;</i> to
+      <i>&ldquo;the bookcase is on the left wall&rdquo;</i>, the attention map
+      follows the object each step names &mdash; which is exactly the quantity
+      the reward scores.
+    </figcaption>
+  </figure>
+</section>
+
+<!-- ============================== figure 1 ============================== -->
+<section class="wrap" aria-labelledby="fig1-h">
+  <h2 id="fig1-h">The idea</h2>
+  <figure class="fig-narrow">
+    <div class="fig">
+      <img src="static/images/fig1.webp" width="1800" height="1245" loading="lazy"
+           alt="A photo of a man on a tram with a second person faintly visible behind him. The vanilla model's attention scatters over the foreground across two reasoning steps and it answers 'one person'. Self-Saliency's attention moves onto the background figure at step two and it answers 'two people'.">
+    </div>
+    <figcaption>
+      <b>Self-Saliency</b> is trained to increase the alignment between visual
+      attention and the regions referenced in its reasoning chain, creating two
+      complementary pressures: (1)&nbsp;generate claims that can be grounded in
+      the image, and (2)&nbsp;attend to the regions those claims refer to.
+    </figcaption>
+  </figure>
+</section>
+
+<!-- ============================== abstract ============================== -->
+<section class="wrap" aria-labelledby="abstract-h">
+  <h2 id="abstract-h">Abstract</h2>
+  <div class="prose">
+    <p>
+      We introduce <b>Self-Saliency</b>, a method for training Vision-Language
+      Models (VLMs) to increase the alignment between their visual attention and
+      the image regions mentioned in their reasoning. Self-Saliency uses a
+      grounding model to localize the objects mentioned in each reasoning step
+      and treats the resulting areas as supervision for the model's visual
+      attention. Previous work on steering visual attention determines target
+      image regions based solely on the image and question. In contrast, we show
+      that conditioning the target regions on the model's generated reasoning
+      improves downstream performance.
+    </p>
+    <p>
+      For proper evaluation, we build a unified, broad suite of 25 visual
+      reasoning benchmarks, where we reproduce the results of previous methods.
+      We find that Self-Saliency significantly outperforms both prior
+      attention-steering methods and baselines that ground image-level text,
+      achieving both a better average rank, and better mean score. Post-training
+      analysis shows that the model primarily adapts its reasoning text to
+      existing attention patterns, producing shorter steps that refer to larger
+      regions. Nevertheless, when controlling for generated text, attention to
+      grounded regions increases significantly across the relevant layer.
+    </p>
+    <p>
+      Finally, we identify a consistent geometric bias in VLM visual attention
+      toward the image border. However, our ablations show that Self-Saliency's
+      gains cannot be explained by simply aligning attention with the center of
+      the image, highlighting the importance of aligning visual attention with
+      the regions mentioned in the model's reasoning.
+    </p>
+  </div>
+</section>
+
+<!-- =============================== method =============================== -->
+<section class="wrap" aria-labelledby="method-h">
+  <h2 id="method-h">Method</h2>
+
+  <div class="prose">
+    <p>
+      The supervision signal comes from the policy itself. Every rollout is
+      segmented into atomic reasoning steps; the steps that describe an
+      observation about the image are scored, and the rest are ignored.
+    </p>
+    <ol class="steps">
+      <li><b>Localize.</b> A phrase-grounding model (Grounding-DINO) runs on the
+        text of each observation step. The union of its boxes is that step's
+        grounded region <i>u<sub>s</sub></i>.</li>
+      <li><b>Extract.</b> The attention that the step's generated tokens pay to
+        each image patch, from two selected heads, averaged over the step, is
+        that step's saliency map <i>sal<sub>s</sub></i>.</li>
+      <li><b>Score.</b> The saliency score is the mean saliency inside the
+        grounded region, normalized by the peak saliency anywhere in the
+        image.</li>
+    </ol>
+  </div>
+
+  <div class="eq" role="math"
+       aria-label="phi of s equals the mean of sal sub s of p over p in u sub s, divided by the maximum of sal sub s of p over p in the image">
+    <span>&phi;(<i>s</i>) =</span>
+    <span class="frac">
+      <span>
+        <span aria-hidden="true">1&frasl;|<i>u<sub>s</sub></i>|</span>
+        &sum;<sub><i>p</i> &isin; <i>u<sub>s</sub></i></sub>
+        <i>sal<sub>s</sub></i>(<i>p</i>)
+      </span>
+      <span>max<sub><i>p</i> &isin; <i>I</i></sub> <i>sal<sub>s</sub></i>(<i>p</i>)</span>
+    </span>
+  </div>
+
+  <figure class="fig-narrow">
+    <div class="fig">
+      <img src="static/images/fig2.webp" width="1800" height="642" loading="lazy"
+           alt="Pipeline diagram: an input image and reasoning step feed a grounding model that produces bounding boxes; the model's visual attention produces a saliency map; the two are combined into a saliency score.">
+    </div>
+    <figcaption>
+      <b>The saliency-scoring pipeline.</b> Given an input image and reasoning
+      step, we extract bounding boxes corresponding to the mentioned image
+      regions, compute a saliency map from the model's visual attention, and
+      calculate the saliency score from the overlap between the two.
+    </figcaption>
+  </figure>
+
+  <div class="prose">
+    <h3>Training</h3>
+    <p>
+      The mean score over a chain's observation steps becomes a GRPO reward
+      term, added to a direct-match accuracy reward, an LLM-as-a-judge reward
+      and a format reward
+      (&alpha;<sub>sal</sub>&nbsp;=&nbsp;0.4, all others&nbsp;1).
+      The policy is Qwen3-VL-8B-Instruct, cold-started with SFT on LLaVA-CoT and
+      Mulberry-SFT, then trained with GRPO (group size 8) on Saliency-R1-8K.
+    </p>
+    <p>
+      The saliency reward reads two attention heads &mdash; layer&nbsp;22, heads
+      28 and 31 &mdash; picked by correlating each head's saliency score with
+      model accuracy on Visual-CoT. A run takes about 46&nbsp;hours on one node
+      of eight H100s: six hold the policy, one serves generation with vLLM, one
+      hosts the grounding model.
+    </p>
+  </div>
+</section>
+
+<!-- =============================== results ============================== -->
+<section class="wrap" aria-labelledby="results-h">
+  <h2 id="results-h">Results</h2>
+
+  <dl class="kpis">
+    <div class="kpi">
+      <dt>Mean score</dt>
+      <dd>64.3<span class="note">Best of seven methods</span></dd>
+    </div>
+    <div class="kpi">
+      <dt>Mean rank</dt>
+      <dd>3.02<span class="note">Lowest &mdash; 1 is best</span></dd>
+    </div>
+    <div class="kpi">
+      <dt>Benchmarks won</dt>
+      <dd>9<span class="note">of 25; next best is 6</span></dd>
+    </div>
+  </dl>
+
+  <div class="prose">
+    <p>
+      The suite is deliberately broad. VGA, Saliency-R1 and EASE evaluate on 3,
+      10 and 11 benchmarks respectively, with only one benchmark shared across
+      all three &mdash; so we evaluate on the union of everything recent work
+      uses, plus several newer benchmarks, and reproduce each baseline
+      ourselves.
+    </p>
+  </div>
+
+  <figure>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr class="colgroup">
+            <td></td>
+            <th colspan="3" scope="colgroup" data-span>No attention intervention</th>
+            <th colspan="3" scope="colgroup" data-span>Prior work</th>
+            <th class="col-ours" scope="colgroup" data-span>Ours</th>
+          </tr>
+          <tr>
+            <th scope="col">Benchmark</th>
+            <th scope="col">Qwen3-VL<br>8B-Instruct</th>
+            <th scope="col">Coldstart</th>
+            <th scope="col">No-Sal</th>
+            <th scope="col">VGA</th>
+            <th scope="col">Saliency-R1</th>
+            <th scope="col">EASE</th>
+            <th scope="col" class="col-ours">Self-Saliency</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">AlgoPuzzleVQA</th><td>32.8</td><td>36.9</td><td>39.9</td><td>34.3</td><td>38.7</td><td>36.4</td><td class="col-ours best">41.4</td></tr>
+          <tr><th scope="row">ChartQA</th><td>85.0</td><td>88.8</td><td>89.4</td><td>84.9</td><td>89.7</td><td>88.9</td><td class="col-ours best">90.0</td></tr>
+          <tr><th scope="row">CV-Bench</th><td>86.0</td><td>83.4</td><td>84.9</td><td class="best">86.1</td><td>83.8</td><td>84.2</td><td class="col-ours">85.9</td></tr>
+          <tr><th scope="row">DailyClue</th><td class="best">35.4</td><td>32.4</td><td>34.2</td><td>34.2</td><td>32.0</td><td>32.7</td><td class="col-ours">31.2</td></tr>
+          <tr><th scope="row">HallusionBench</th><td class="best">63.2</td><td>59.7</td><td>57.1</td><td>62.0</td><td>58.3</td><td>62.6</td><td class="col-ours">55.7</td></tr>
+          <tr><th scope="row">HR-Bench 4K</th><td>78.0</td><td>76.9</td><td>77.4</td><td>78.1</td><td>78.9</td><td>76.9</td><td class="col-ours best">79.5</td></tr>
+          <tr><th scope="row">HR-Bench 8K</th><td>74.1</td><td>72.9</td><td>72.0</td><td>74.2</td><td class="best">76.0</td><td>72.8</td><td class="col-ours">74.5</td></tr>
+          <tr><th scope="row">IllusionVQA</th><td>40.0</td><td>41.9</td><td>41.5</td><td>40.1</td><td class="best">43.8</td><td>40.5</td><td class="col-ours">43.5</td></tr>
+          <tr><th scope="row">LogicVista</th><td>52.5</td><td>54.9</td><td>55.1</td><td>51.3</td><td class="best">56.5</td><td>52.9</td><td class="col-ours">56.2</td></tr>
+          <tr><th scope="row">MathVerse</th><td>34.4</td><td>51.0</td><td class="best">52.8</td><td>33.8</td><td>49.5</td><td>50.4</td><td class="col-ours">50.9</td></tr>
+          <tr><th scope="row">MathVision</th><td>29.6</td><td>33.5</td><td>37.5</td><td>31.2</td><td>33.9</td><td>35.9</td><td class="col-ours best">41.5</td></tr>
+          <tr><th scope="row">MathVista</th><td>73.5</td><td>69.5</td><td>71.8</td><td class="best">73.8</td><td>71.0</td><td>70.0</td><td class="col-ours">70.4</td></tr>
+          <tr><th scope="row">MME</th><td>2375.9</td><td>2371.7</td><td>2376.1</td><td>2379.8</td><td class="best">2395.7</td><td>2395.4</td><td class="col-ours">2355.1</td></tr>
+          <tr><th scope="row">MME-RealWorld</th><td>63.7</td><td>64.2</td><td>66.7</td><td>63.8</td><td>66.4</td><td>65.1</td><td class="col-ours best">68.7</td></tr>
+          <tr><th scope="row">MMK12</th><td class="best">68.2</td><td>63.1</td><td>62.3</td><td>67.9</td><td>61.1</td><td>63.1</td><td class="col-ours">62.0</td></tr>
+          <tr><th scope="row">MMMU-Pro</th><td>40.4</td><td class="best">48.6</td><td class="best">48.6</td><td>41.9</td><td>47.7</td><td>47.1</td><td class="col-ours">48.4</td></tr>
+          <tr><th scope="row">MMStar</th><td>64.0</td><td>69.8</td><td class="best">70.9</td><td>64.7</td><td>69.9</td><td>69.5</td><td class="col-ours">69.6</td></tr>
+          <tr><th scope="row">OmniSpatial</th><td>47.4</td><td>50.3</td><td>48.2</td><td>46.8</td><td>50.2</td><td>50.2</td><td class="col-ours best">51.0</td></tr>
+          <tr><th scope="row">SalBench</th><td>43.3</td><td>60.7</td><td>59.8</td><td>43.3</td><td>62.7</td><td>58.6</td><td class="col-ours best">64.7</td></tr>
+          <tr><th scope="row">POPE</th><td>88.8</td><td>87.4</td><td>88.2</td><td>88.8</td><td>88.5</td><td>88.5</td><td class="col-ours best">88.9</td></tr>
+          <tr><th scope="row">RealWorldQA</th><td>68.5</td><td>67.1</td><td>67.8</td><td>68.4</td><td class="best">68.8</td><td>67.5</td><td class="col-ours">68.2</td></tr>
+          <tr><th scope="row">ScienceQA-IMG</th><td>94.4</td><td>96.3</td><td>97.2</td><td>94.4</td><td class="best">97.6</td><td>96.2</td><td class="col-ours">97.4</td></tr>
+          <tr><th scope="row">VisuLogic</th><td class="best">26.6</td><td>24.9</td><td>24.8</td><td>26.4</td><td>24.9</td><td>24.4</td><td class="col-ours">24.4</td></tr>
+          <tr><th scope="row">V*</th><td>84.3</td><td>79.6</td><td>79.6</td><td class="best">85.3</td><td>80.6</td><td>81.2</td><td class="col-ours">82.7</td></tr>
+          <tr><th scope="row">WeMath</th><td>69.4</td><td>68.6</td><td>74.3</td><td>68.2</td><td>73.8</td><td>71.1</td><td class="col-ours best">75.5</td></tr>
+
+          <tr class="summary"><th scope="row">Mean score &uarr;</th><td>61.1</td><td>62.7</td><td>63.5</td><td>61.2</td><td>63.6</td><td>62.9</td><td class="col-ours best">64.3</td></tr>
+          <tr class="summary"><th scope="row">Mean rank &darr;</th><td>4.42</td><td>4.64</td><td>3.68</td><td>4.48</td><td>3.26</td><td>4.50</td><td class="col-ours best">3.02</td></tr>
+          <tr class="summary"><th scope="row">Wins &uarr;</th><td>4</td><td>0</td><td>3</td><td>3</td><td>6</td><td>0</td><td class="col-ours best">9</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figcaption>
+      <b>Results across 25 benchmarks.</b> Best per benchmark in bold. Mean
+      score is computed over all 25 benchmarks after rescaling MME to [0,&nbsp;100]
+      (raw&nbsp;/&nbsp;2800). Mean rank averages the per-benchmark ranks
+      (1&nbsp;=&nbsp;best). The largest gains are on benchmarks that need
+      low-level visual saliency and multi-step reasoning &mdash; AlgoPuzzleVQA,
+      SalBench, MME-RealWorld &mdash; and, unexpectedly, on mathematical
+      reasoning (WeMath, MathVision), where Grounding-DINO was never trained to
+      operate.
+    </figcaption>
+  </figure>
+
+  <figure class="fig-narrow spaced-lg">
+    <div class="fig">
+      <img src="static/images/fig3.webp" width="1800" height="1032" loading="lazy"
+           alt="Qualitative examples in which Self-Saliency attends to and correctly reads small, low-level visual details.">
+    </div>
+    <figcaption>
+      <b>Qualitative examples</b> of how Self-Saliency correctly identifies
+      low-level visual information.
+    </figcaption>
+  </figure>
+</section>
+
+<!-- ============================== analysis ============================== -->
+<section class="wrap" aria-labelledby="analysis-h">
+  <h2 id="analysis-h">What training actually changes</h2>
+
+  <div class="prose">
+    <p>
+      The model can raise the reward two ways: by writing reasoning that is
+      easier to ground and already well attended, or by moving attention onto
+      the regions it describes. To separate them we teacher-force both the
+      cold-start checkpoint and the trained model on the <em>same</em> 200
+      reasoning chains, so the text is held fixed and only attention can move.
+    </p>
+    <p>
+      Text does most of the work: the trained model writes chains a third
+      shorter that refer to larger regions. With the text held fixed, in-region
+      attention does <em>not</em> rise in the two heads the reward reads.
+      Averaged over all of layer 22, though, it does rise, significantly
+      (<i>p</i>&nbsp;&lt;&nbsp;0.001).
+    </p>
+  </div>
+
+  <figure>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr class="colgroup">
+            <td></td>
+            <th colspan="2" scope="colgroup" data-span>Text-related</th>
+            <th colspan="2" scope="colgroup" data-span>Attention-related</th>
+          </tr>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Completion length</th>
+            <th scope="col">Box union area</th>
+            <th scope="col">In-region share<br>(selected heads)</th>
+            <th scope="col">In-region share<br>(layer-22 heads)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Coldstart</th><td>230.0</td><td>0.533</td><td>0.462</td><td>0.612</td></tr>
+          <tr><th scope="row">Self-Saliency</th><td>149.6</td><td>0.566</td><td>0.462</td><td>0.621</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figcaption>
+      <b>Text and attention statistics before and after training</b>, averaged
+      over 100 held-out validation samples. In-region share is attention inside
+      grounded regions divided by all visual attention.
+    </figcaption>
+  </figure>
+
+  <h3 class="prose subhead">Attention piles up on the image border</h3>
+  <div class="prose">
+    <p>
+      Across four instruction-tuned VLMs, visual attention is enriched along the
+      geometric border of the image and depleted in the center &mdash; and in
+      every model the single most enriched patch sits in a <em>corner</em>.
+      Human annotators marking the regions that matter for answering the
+      question do the opposite.
+    </p>
+  </div>
+
+  <figure>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Model</th>
+            <th scope="col">En border ring</th>
+            <th scope="col">En center</th>
+            <th scope="col">Largest En</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Qwen3-VL-8B-Instruct</th><td>1.20</td><td>0.92</td><td>Top left, 6.64</td></tr>
+          <tr><th scope="row">InternVL3.5-8B</th><td>1.18</td><td>0.95</td><td>Bottom left, 2.29</td></tr>
+          <tr><th scope="row">GLM-4.1V-Thinking</th><td>1.50</td><td>0.82</td><td>Top right, 7.79</td></tr>
+          <tr><th scope="row">Nemotron-Omni</th><td>1.43</td><td>0.87</td><td>Top right, 3.86</td></tr>
+          <tr><th scope="row">Human boxes</th><td>0.53</td><td>1.14</td><td>Non-border, 1.87</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figcaption>
+      <b>Attention enrichment.</b> Enrichment is the share of visual attention a
+      set of patches receives divided by the share of patches it contains;
+      En&nbsp;=&nbsp;1 means no effect. Every model is above 1 on the border ring
+      and below 1 in the center. Human boxes invert it.
+    </figcaption>
+  </figure>
+
+  <figure class="spaced">
+    <div class="fig">
+      <img src="static/images/fig4.webp" width="1800" height="380" loading="lazy"
+           alt="Five patch-grid heatmaps. The four model maps light up along the image border with a bright corner; the human-annotation map is brightest in the middle.">
+    </div>
+    <figcaption>
+      <b>Saliency maps for different models and human-annotated boxes.</b> For
+      each model, a cell is the fraction of total visual attention assigned to
+      that image patch. For the human annotations (right), a cell is the
+      fraction of images in which that patch falls inside an annotated box.
+    </figcaption>
+  </figure>
+
+  <figure class="fig-narrow spaced">
+    <div class="fig">
+      <img src="static/images/fig5.webp" width="1800" height="722" loading="lazy"
+           alt="Two patch-grid heatmaps of the two rewarded heads, before and after training. The bright top-left corner is much weaker after training and the mass is spread along the border and toward the center.">
+    </div>
+    <figcaption>
+      <b>The two rewarded heads, before and after training.</b> Attention is
+      redistributed primarily from the corner sinks to the image border, with a
+      smaller fraction moving toward the center.
+    </figcaption>
+  </figure>
+</section>
+
+<!-- ============================= ablations ============================== -->
+<section class="wrap" aria-labelledby="ablation-h">
+  <h2 id="ablation-h">It is the chain, not the center</h2>
+
+  <div class="prose">
+    <p>
+      Two variants change only where the target boxes come from.
+      <b>Center rect</b> uses a fixed rectangle in the middle of the image
+      &mdash; if that matched Self-Saliency, the gains would just be
+      &ldquo;attend away from the corner&rdquo;.
+      <b>Question boxes</b> grounds the input question instead of the model's
+      own reasoning steps &mdash; testing whether chain-level grounding beats
+      image-level text. Neither closes the gap.
+    </p>
+  </div>
+
+  <figure>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Qwen3-VL-8B<br>Instruct</th>
+            <th scope="col">Coldstart</th>
+            <th scope="col">No-Sal</th>
+            <th scope="col">Center rect</th>
+            <th scope="col">Question boxes</th>
+            <th scope="col" class="col-ours">Self-Saliency</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Mean score &uarr;</th><td>61.14</td><td>62.69</td><td>63.47</td><td>63.39</td><td>63.33</td><td class="col-ours best">64.26</td></tr>
+          <tr><th scope="row">Mean rank &darr;</th><td>3.90</td><td>4.06</td><td>3.34</td><td>3.68</td><td>3.38</td><td class="col-ours best">2.64</td></tr>
+          <tr><th scope="row">Wins &uarr;</th><td class="best">7</td><td>0</td><td>3</td><td>2</td><td>5</td><td class="col-ours best">9</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figcaption>
+      <b>Ablations across the same 25-benchmark suite.</b> Grounding the model's
+      own reasoning chain provides a meaningfully better training signal than
+      either a fixed central rectangle or the grounded question text.
+    </figcaption>
+  </figure>
+</section>
+
+<!-- ============================== bibtex =============================== -->
+<section class="wrap" id="bibtex" aria-labelledby="bibtex-h">
+  <h2 id="bibtex-h">BibTeX</h2>
+  <div class="prose">
+<!-- TODO(publish): replace with the real entry once the preprint is posted. -->
+<pre><code>@article{TODO_selfsaliency,
+  title   = {Look Where You Say You're Looking:
+             Self-Grounded Attention for Visual Reasoning},
+  author  = {TODO},
+  journal = {arXiv preprint arXiv:TODO},
+  year    = {2026}
+}</code></pre>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <div class="prose">
+    <p>
+      Code: <a href="https://github.com/uriberger/self-saliency">github.com/uriberger/self-saliency</a>.
+      Evaluation runs on <a href="https://github.com/EvolvingLMMs-Lab/lmms-eval">lmms-eval</a>;
+      grounding uses <a href="https://github.com/IDEA-Research/GroundingDINO">Grounding-DINO</a>;
+      training builds on <a href="https://github.com/huggingface/trl">TRL</a>.
+    </p>
+    <p>
+      Page template written for this project; released under the same licence as
+      the code.
+    </p>
+  </div>
+</footer>
+
+<script src="static/js/index.js"></script>
+</body>
+</html>
