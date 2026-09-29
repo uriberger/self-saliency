@@ -91,5 +91,7 @@ repository per arm, linked from `docs/reproduce.md`, is the obvious home.
 * `baselines/saliency_r1/reward.py` derives from the Saliency-R1 authors' repository
 * `baselines/ease/` patches EasyR1/verl
 
-Each is compatible, and each should be acknowledged in the README when the repository is
-published rather than only in the file headers.
+Each is compatible. **Done:** the README now has a "Derived work, and its licences"
+section naming all of them, plus `baselines/vga/`, the pinned lmms-eval fork and
+LLaMA-Factory, and the corpora and models used under their own terms — so the
+acknowledgement is not only in the file headers.

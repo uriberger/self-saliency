@@ -75,6 +75,24 @@ Private, pending review. The paper is under double-blind review and promises cod
 weights on acceptance; **[docs/publishing.md](docs/publishing.md) is what has to happen
 first**, starting with the fact that the git history is authored under a real name.
 
+## Derived work, and its licences
+
+This repository is Apache-2.0 (see [LICENSE](LICENSE)). Parts of it are derived from other
+people's work, all Apache-2.0-compatible, and are marked as such in their own headers:
+
+| here | derived from |
+|---|---|
+| `training/grpo/trl_patch/` | HuggingFace **TRL** (Apache-2.0). `grpo_trainer_qwen3.py` and `grpo_vlm_qwen3.py` are modified copies of its GRPO trainer and VLM example; the files carry TRL's copyright header and `env/patches/trl.sh` installs them into a checkout rather than vendoring one |
+| `baselines/saliency_r1/reward.py` and `training/grpo/trl_patch/rewards/saliency_r1.py` | the **Saliency-R1** authors' reward, from [their repository](https://github.com/peterant330/Saliency_R1), kept as released so the Appendix D.2 arm differs from ours in the attention term alone |
+| `baselines/ease/` | **EASE** on top of **EasyR1**/**verl** (Apache-2.0). The method files are untouched; what is here patches their reward interface and an import, and drives their trainer |
+| `baselines/vga/` | **VGA**, reimplemented as an inference-time patch on Qwen3-VL (Appendix D.1) |
+| `evaluation/lmms_eval` | **lmms-eval** (Apache-2.0), a pinned submodule of a fork carrying task definitions and answer-parser fixes that are not upstream |
+| `training/coldstart/` | driven by **LLaMA-Factory** (Apache-2.0), cloned rather than vendored |
+
+The corpora are used under their own terms: Saliency-R1-8K, Visual-CoT, LLaVA-CoT,
+Mulberry-SFT and the 25 benchmarks of [Table 1](docs/reproduce.md). Grounding-DINO and
+Qwen3-VL-8B-Instruct are used under theirs.
+
 ## Citation
 
 ```bibtex

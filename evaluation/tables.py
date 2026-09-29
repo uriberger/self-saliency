@@ -1353,8 +1353,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--lmms-eval", action=argparse.BooleanOptionalAction, default=True,
-        help="Build the table from lmms-eval outputs in results/lmms_eval "
-             "(use --no-lmms-eval for the results/inference jsonl files).",
+        help="Build the table from the lmms-eval outputs in results/ (the default, and "
+             "what every paper table is built from). --no-lmms-eval reads the "
+             "results/inference jsonl files instead, which this tree does not carry.",
     )
     parser.add_argument(
         "--paper-comparison", action="store_true",
@@ -1391,8 +1392,12 @@ def main():
         global RESULTS_DIR, LMMS_EVAL_DIR
         if not args.results_root.is_dir():
             parser.error(f"--results-root {args.results_root} is not a directory")
+        # The same shape as the module-level defaults above. The archive kept
+        # `<root>/inference` and `<root>/lmms_eval` side by side; here the lmms-eval runs
+        # ARE `results/`, so `--results-root evaluation/results` has to mean that
+        # directory and not a `lmms_eval/` inside it, or the flag finds nothing.
         RESULTS_DIR = args.results_root / "inference"
-        LMMS_EVAL_DIR = args.results_root / "lmms_eval"
+        LMMS_EVAL_DIR = args.results_root
 
     if args.bootstrap:
         eval_stats.use_bootstrap(args.bootstrap_resamples, args.bootstrap_seed)

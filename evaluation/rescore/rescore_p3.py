@@ -22,7 +22,10 @@ import shutil
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-LMMS_EVAL_DIR = REPO / "results" / "lmms_eval"
+# `evaluation/results` IS the lmms-eval tree here. The archive kept `<root>/inference`
+# and `<root>/lmms_eval` side by side and the port flattened them, so the extra level
+# below made the default glob match nothing and the script report no work to do.
+LMMS_EVAL_DIR = REPO / "results"
 UTILS_PATH = Path.home() / "scratch/research/lmms-eval/lmms_eval/tasks/salbench/utils.py"
 
 # Load the (fixed) salbench scorer directly from the lmms-eval checkout so this

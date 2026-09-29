@@ -32,9 +32,22 @@ Checked against the originals rather than eyeballed:
 
 Four things the port turned up that were not visible from the outside:
 
-1. **The image resize was never bicubic.** `resize(..., 2)` with a comment saying BICUBIC;
-   PIL's 2 is BILINEAR. Every published image was resized bilinearly. Following the
-   comment would have changed every patch grid's contents.
+1. **Training and the probes resized images with different filters**, and one of the two
+   says so wrongly. The training path — `A trl/grpo_vlm_qwen3.py`, `A build_grpo_sets.py`
+   and `A precompute_question_boxes.py` — passes `Image.BICUBIC`, so every image the
+   published runs trained on, and every image the `question_boxes` arm grounded, is
+   bicubic. The post-hoc probes — `A overlap_probe.py` (here
+   `experiments/trained_model/probe.py`) and the RoPE-phase probes — pass `resize(..., 2)`
+   with a trailing comment saying BICUBIC, and PIL's 2 is BILINEAR, so those measurements
+   are bilinear. Both filters are preserved as they ran; neither file was "corrected",
+   because following the comment would change every patch grid's contents and hence every
+   map and every φ.
+
+   The consequence to know about: `selfsal/data/prompt.py`'s `prepare_image` is the
+   probes' filter. It has no callers today — `experiments/trained_model/probe.py` imports
+   it and then shadows it with its own copy — and **the GRPO entry script must not adopt
+   it**, which is why that script keeps its own bicubic resize with a comment saying so.
+   Unifying the two is a decision about which published numbers to move, not a cleanup.
 2. **`phi` and `phi_mean` ran at different precisions** on the same map -- one divided in
    the map's dtype, the other had already upcast. Both are float64 now.
 3. **Head selection and the reward segment chains differently.** See
@@ -46,6 +59,45 @@ What deliberately did NOT come across, and is intact in the archive: the gradien
 GLIMPSE saliency maps, the AUROC and roll-null metrics, the placebo, mask-free,
 mismatched-box and length-guard controls, the attention-intervention and sink-shift
 experiments, the RoPE-phase probes, and the set_a-set_e corpus builders.
+
+HOW THE PROBES REACH WHAT DID COME ACROSS. The archive was flat, so its scripts reached
+each other by file name — `spec_from_file_location("_x", REPO / "sink_location_probe.py")`
+— and several kept doing that after the port, naming files that do not exist here. They
+are ordinary imports now. The mapping, which is the one to read when a traceback still
+names an old file:
+
+| archive | here |
+|---|---|
+| `overlap_probe.py` | `experiments/trained_model/probe.py` |
+| `sink_location{,_probe,_xmodel_tables,_html}.py` | `experiments/attention_bias/{measure,probe,tables,report_html}.py` |
+| `trl/overlap_steps.py` | `selfsal/steps/segment.py` (`segment_observe_steps` → `segment_sentences`, `OverlapStepsClassifier` → `StepClassifier`) |
+| `trl/rewards/overlap_rewards.py` | `selfsal/{grounding,saliency}` — `_dino_boxes` → `ground`, `_union_mask` → `union_mask`, `_mean_in`/`_mean_in_v2`/`_auroc` → `phi`/`phi_mean`/`auroc` |
+| `V analysis/aggregation_correlation.py` | `experiments/head_selection/screen.py` |
+| `intervene_probe.py` (`Progress`, `monitor` only) | `experiments/_progress.py` |
+| `trl/rewards/roll_null.py` (`inframe_offsets`, `sample_offsets` only) | `selfsal/grounding/mask.py` |
+
+The last two are the pattern for a module that did not come across whole: the geometry a
+probe needs is taken, the reward it belonged to is not. `sample_offsets` was checked
+against the archive's over 400 random masks and is identical.
+
+Where the missing thing has no equivalent — the gradient and GLIMPSE maps, the
+attention-rollout flow, the three control rewards — the probe stands it up as an
+`experiments/_unavailable.py` sentinel, so `--map attn` works and `--map grad` raises with
+a sentence naming the archive. That pattern was already here and was broken in three
+places: a sentinel read as a function default or an `add_argument` default is evaluated at
+import and parser-build time respectively, which made `experiments/trained_model/probe.py`
+unimportable — so the one map in the paper was as dead as the two that are not here.
+`tests/test_dropped_variants_fail_late.py` now enforces it.
+
+Two WandB callbacks in the GRPO entry script went with them: `ValidationAccuracyCallback`
+(one greedy completion per held-out prompt, scored on answer accuracy) and
+`BenchmarkResultsCallback` (mini-benchmark scores produced out of process). Both read
+inputs that only the dropped builders produce — `A build_grpo_sets.py --build-val` and
+`A run_bench_eval.sh` / `A eval_mini/` — so neither could be satisfied from this
+repository, and neither is reachable from any of the six arm configs. Their `--val_sets_dir`
+and `--val_eval_steps` flags went too. Training is byte-identical without them; the one
+thing worth carrying forward was the note on why the vLLM prompt needs an explicit image
+placeholder, which now sits at the conversion site in `grpo_trainer_qwen3.py`.
 
 ## selfsal/ — the method
 
@@ -62,24 +114,33 @@ experiments, the RoPE-phase probes, and the set_a-set_e corpus builders.
 | `saliency/score.py` | `A trl/rewards/overlap_rewards.py` (`_step_score`) | φ and φ_mean |
 | `saliency/heads.py` | new | the (22,28)/(22,31) constant, one place |
 | `models/families.py` | `A vlm_family.py` | §5's four backbones |
-| `data/saliency_r1_8k.py` | `A trl/grpo_vlm_qwen3.py` (loader + seed-42 split) | |
+| `data/prompt.py` | the reward, the probe and the launcher | three copies, now one |
+| `data/saliency_r1_8k.py` | `A trl/grpo_vlm_qwen3.py` (loader + seed-42 split) | also sets `config.py`'s step count |
+| `data/question_boxes.py` | `A trl/rewards/overlap_rewards.py` (the cache format) | shared with the builder |
 | `data/boxed_corpus.py` | `A build_boxed_corpus.py` | §5's 1,800 VisualCoT pairs |
+| `judge.py` | `A trl/rewards/openai_rewards.py` | R_llm, shared with re-scoring |
 
 ## training/
 
 | Here | From |
 |---|---|
 | `coldstart/configs/qwen3_vl_8b.yaml` | `A train/cold_start/qwen3_vl_8b_instruct_sft/train.yaml` |
-| `coldstart/prepare_data.py` | `A cold_data/{dl_llavacot,dl_mulberry,extract_needed,sanitize_to_jsonl,split_records_to_jsonl}.py` |
-| `coldstart/run.sh` | `A launch_coldstart_job.sh` |
+| `coldstart/data/{dl_llavacot,dl_mulberry,extract_needed,sanitize_to_jsonl,split_records_to_jsonl}.py` | the same names under `A cold_data/` |
+| `coldstart/submit.sh` | `A launch_coldstart_job.sh` |
 | `grpo/trl_patch/grpo_trainer_qwen3.py` | `A trl/grpo_trainer_qwen3.py` |
 | `grpo/trl_patch/grpo_vlm_qwen3.py` | `A trl/grpo_vlm_qwen3.py` |
 | `grpo/trl_patch/rewards/self_saliency.py` | `A trl/rewards/overlap_rewards.py` |
 | `grpo/trl_patch/rewards/saliency_r1.py` | `A trl/rewards/saliency_rewards.py` |
-| `grpo/trl_patch/rewards/{format,answer,judge}.py` | `A trl/rewards/{format,answer_format,openai}_rewards.py` |
+| `grpo/trl_patch/rewards/{format,answer}.py` | `A trl/rewards/{format,answer_format}_rewards.py` |
 | `grpo/trl_patch/{scripts,models}/utils.py` | `A trl/{scripts,models}/utils.py` |
-| `grpo/run.sh` + `grpo/configs/*.yaml` | `A launch_grpo_qwen3_overlap_colocated_job.sh`, split |
+| `grpo/run.sh` + the six `grpo/configs/` YAMLs | `A launch_grpo_qwen3_overlap_colocated_job.sh`, split |
 | `grpo/precompute_question_boxes.py` | `A precompute_question_boxes.py` |
+
+R_llm is not in that table: it is `selfsal/judge.py` (from `A trl/rewards/openai_rewards.py`),
+because the offline re-scoring tools need the same judge and must not reach into a TRL
+checkout to get it. `selfsal/data/question_boxes.py` moved out of the rewards package for
+the same reason — it is a FILE FORMAT, and `grpo/precompute_question_boxes.py` writes what
+the reward reads.
 
 The 2,377-line launcher parsed 72 flags, roughly 47 of them for experiments outside
 the paper. Here the six paper arms are six YAML files and the runner is thin.
@@ -88,9 +149,14 @@ the paper. Here the six paper arms are six YAML files and the runner is thin.
 
 | Here | From |
 |---|---|
-| `head_selection/{collect,correlate}.py` | `V analysis/aggregation_correlation.py`, split by stage |
+| `head_selection/screen.py` | `V analysis/aggregation_correlation.py` |
 | `head_selection/cross_dataset.py` | `V analysis/cross_dataset_head_transfer.py` (fn. 3) |
 | `head_selection/generate.py` | `V run_experiment.py` |
+| `head_selection/run.sh` | `V scripts/slurm/launch_agg_corr_job.sh`, minus the cluster |
+| `attention_bias/run.sh` | `A launch_sink_location{,_job}.sh`, minus the cluster |
+| `trained_model/run.sh` | `A launch_overlap_probe{,_job}.sh` + `A launch_selfground_audit{,_job}.sh` |
+| `_progress.py` | `A intervene_probe.py` (`Progress`, `monitor` only) |
+| `_unavailable.py` | new | the sentinel for a dropped arm's module |
 | `attention_bias/*` | `A sink_location{,_probe,_xmodel_tables,_html}.py`, `A sink_{box_coverage,three_legs,observe_boxes,encoder_probe}.py` |
 | `trained_model/{probe,audit}.py` | `A overlap_probe.py`, `A selfground_audit.py` |
 | `figures/steps_figure.py` | `A fig1_steps_figure.py` |

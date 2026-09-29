@@ -58,7 +58,13 @@ from lmms_eval.tasks.mathvision.utils import (  # noqa: E402
     mathvision_process_results,
 )
 
-RESULTS_DIR = Path(__file__).parent.parent / "results" / "lmms_eval"
+# `evaluation/results` IS the lmms-eval tree here. The archive kept two trees side by side
+# (`<root>/inference` and `<root>/lmms_eval`) and the port flattened them; this constant
+# still had the archive's extra level, so the default glob matched a directory that does
+# not exist and the script reported nothing to do. `rescore_reasoning_tasks.py` was
+# updated and this one was not -- they glob the same `*/*/*_results.json` below, so they
+# have to agree on the root.
+RESULTS_DIR = Path(__file__).resolve().parents[1] / "results"
 BACKUP_SUFFIX = ".orig_buggy_parse.bak"
 # The metric name that marks a task as scored by mathvision's own rule-based
 # scorer. The `_reason_` variant of the task is judged by an LLM instead and

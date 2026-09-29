@@ -5,10 +5,45 @@ re-scored on the three benchmarks with a versioned answer reader; every one of t
 cells now carries the pinned reader's version. The pre-re-score state is kept beside each
 rewritten file as `*.orig_buggy_parse.bak` (18 files).
 
-Non-paper runs in the archive were left alone. One of them moved 38.00 -> 37.00 and lost
-an answer, which the re-score script itself flags as impossible for a fix that only adds
-readings. That is unexplained, it is outside every paper arm, and it is the reason this
-was applied per-arm rather than across the whole tree.
+Non-paper runs in the archive were left alone. One of them was reported to move
+38.00 -> 37.00 and lose an answer, which the re-score script itself flags as impossible
+for a fix that only adds readings. That was the reason this was applied per-arm rather
+than across the whole tree.
+
+**It does not reproduce.** Replaying the pinned scorer (`2026-09-17-option-letter`) over
+every banked MathVision run that still exists:
+
+| tree | files | skipped | moved | LOST an answer |
+|---|---|---|---|---|
+| `V results/lmms_eval` (the non-paper tree) | 446 | 0 | 4 | **0** |
+| `A results/vga_mini_sweep` (App D.1's window sweep) | 6 | 0 | 0 | **0** |
+
+and of the 435 MathVision cells that carry a `*.orig_buggy_parse.bak`, **none** scores
+lower than its backup. No cell anywhere reads 38.00 in the self-saliency tree; the 40 that
+do in `vlm_reasoning` are all already stamped, and none of them regressed.
+
+So the "impossible" case cannot be exhibited against the scorer as pinned. That is not the
+same as explaining it: the likeliest reading is that the run it came from has since been
+deleted, or that the dry run predates the pin and saw a scorer build that no longer
+exists. Either way there is nothing on disk today that the current reader scores DOWN, and
+the per-arm caution it motivated cost nothing.
+
+Re-run the check with:
+
+```bash
+LMMS_EVAL_DIR=evaluation/lmms_eval python evaluation/rescore/rescore_mathvision.py
+```
+
+which is a dry run by default and prints `+gained/-lost` per task-entry, with `<-- LOST`
+against any that regressed.
+
+In a fresh clone it will find all ten arms and skip all ten with `no samples file beside
+<stamp>_results.json`: re-scoring replays the model's stored answers, and those per-sample
+`*_samples_*.jsonl` files are the ~5 GB release asset, not in git. That is the same asset
+`tables.py --bootstrap` needs — see [publishing.md](publishing.md). Skipping loudly is the
+intended behaviour; finding *nothing at all* was a bug, and was one until the four
+re-score scripts were pointed at `evaluation/results` instead of the archive's
+`results/lmms_eval`.
 
 ## What this was checking
 

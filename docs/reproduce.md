@@ -29,8 +29,25 @@ pinned answer reader, moving Coldstart 54.91 -> 55.13 and No-Sal 55.13 -> 54.69,
 62.69 -> 62.70 and 63.47 -> 63.45. Nothing reorders and SELF-SALIENCY is untouched. See
 [rescore-audit.md](rescore-audit.md).
 
-Two arms carry a DAPO reference that never appears in a table but without which the
-EASE number means nothing (App D.3): `baselines/ease/configs/dapo.yaml`. Run it.
+The EASE row carries a DAPO reference that appears in no table and without which the EASE
+number means nothing (App D.3), because EASE is DAPO-in-EasyR1 plus an attention loss
+while our arms are GRPO-in-TRL — so EASE against an arm of ours compares the method and
+the framework at once. The quantity that means something is
+
+    (EASE − DAPO) inside EasyR1    vs    (SELF-SALIENCY − No-Sal) inside ours
+
+so run both arms, from the same cold start on the same data:
+
+```bash
+bash baselines/ease/run.sh --arm ease --exp ease_8k
+bash baselines/ease/run.sh --arm dapo --exp dapo_8k
+```
+
+It is `--arm`, not a config file of ours: EasyR1 takes its own `examples/config.yaml` and
+every deviation is a `key=value` override, so the arm is the override list in `run.sh`.
+Pass `--no-judge` to both arms or to neither — a judged EASE arm against a rule-scored
+DAPO arm confounds the attention loss with the reward, which is the one thing the paired
+design exists to prevent.
 
 ## The flagship, exactly
 
@@ -52,12 +69,19 @@ released adapter rather than off a command line:
 | Artifact | Command |
 |---|---|
 | Table 1 (the suite) | `evaluation/suite.yaml` is the list, with App A.3's splits |
-| Table 2, Table 6 | `evaluation/tables.py --arms paper` (reads banked `results.json`; `--bootstrap` for App B's error bars, which needs the per-sample release asset) |
-| Table 3 (§4.4) | `experiments/trained_model/run.sh` |
-| Table 4, Figure 4, Table 8 (§5) | `experiments/attention_bias/run.sh` |
-| Table 5 (ablations) | `evaluation/tables.py --arms ablation` |
-| Table 7 (App C) | `evaluation/tables.py --arms appendix-c`; α_sal_mean = 0.033 is re-derived by `experiments/alpha_calibration.py` |
-| Figure 3 | `experiments/figures/steps_figure.py` |
-| Figure 5 | `experiments/attention_bias/tables.py --panels` |
-| §3.5 head selection | `experiments/head_selection/run.sh` — selects (22,28) and (22,31) |
-| App A.1 classifier (91.9% / 93%) | `selfsal/steps/evaluate.py` |
+| Table 2, Table 5, Table 6, Table 7 | `python evaluation/tables.py` |
+| Table 3 (§4.4) | `bash experiments/trained_model/run.sh --out-dir DIR --arm coldstart=CKPT --arm self_saliency=CKPT` |
+| Table 4, Figure 4, Table 8 (§5) | `bash experiments/attention_bias/run.sh --stage corpus\|selftest\|scan\|report --out-dir DIR` |
+| Figure 3 | `python -m experiments.figures.steps_figure` |
+| Figure 5 | `python -m experiments.attention_bias.tables --panels ...` |
+| §3.5 head selection | `bash experiments/head_selection/run.sh --out-dir DIR` — selects (22,28) and (22,31) |
+| App C's α_sal_mean = 0.033 | `python -m experiments.alpha_calibration <probe_merged.json>` |
+| App A.1 classifier (91.9% / 93%) | `python -m selfsal.steps.evaluate` |
+
+**Four tables, one command.** `evaluation/tables.py` reads the banked `*_results.json`
+under `evaluation/results/` and prints every arm it finds, which is exactly the ten of the
+table above — the tree carries the paper's runs and nothing else. Tables 2, 5, 6 and 7 are
+four readings of those ten rows, not four invocations: Table 5 is the ablation subset,
+Table 7 adds SELF-SALIENCY_mean, and Table 6 is Table 2 with error bars. Pass
+`--bootstrap` for App B's bars, which needs the per-sample `*_samples_*.jsonl` files —
+about 5 GB, not in git, and a release asset (see [publishing.md](publishing.md)).
