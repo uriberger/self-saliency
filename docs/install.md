@@ -89,6 +89,11 @@ python -m selfsal.data.boxed_corpus --out-dir "$SELFSAL_DATA/boxed_corpus" --n 1
 
 The GRPO corpus (`peterant330/saliency-r1-8k`) is pulled from the Hub on first use.
 
+Everything that touches the Hub honours `HF_HOME` and nothing overrides it, so the cache
+lands in `~/.cache/huggingface` unless you say otherwise. On a cluster, where that is
+usually a small quota, export it alongside `SELFSAL_DATA` — every `submit.sh` here
+already requires it.
+
 The step classifier's checkpoint is needed by training and by every probe; point
 `SELFSAL_STEPS_CKPT` at it, or put it in `checkpoint/steps_classifier/best`. To train it
 from scratch, see `selfsal/steps/make_data.py` and `selfsal/steps/train.py`.

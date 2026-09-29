@@ -8,11 +8,13 @@ reports accuracy/precision/recall/F1, optionally rewriting the samples file so
 the results table reflects the fix. Deterministic responses -> no re-generation.
 
 Run in the lmms_eval conda env:
-    python scripts/rescore_pope.py <samples_pope.jsonl> [--in-place]
+    python evaluation/rescore/rescore_pope.py <samples_pope.jsonl> [--in-place]
 """
 import argparse, json, os, re, sys
+from pathlib import Path
 
-sys.path.insert(0, "${SELFSAL_ROOT:-.}/../lmms-eval")
+sys.path.insert(0, str(Path(os.environ.get(
+    "LMMS_EVAL_DIR", Path(__file__).resolve().parents[1] / "lmms_eval"))))
 from lmms_eval.tasks.pope.utils import (  # noqa: E402
     pope_process_results,
     pope_aggregate_accuracy,

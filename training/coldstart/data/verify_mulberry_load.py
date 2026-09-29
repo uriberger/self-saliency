@@ -1,9 +1,6 @@
 """Real LLaMA-Factory data-load verify on the mulberry cold-start subset (CPU, no model weights).
 Confirms: LF parses the Saliency-R1 mulberry JSON, resolves images from disk, and the
 qwen3_vl_nothink template + Qwen3VLPlugin produce input_ids + pixel_values."""
-import os
-os.environ.setdefault("HF_HOME", "/home/uberger/scratch/cache/hf_cache")
-
 from llamafactory.hparams import get_train_args
 from llamafactory.model import load_tokenizer
 from llamafactory.data import get_dataset, get_template_and_fix_tokenizer

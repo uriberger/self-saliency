@@ -630,8 +630,8 @@ def _repair_radio_summary_idxs(model, cfg):
         raise SystemExit("RADIO's summary_idxs was newly initialised and no upstream "
                          "encoder repo is named in vision_config.auto_map to recover it")
     from safetensors.torch import load_file
-    snaps = sorted(glob.glob("${HF_HOME:?set HF_HOME}/hub/models--"
-                             + repo.replace("/", "--") + "/snapshots/*"))
+    snaps = sorted(glob.glob(str(_hf_root() / ("models--" + repo.replace("/", "--"))
+                                 / "snapshots" / "*")))
     for f in (sorted(glob.glob(snaps[-1] + "/*.safetensors")) if snaps else []):
         for k, v in load_file(f).items():
             if k.endswith("summary_idxs"):

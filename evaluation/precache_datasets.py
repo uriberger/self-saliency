@@ -18,7 +18,7 @@ This does not patch the task YAMLs, so results stay identical to the old
 cluster's. Setting HF_TOKEN would also fix it and makes this script unnecessary.
 
 Usage:
-    HF_HOME=/path/to/hf_cache python scripts/precache_lmms_eval_datasets.py
+    HF_HOME=/path/to/hf_cache python evaluation/precache_datasets.py
     ... --tasks mmstar,chartqa      # subset
     ... --list                      # resolve and print, download nothing
 
@@ -28,6 +28,7 @@ import argparse
 import os
 import sys
 import traceback
+from pathlib import Path
 
 import yaml
 
@@ -158,7 +159,8 @@ def main():
     ap.add_argument("--tasks", default=",".join(DEFAULT_TASKS), help="comma-separated task names")
     ap.add_argument(
         "--lmms-eval-dir",
-        default=os.environ.get("LMMS_EVAL_DIR", "${SELFSAL_ROOT:-.}/../lmms-eval"),
+        default=os.environ.get(
+            "LMMS_EVAL_DIR", str(Path(__file__).resolve().parent / "lmms_eval")),
     )
     ap.add_argument("--list", action="store_true", help="resolve and print, download nothing")
     args = ap.parse_args()

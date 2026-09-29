@@ -634,8 +634,6 @@ def collect(args):
     _sys.setrecursionlimit(3000)
 
     # Load all required models
-    os.environ.setdefault("HF_HOME", "${HF_HOME:?set HF_HOME}")
-
     from datasets import load_dataset
     from transformers import AutoProcessor
 
@@ -1485,7 +1483,6 @@ def reground(args):
 
     if args.gpu is not None:
         os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu)
-    os.environ.setdefault("HF_HOME", "${HF_HOME:?set HF_HOME}")
 
     from experiments.head_selection.generate import (get_field, _resolve_image,
                                                  _load_dataset_resolved)
