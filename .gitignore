@@ -20,9 +20,19 @@ logs/
 wandb/
 
 # Downloaded / derived corpora. The prep scripts are tracked; their output is not.
-data/
+# Anchored: an unanchored `data/` also swallows the `selfsal/data/` source package and
+# `training/coldstart/data/`'s prep scripts, which is the opposite of the line above.
+/data/
 
 # Per-sample eval records (*_samples_*.jsonl) are ~5 GB for the paper's arms and are
 # published as a release asset, not committed. The results.json files beside them ARE
 # tracked -- they are ~10 MB and are what evaluation/tables.py reads.
 evaluation/results/**/*_samples_*.jsonl
+
+# `evaluation/tables.py` renders its tables to HTML_DIR = evaluation/results/. That is a
+# view of the tracked results.json files, regenerable from them, so it is not tracked.
+evaluation/results/*.html
+
+# Working handoff for the next session. Not repository documentation:
+# docs/publishing.md and docs/provenance.md are what a reader should find.
+NEXT_SESSION.md

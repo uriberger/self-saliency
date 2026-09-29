@@ -31,10 +31,9 @@ from __future__ import annotations
 
 import numpy as np
 
+from selfsal.data.question_boxes import boxes_per_row, load_question_boxes  # noqa: F401
 from selfsal.grounding import center_rect_mask, ground, ring_fraction, union_mask
 from selfsal.saliency import resolve_metric, score_step
-
-from .question_boxes import boxes_per_row, load_question_boxes  # noqa: F401  (re-export)
 
 #: Set by the launcher from the CLI; see training/grpo/configs/.
 _CFG = {

@@ -5,6 +5,13 @@ One box list per dataset ROW, grounded once on the row's question before trainin
 by `training/grpo/precompute_question_boxes.py`. The trainer then loads the file and
 never constructs a detector.
 
+IN `selfsal` RATHER THAN IN THE REWARD, because this is a FILE FORMAT and two programs
+depend on it: the builder that writes the file and the reward that reads it. They must
+agree on the version, on the key columns, and on what the refusals below mean, and the
+builder must not need a patched TRL checkout to learn any of that. Both import it
+absolutely from here, which is the same reason phi lives in `selfsal.saliency` -- see
+`trl/rewards/self_saliency.py`, whose docstring calls itself a shell for exactly this.
+
 This is what makes the ablation the comparison it claims to be: prior work fixes the
 target regions from the image and question alone, and the gap to SELF-SALIENCY is the
 value of conditioning them on the chain the policy is generating instead.

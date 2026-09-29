@@ -37,7 +37,6 @@ COPIES=(
   "grpo_trainer_qwen3.py:trl/trainer/grpo_trainer_qwen3.py"
   "grpo_vlm_qwen3.py:examples/scripts/grpo_vlm_qwen3.py"
   "rewards/self_saliency.py:trl/rewards/self_saliency.py"
-  "rewards/question_boxes.py:trl/rewards/question_boxes.py"
   "rewards/saliency_r1.py:trl/rewards/saliency_r1.py"
   "rewards/format.py:trl/rewards/format.py"
   "rewards/answer.py:trl/rewards/answer.py"
