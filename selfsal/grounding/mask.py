@@ -158,3 +158,55 @@ def centroid_eccentricity(mask) -> float:
     cy = (ys.mean() + 0.5) / gh - 0.5
     cx = (xs.mean() + 0.5) / gw - 0.5
     return float(np.hypot(cy, cx) / np.hypot(0.5, 0.5))
+
+
+# ---------------------------------------------------------------------------
+# Translating a region, for the matched control the trained-model audit uses.
+#
+# These two and `centroid_eccentricity` above come from the archive's
+# `trl/rewards/roll_null.py`. The roll-null SCORE is not in this repository -- no arm was
+# trained or scored with it, and `docs/provenance.md` says so -- but its geometry is not
+# the score: moving a region to a random place that still fits on the grid is how
+# `experiments/trained_model/audit.py` builds the control that holds everything about a
+# region except WHERE it is. Without it the audit has only its sibling control, and half
+# its argument.
+
+def inframe_offsets(mask) -> list[tuple[int, int]]:
+    """Every translation that keeps all of `mask` on the grid, excluding the identity.
+
+    The region is a union of boxes and need not be rectangular, so the constraint is on
+    its bounding box: shifting by (dy, dx) moves every True cell, and no cell leaves the
+    grid exactly when the bounding box does not.
+    """
+    m = np.asarray(mask, dtype=bool)
+    gh, gw = m.shape
+    rows = np.flatnonzero(m.any(axis=1))
+    cols = np.flatnonzero(m.any(axis=0))
+    if rows.size == 0 or cols.size == 0:
+        return []
+    r0, r1, c0, c1 = int(rows[0]), int(rows[-1]), int(cols[0]), int(cols[-1])
+    return [(dy, dx)
+            for dy in range(-r0, gh - r1)
+            for dx in range(-c0, gw - c1)
+            if (dy, dx) != (0, 0)]
+
+
+def sample_offsets(mask, k: int, rng, *, inframe: bool = True,
+                   min_inframe: int = 4) -> tuple[list[tuple[int, int]], bool]:
+    """-> (offsets, fell_back_to_toroidal). Without replacement; identity excluded.
+
+    A near-full-frame region leaves too few in-frame positions to draw a control from, so
+    below `min_inframe` this wraps around the border instead. The caller is told which
+    happened, because a toroidal control is a different control: it can place part of the
+    region on the opposite edge, and Section 5.2 is about the edges.
+    """
+    m = np.asarray(mask, dtype=bool)
+    pool = inframe_offsets(m) if inframe else []
+    toroidal = len(pool) < int(min_inframe)
+    if toroidal:
+        gh, gw = m.shape
+        pool = [(dy, dx) for dy in range(gh) for dx in range(gw) if (dy, dx) != (0, 0)]
+    if not pool:
+        return [], toroidal
+    idx = rng.choice(len(pool), size=min(int(k), len(pool)), replace=False)
+    return [pool[int(i)] for i in idx], toroidal

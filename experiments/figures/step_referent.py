@@ -7,13 +7,13 @@ dataset's *answer* box. Neither answers the question a Figure-1 panel actually a
 answer box is the same box for every step of the chain, so a step that describes some
 other object is marked wrong for describing it.
 
-This script asks the per-step question instead, with the same instrument the overlap
-reward used during training: Grounding-DINO grounds the step's whole sentence
-(`overlap_rewards._dino_boxes`), the surviving boxes are rasterised onto the map's patch
-grid (`_union_mask`, so the per-box area cap applies), and the step's map is scored inside
-that union. That makes the number reward-aligned by construction -- it is the training
-target, not independent evidence -- which is the right thing for an illustration and the
-wrong thing for a headline metric.
+This script asks the per-step question instead, with the same instrument R_sal used during
+training -- literally the same functions, not a reimplementation: Grounding-DINO grounds
+the step's whole sentence (`selfsal.grounding.ground`), the surviving boxes are rasterised
+onto the map's patch grid (`union_mask`, so the per-box area cap applies), and the step's
+map is scored inside that union by phi (`selfsal.saliency`). That makes the number
+reward-aligned by construction -- it is the training target, not independent evidence --
+which is the right thing for an illustration and the wrong thing for a headline metric.
 
 The cross-model search is the point: within one sample, pair a step of model A with a step
 of model B whose referent masks agree (grid IoU >= --iou-min, i.e. the two sentences are
@@ -28,42 +28,31 @@ sentence) pairs for a 20-sample 3-model run and a few minutes on a login node.
 from __future__ import annotations
 
 import argparse
-import importlib.util
 import json
 import sys
-import types
 from pathlib import Path
 
 import numpy as np
 from PIL import Image
 
+from selfsal.grounding import ground, union_mask
+from selfsal.saliency import auroc, phi, phi_mean
+
 REPO = Path(__file__).resolve().parents[2]   # the repository root
 
-
-def _load_module(name: str, relpath: str):
-    spec = importlib.util.spec_from_file_location(name, REPO / relpath)
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules[name] = mod
-    spec.loader.exec_module(mod)
-    return mod
-
-
-def _stub_rewards_package():
-    """Give `trl` / `trl.rewards` a __path__ so overlap_rewards' relative imports resolve.
-
-    Same reason as overlap_probe.py: the reward modules import their siblings relatively,
-    which raises under a flat alias, and importing the real trl/__init__.py would drag in
-    the whole training stack for a script that only needs the detector helpers.
-    """
-    for name, path in (("trl", REPO / "trl"), ("trl.rewards", REPO / "trl" / "rewards")):
-        if name not in sys.modules:
-            mod = types.ModuleType(name)
-            mod.__path__ = [str(path)]
-            sys.modules[name] = mod
-
-
-_stub_rewards_package()
-OREW = _load_module("trl.rewards.overlap_rewards", "trl/rewards/overlap_rewards.py")
+# The grounding and scoring settings for this run. In the archive these were reached out
+# of the reward module's module-level `_CFG`, which is why this file used to build a fake
+# `trl.rewards` package and load `overlap_rewards.py` by path. The method is a library
+# here -- `selfsal.grounding` grounds and `selfsal.saliency` scores, and both take their
+# settings as arguments -- so there is no global to reach into, and this script holds its
+# own. Same shape as `experiments/trained_model/probe.py`'s CFG, and for the same reason.
+CFG = {
+    "box_threshold": 0.10,
+    "max_box_area": 0.5,
+    "max_union_area": None,
+    "dino_batch_size": 32,
+    "dino_device": None,
+}
 
 
 def border_frac(smap: np.ndarray) -> float:
@@ -79,10 +68,13 @@ def border_frac(smap: np.ndarray) -> float:
 
 
 def score_one(smap: np.ndarray, mask: np.ndarray) -> dict:
+    # The historical key names are kept: stored runs of this script are keyed on them, and
+    # the figure scripts that read its JSON index them. `mean_in` IS phi (Equation 1) and
+    # `mean_in_v2` IS phi_mean (Appendix C) -- see selfsal.saliency.score.
     return {
-        "mean_in": OREW._mean_in(smap, mask),
-        "mean_in_v2": OREW._mean_in_v2(smap, mask),
-        "auroc": OREW._auroc(smap, mask),
+        "mean_in": phi(smap, mask),
+        "mean_in_v2": phi_mean(smap, mask),
+        "auroc": auroc(smap, mask),
         "box_area_frac": float(mask.sum()) / float(mask.size),
         "peak_in": bool(mask[np.unravel_index(np.argmax(smap), smap.shape)]),
     }
@@ -143,29 +135,30 @@ def main():
     if len(models) < 2:
         print(f"[warn] only {len(models)} model(s); the cross-model pairing needs two")
 
-    cfg = {"dino_batch_size": args.dino_batch_size}
-    if args.box_threshold is not None:
-        cfg["box_threshold"] = args.box_threshold
-    if args.max_box_area is not None:
-        cfg["max_box_area"] = args.max_box_area
-    if args.max_union_area is not None:
-        cfg["max_union_area"] = args.max_union_area
-    if args.dino_device:
-        cfg["dino_device"] = args.dino_device
-    OREW.configure(**cfg)
-    used_cfg = {k: OREW._CFG.get(k) for k in
-                ("box_threshold", "max_box_area", "max_union_area", "metric")}
+    CFG["dino_batch_size"] = args.dino_batch_size
+    for key, value in (("box_threshold", args.box_threshold),
+                       ("max_box_area", args.max_box_area),
+                       ("max_union_area", args.max_union_area),
+                       ("dino_device", args.dino_device)):
+        if value is not None:
+            CFG[key] = value
+    used_cfg = {k: CFG[k] for k in ("box_threshold", "max_box_area", "max_union_area")}
     print(f"[cfg] models={models}  map={args.map}  dino={used_cfg}", flush=True)
 
     items = collect(run_dir, models, args.map)
     print(f"[dino] grounding {len(items)} (image, step) pairs ...", flush=True)
-    boxes_per_item = OREW._dino_boxes([it["image"] for it in items], [it["text"] for it in items])
+    boxes_per_item = ground([it["image"] for it in items], [it["text"] for it in items],
+                            box_threshold=CFG["box_threshold"],
+                            batch_size=CFG["dino_batch_size"],
+                            device=CFG["dino_device"])
 
     records = []
     for it, boxes in zip(items, boxes_per_item):
         smap = it["map"]
         gh, gw = smap.shape
-        mask = OREW._union_mask(boxes or [], gh, gw)
+        mask = union_mask(boxes or [], gh, gw,
+                          max_box_area=CFG["max_box_area"],
+                          max_union_area=CFG["max_union_area"])
         rec = {k: it[k] for k in
                ("model", "sample", "row", "step", "text", "question", "gt_answer", "format_ok")}
         rec.update(grid=[gh, gw], n_boxes=len(boxes or []), border_frac=border_frac(smap),
@@ -211,8 +204,8 @@ def main():
                         "a_own_mean_in": ra["mean_in"], "b_own_mean_in": rb["mean_in"],
                         # Both maps against the SAME region, so the panel's two rows differ
                         # only in where the attention went.
-                        "a_shared_v2": OREW._mean_in_v2(ra["_map"], shared),
-                        "b_shared_v2": OREW._mean_in_v2(rb["_map"], shared),
+                        "a_shared_v2": phi_mean(ra["_map"], shared),
+                        "b_shared_v2": phi_mean(rb["_map"], shared),
                         "a_border": ra["border_frac"], "b_border": rb["border_frac"],
                         "a_peak_in": ra["peak_in"], "b_peak_in": rb["peak_in"],
                         "shared_area_frac": float(shared.sum()) / float(shared.size),

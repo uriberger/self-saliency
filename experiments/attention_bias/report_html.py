@@ -18,7 +18,6 @@ from __future__ import annotations
 
 import argparse
 import contextlib
-import importlib.util
 import io
 import json
 import sys
@@ -31,11 +30,14 @@ sys.path.insert(0, str(REPO))
 
 
 def _probe():
-    spec = importlib.util.spec_from_file_location("_slp", REPO / "sink_location_probe.py")
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules["_slp"] = mod
-    spec.loader.exec_module(mod)
-    return mod
+    """The harness, whose readers this page calls rather than retyping their numbers.
+
+    A function rather than a plain import only because it is bound to `SP` below and the
+    name `probe` would shadow nothing useful here; it is called at module scope, so this
+    does pull in torch.
+    """
+    from experiments.attention_bias import probe
+    return probe
 
 
 SP = _probe()

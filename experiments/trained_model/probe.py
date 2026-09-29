@@ -68,33 +68,16 @@ from selfsal import steps as STEPS                                 # noqa: E402
 from selfsal import saliency as SAL                                # noqa: E402
 
 
-class _MapVariantUnavailable:
-    """The gradient and GLIMPSE saliency maps are not part of this paper.
+# The probe supported three maps -- the attention map the published arms were trained on,
+# plus a pixel-gradient one and a GLIMPSE one that were explored and dropped. Only the
+# attention map has a number in the paper, so only it came across. `--map grad` and
+# `--map glimpse` therefore fail when the map is BUILT, with a sentence saying where the
+# code went; see experiments/_unavailable.py for the rule that keeps that failure late.
+from experiments._unavailable import unavailable                   # noqa: E402
 
-    The probe supported three maps -- the attention map the published arms were trained
-    on, plus a pixel-gradient one and a GLIMPSE one that were explored and dropped. Only
-    the attention map has a number in the paper, so only it came across; the other two
-    are in the archive repo, whole and still runnable.
-
-    This stands in for them so `--map grad` fails at the flag with a sentence saying
-    where to go, rather than at an import three screens earlier with a traceback, or --
-    worse -- silently producing a column no published result describes.
-    """
-
-    def __init__(self, name):
-        self._name = name
-
-    def __getattr__(self, attr):
-        raise NotImplementedError(
-            f"the {self._name} saliency map is not part of this repository. No arm in "
-            f"the paper was trained or scored with it. It is intact in the archive repo "
-            f"(research/saliency_r1: trl/{self._name}_maps.py, "
-            f"trl/rewards/{self._name}_rewards.py, overlap_probe.py --map {self._name}).")
-
-
-GM = _MapVariantUnavailable("grad")
-GREW = _MapVariantUnavailable("grad")
-GLM = _MapVariantUnavailable("glimpse")
+GM = unavailable("grad maps", "trl/grad_maps.py")
+GREW = unavailable("the roll-null gradient reward", "trl/rewards/grad_rewards.py")
+GLM = unavailable("GLIMPSE maps", "trl/glimpse_maps.py", "trl/rewards/glimpse_rewards.py")
 
 # Which per-step number `score` (and therefore the aggregated overlap) reports:
 # "metric" = the configured overlap metric, "logratio" = the roll-null gradient score.
@@ -179,16 +162,13 @@ def judge_format(response: str) -> bool:
 # ---------------------------------------------------------------------------
 # dataset
 # ---------------------------------------------------------------------------
-def prepare_image(image):
-    from PIL import Image  # noqa: F401
-
-    w, h = image.size
-    if max(w, h) > MAX_IMAGE_SIDE:
-        s = MAX_IMAGE_SIDE / max(w, h)
-        image = image.resize((max(1, round(w * s)), max(1, round(h * s))), 2)  # BICUBIC
-    if image.mode != "RGB":
-        image = image.convert("RGB")
-    return image
+# `prepare_image` is imported from `selfsal.data.prompt` at the top of this file.
+# A verbatim copy of it used to sit here and shadow that import -- same filter, same
+# order, and verified pixel-identical over 42 cases (7 sizes x 6 image modes), so nothing
+# about the probe's numbers changes by deleting it. What changes is that there is now one
+# implementation: the copy carried the archive's `resize(..., 2)  # BICUBIC`, whose
+# comment is wrong, and a reader fixing the comment would have silently switched this
+# probe to a filter the published runs never used.
 
 
 def load_samples(dataset_path: str, n: int, seed: int, cache_tag: str = "",
@@ -595,7 +575,7 @@ def overlap_from_detail(detail, format_valid):
 # main shard
 # ---------------------------------------------------------------------------
 def grad_step_maps(model, processor, prompt_inputs, prompt_len, comp_ids, steps, device,
-                   grad_target="clogit", span_chunk=GM.SPAN_CHUNK_DEFAULT):
+                   grad_target="clogit", span_chunk=None):
     """The GRPO gradient reward's map, per observe step -- the same call the trainer makes.
 
     Same [{"map", "text", "tok_a", "tok_b"}] contract as step_maps_from_attention, so the
@@ -878,7 +858,10 @@ def main():
                         "identical maps and masks. Use --map grad --score logratio to measure "
                         "the spread that sets w_grad.")
     p.add_argument("--grad-target", default="clogit", choices=["clogit", "logit", "logprob"])
-    p.add_argument("--grad-span-chunk", type=int, default=GM.SPAN_CHUNK_DEFAULT,
+    # 4 is the archive's SPAN_CHUNK_DEFAULT, written out rather than read off GM for the
+    # same reason --grad-target's choices are: building the parser must not touch the
+    # sentinel, or the probe dies before it has read the flag that would have avoided it.
+    p.add_argument("--grad-span-chunk", type=int, default=4,
                    help="steps per vmapped backward; 0 = all at once. Pure memory/speed "
                         "dial, identical maps at every value. Lower it if [grad-mem] "
                         "peak approaches the card")
@@ -886,7 +869,8 @@ def main():
     p.add_argument("--grad-logratio-clip", type=float, default=1.0)
     # --- the GLIMPSE reward (trl/rewards/glimpse_rewards.py). Defaults match the
     # trainer's, so `--map glimpse` measures the map a `--glimpse` run would score.
-    p.add_argument("--glimpse-target", default="clogit", choices=list(GM.GRAD_TARGETS))
+    p.add_argument("--glimpse-target", default="clogit",
+                   choices=["clogit", "logit", "logprob"])
     p.add_argument("--glimpse-layer-frac", type=float, default=1.0,
                    help="fraction of the stack propagated, off the top. 0.6 is 1.64x "
                         "cheaper and a METHOD change; the screened map is 1.0.")

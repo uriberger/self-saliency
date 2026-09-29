@@ -64,7 +64,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import importlib.util
 import io
 import json
 import os
@@ -76,27 +75,20 @@ import numpy as np
 import torch
 
 REPO = Path(__file__).resolve().parents[2]   # the repository root
-from selfsal.data.paths import grpo_sets_dir  # noqa: E402
-
-
-def _load_module(name: str, relpath: str):
-    spec = importlib.util.spec_from_file_location(name, REPO / relpath)
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules[name] = mod
-    spec.loader.exec_module(mod)
-    return mod
-
-
-PROBE = _load_module("_sl_overlap_probe", "overlap_probe.py")
-IV = _load_module("_sl_intervene", "intervene_probe.py")
-# The reward's own observe-step segmenter, loaded by path for the same reason PROBE is:
-# `trl/` is a package whose __init__ drags in the trainer. Kept as the trainer's module
-# and not a reimplementation, so "the tokens the reward scored" means exactly that.
-STEPS = _load_module("_sl_overlap_steps", "trl/overlap_steps.py")
 sys.path.insert(0, str(REPO))
-from experiments.attention_bias import measure as SL
-from selfsal.saliency import maps as CAP
-from selfsal.models import families as VF
+
+# Ordinary imports. In the archive these three were loaded by file path, because there
+# `overlap_probe.py` and `intervene_probe.py` were loose scripts at the repository root
+# and the segmenter sat inside `trl/`, whose __init__ drags in the whole trainer. Here
+# they are packages, so the reason is gone -- and a path load would name files that do
+# not exist in this repository at all.
+from experiments import _progress as IV                       # noqa: E402
+from experiments.attention_bias import measure as SL          # noqa: E402
+from experiments.trained_model import probe as PROBE          # noqa: E402
+from selfsal import steps as STEPS                            # noqa: E402
+from selfsal.data.paths import grpo_sets_dir                  # noqa: E402
+from selfsal.models import families as VF                     # noqa: E402
+from selfsal.saliency import maps as CAP                      # noqa: E402
 
 # The pair the reward trained, kept as a named cell so every table can carry the
 # "and what does it say at the cell the whole project is built on" column. It is a fact
@@ -769,7 +761,7 @@ def observe_spans(processor, comp, question, classifier):
     if ts is None or te is None or te < ts:
         return [], diag
 
-    steps = STEPS.segment_observe_steps(text, lo_char, hi_char, out, 0, ts, te,
+    steps = STEPS.segment_sentences(text, lo_char, hi_char, out, 0, ts, te,
                                         question, classifier)
     diag["n_steps"] = len(steps)
     return [(a, b) for _t, a, b in steps], diag
@@ -1124,9 +1116,9 @@ def stage_scan(args):
     # classifier checkpoint should stop the run that wanted it, not every run.
     clf = None
     if args.observe_steps and args.max_new_tokens > 0:
-        clf = STEPS.OverlapStepsClassifier.load(args.steps_ckpt or None, device=device)
+        clf = STEPS.StepClassifier.load(args.steps_ckpt or None, device=device)
         print(f"[scan] observe-step classifier on {device} "
-              f"from {args.steps_ckpt or STEPS._DEFAULT_CKPT}", flush=True)
+              f"from {args.steps_ckpt or STEPS.default_checkpoint()}", flush=True)
     elif args.observe_steps:
         raise SystemExit("--observe-steps needs --max-new-tokens > 0: there is no "
                          "completion to segment without one")

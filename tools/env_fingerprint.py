@@ -4,25 +4,26 @@
 Run it on two clusters and `diff` the outputs. Anything that differs is a reason a
 checkpoint copied from one to the other will not resume identically -- or at all.
 
-Why this is not just `pip freeze`: the training code is not a pip package. It lives in
-`trl_repo/`, a gitignored clone that `patch_trl_qwen3.sh` overwrites with tracked sources
-from `trl/`. Two clusters can report identical package versions and still run different
-reward functions. So this checks three layers:
+Why this is not just `pip freeze`: the training code is not a pip package. It lives in a
+TRL checkout (`third_party/trl_repo` by default, gitignored) that `env/patches/trl.sh`
+overwrites with the tracked sources under `training/grpo/trl_patch/`. Two clusters can
+report identical package versions and still run different reward functions. So this
+checks three layers:
 
   1. packages      -- the pip layer
-  2. patch set     -- every file patch_trl_qwen3.sh copies, verified against its source
-  3. reward modules-- every module trl/rewards/__init__.py promises to expose
+  2. patch set     -- every file env/patches/trl.sh copies, installed copy vs source
+  3. reward modules-- every module `rewards/__init__.py` binds, and whether it is installed
 
-Layer 3 exists because the patch script does NOT copy every file the entrypoint imports.
-`grpo_vlm_qwen3.py` does `from trl.rewards import think_format_reward, ...`, and
-format_rewards.py / saliency_rewards.py / answer_format_rewards.py are modified (or added)
-in this repo without being in the patch script's copy list. A cluster whose trl_repo
-predates that work resolves those imports against stock upstream TRL, where
-think_format_reward has a different signature entirely.
+Layer 3 exists because the patch script need not copy every file the entry script
+imports. `grpo_vlm_qwen3.py` does `from trl.rewards import think_format_reward, ...`, and
+a checkout that predates a change to those resolves the import against stock upstream
+TRL, where `think_format_reward` has a different signature entirely. Any module this
+prints with "NOT patch-copied" beside it is one to look at for that reason.
+(`tests/test_import_layout.py` holds the copy list and those exports in step on the
+source side; this is the check on the INSTALLED side, which no test can reach.)
 
 Usage:
-    ./env_fingerprint.sh                      # activates the env, then runs this
-    <env>/bin/python -I env_fingerprint.py    # -I matters: keeps cwd off sys.path
+    <env>/bin/python -I tools/env_fingerprint.py   # -I matters: keeps cwd off sys.path
 
 Exit status is 0 unless a check could not be performed at all.
 """
@@ -35,8 +36,19 @@ import re
 import subprocess
 import sys
 
-REPO = os.environ.get("SALIENCY_REPO") or os.path.dirname(os.path.abspath(__file__))
-TRL_REPO = os.path.join(REPO, "trl_repo")
+# This file sits in tools/, so the repository root is its PARENT. The same two
+# environment variables the runner and the patch script honour, with the same defaults,
+# so all three agree on which checkout is being described.
+REPO = (os.environ.get("SELFSAL_ROOT") or os.environ.get("SALIENCY_REPO")
+        or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+TRL_REPO = os.environ.get("TRL_REPO") or os.path.join(REPO, "third_party", "trl_repo")
+
+#: The script that installs the patch set. Its COPIES array is the source of truth for
+#: which files are patched, and is parsed rather than duplicated here.
+PATCH_SCRIPT = os.path.join(REPO, "env", "patches", "trl.sh")
+
+#: The tracked sources it copies from.
+PATCH_SRC = os.path.join(REPO, "training", "grpo", "trl_patch")
 
 PKGS = [
     "torch", "transformers", "trl", "peft", "accelerate", "deepspeed",
@@ -112,51 +124,39 @@ def norm(path):
 
 
 def copied_pairs():
-    """(src, dst) for every `cp` in patch_trl_qwen3.sh, so the list cannot drift.
+    """(src, dst) for every entry in env/patches/trl.sh's COPIES array.
 
-    Hardcoding the file list is how you miss a file the patch script started copying
-    last month. Parse the script instead -- it is the source of truth. Two shapes appear
-    there: literal `cp "$REPO/a" "$TRL_REPO/b"`, and grpo_trainer_qwen3.py's
-    `cp "$SRC" "$DST"` after SRC/DST are assigned -- resolve the assignments too, since
-    that indirection hides the single most important file in the patch set.
+    Hardcoding the file list is how you miss a file the patch script started copying last
+    month. Parse the script instead -- it is the source of truth, and it is the same array
+    `tests/test_import_layout.py` reads. `src` is relative to training/grpo/trl_patch/ and
+    `dst` to the TRL checkout, exactly as the array spells them.
     """
-    script = os.path.join(REPO, "patch_trl_qwen3.sh")
-    literal = re.compile(
-        r'^\s*cp\s+"?\$(?:\{)?REPO(?:\})?/([^"\s]+)"?\s+"?\$(?:\{)?TRL_REPO(?:\})?/([^"\s]+)"?'
-    )
-    assign = re.compile(r'^\s*(SRC|DST)="\$(?:\{)?(?:REPO|TRL_REPO)(?:\})?/([^"]+)"')
-    indirect = re.compile(r'^\s*cp\s+"\$(?:\{)?SRC(?:\})?"\s+"\$(?:\{)?DST(?:\})?"')
-    pairs, held = [], {}
     try:
-        with open(script) as fh:
-            for line in fh:
-                m = literal.match(line)
-                if m:
-                    pairs.append((m.group(1), m.group(2)))
-                    continue
-                m = assign.match(line)
-                if m:
-                    held[m.group(1)] = m.group(2)
-                    continue
-                if indirect.match(line) and "SRC" in held and "DST" in held:
-                    pairs.append((held["SRC"], held["DST"]))
+        with open(PATCH_SCRIPT) as fh:
+            text = fh.read()
     except OSError:
         return None
-    return pairs
+    block = re.search(r"^COPIES=\((.*?)^\)", text, re.MULTILINE | re.DOTALL)
+    if not block:
+        return None
+    return re.findall(r'"([^":]+):([^"]+)"', block.group(1))
 
 
 def declared_reward_modules():
-    """Module names trl/rewards/__init__.py promises via its lazy _import_structure."""
-    path = os.path.join(TRL_REPO, "trl", "rewards", "__init__.py")
+    """Module names `rewards/__init__.py` binds, from the tracked source.
+
+    Read out of trl_patch/ rather than out of the installed checkout, and by the names
+    the `__init__` imports rather than by a lazy `_import_structure` table -- this
+    package's __init__ imports eagerly on purpose (a lazy failure would surface on a GPU,
+    mid-step, rather than at import; its docstring is the argument).
+    """
+    path = os.path.join(PATCH_SRC, "rewards", "__init__.py")
     try:
         with open(path) as fh:
             src = fh.read()
     except OSError:
         return None
-    block = re.search(r"_import_structure\s*=\s*\{(.*?)\}", src, re.DOTALL)
-    if not block:
-        return None
-    return re.findall(r'"([A-Za-z_][A-Za-z0-9_]*)"\s*:', block.group(1))
+    return sorted({m.group(1) for m in re.finditer(r"^from \.(\w+) import", src, re.M)})
 
 
 print("## host  (these lines differ between clusters by design -- ignore them in a diff)")
@@ -197,15 +197,15 @@ row("repo dirty", dirty(REPO))
 row("trl_repo HEAD", sh("git", "-C", TRL_REPO, "rev-parse", "--short", "HEAD"))
 row("trl_repo dirty", dirty(TRL_REPO))
 
-print("\n## patch set (patch_trl_qwen3.sh: trl_repo copy vs tracked source)")
+print("\n## patch set (env/patches/trl.sh: installed copy vs tracked source)")
 pairs = copied_pairs()
 if pairs is None:
-    row("patchset", "ERROR (patch_trl_qwen3.sh unreadable)")
+    row("patchset", "ERROR (env/patches/trl.sh unreadable or no COPIES array)")
 else:
     roll, stale, absent = hashlib.md5(), [], []
     for src, dst in sorted(pairs, key=lambda p: p[1]):
         d_dst = digest(os.path.join(TRL_REPO, dst))
-        d_src = digest(os.path.join(REPO, src))
+        d_src = digest(os.path.join(PATCH_SRC, src))
         if d_dst is None:
             absent.append(dst)
             continue
@@ -217,16 +217,16 @@ else:
     row("not installed", ", ".join(absent) if absent else "(none)")
     row("stale vs trl/", ", ".join(stale) if stale else "(none)")
 
-print("\n## reward modules (declared in trl/rewards/__init__.py, NOT all patch-copied)")
+print("\n## reward modules (bound by rewards/__init__.py)")
 mods = declared_reward_modules()
 if mods is None:
-    row("rewards", "ERROR (trl_repo/trl/rewards/__init__.py unreadable)")
+    row("rewards", "ERROR (trl_patch/rewards/__init__.py unreadable)")
 else:
     copied = {dst for _, dst in (pairs or [])}
     for mod in sorted(mods):
         rel = f"trl/rewards/{mod}.py"
         d = digest(os.path.join(TRL_REPO, rel))
-        tag = "" if rel in copied else "   <- not patch-copied"
+        tag = "" if rel in copied else "   <- NOT patch-copied"
         row(mod, (d or "MISSING") + tag)
 
 print("\n## site-package patches")

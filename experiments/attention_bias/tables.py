@@ -47,7 +47,6 @@ QWEN3-VL HAS NO SINGLE GRID -- see `resample_map` for what is done about it.
 from __future__ import annotations
 
 import argparse
-import importlib.util
 import sys
 from pathlib import Path
 
@@ -55,14 +54,6 @@ import numpy as np
 
 REPO = Path(__file__).resolve().parents[2]   # the repository root
 sys.path.insert(0, str(REPO))
-
-
-def _load(name, rel):
-    spec = importlib.util.spec_from_file_location(name, REPO / rel)
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules[name] = mod
-    spec.loader.exec_module(mod)
-    return mod
 
 
 from experiments.attention_bias import measure as SL
@@ -361,7 +352,9 @@ def main():
     if not args.dirs and not args.panels:
         raise SystemExit("one of --dirs or --panels is required")
 
-    P = _load("_xm_probe", "sink_location_probe.py")
+    # Imported here rather than at module scope because `probe` pulls in torch and the
+    # trained-model probe, and everything above this line is numpy over stored arrays.
+    from experiments.attention_bias import probe as P
     TRAINED = [(P.TRAINED_LAYER, h) for h in P.TRAINED_HEADS]
     HEAD_TEXT = {"all": "all heads",
                  "trained": f"L{P.TRAINED_LAYER} h"

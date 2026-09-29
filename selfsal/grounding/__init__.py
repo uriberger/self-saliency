@@ -5,10 +5,12 @@
 a numpy-only environment.
 """
 
-from .mask import box_area, center_rect_mask, centroid_eccentricity, raster_union, ring_fraction, union_mask
+from .mask import (box_area, center_rect_mask, centroid_eccentricity, inframe_offsets,
+                   raster_union, ring_fraction, sample_offsets, union_mask)
 
 __all__ = [
-    "box_area", "center_rect_mask", "centroid_eccentricity", "raster_union", "ring_fraction", "union_mask",
+    "box_area", "center_rect_mask", "centroid_eccentricity", "inframe_offsets",
+    "raster_union", "ring_fraction", "sample_offsets", "union_mask",
     "ground", "ground_local", "ground_served", "ground_scored", "ground_claim",
     "GROUNDING_DINO_HF_ID",
     "DEFAULT_BOX_THRESHOLD",

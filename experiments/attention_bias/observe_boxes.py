@@ -30,7 +30,6 @@ legs are directly comparable:
 from __future__ import annotations
 
 import argparse
-import importlib.util
 import json
 import sys
 from pathlib import Path
@@ -39,14 +38,6 @@ import numpy as np
 
 REPO = Path(__file__).resolve().parents[2]   # the repository root
 sys.path.insert(0, str(REPO))
-
-
-def _load(name, rel):
-    spec = importlib.util.spec_from_file_location(name, REPO / rel)
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules[name] = mod
-    spec.loader.exec_module(mod)
-    return mod
 
 
 def box_stats(boxes, gh, gw, max_box_area=0.5):
@@ -97,22 +88,22 @@ def main():
     ap.add_argument("--batch", type=int, default=16)
     args = ap.parse_args()
 
-    P = _load("_sob_probe", "sink_location_probe.py")
-    OREW = sys.modules.get("trl.rewards.overlap_rewards") or P.PROBE.OREW
-    STEPS = P.STEPS
+    # Imported here rather than at module scope: `probe` pulls in torch, and --help
+    # should not.
     from experiments.attention_bias import measure as SL
+    from experiments.attention_bias import probe as P
     from PIL import Image
 
-    if hasattr(OREW, "configure"):
-        try:
-            OREW.configure(box_threshold=args.box_threshold,
-                           max_box_area=args.max_box_area)
-        except Exception:
-            OREW._CFG.update(box_threshold=args.box_threshold,
-                             max_box_area=args.max_box_area)
-    else:
-        OREW._CFG.update(box_threshold=args.box_threshold,
-                         max_box_area=args.max_box_area)
+    from selfsal.grounding import ground
+    from selfsal.steps import StepClassifier
+
+    # The detector, called directly. In the archive this went through the reward module's
+    # module-level _CFG, reached either by importing it or by borrowing whichever copy the
+    # probe had already loaded -- hence the `sys.modules.get(...) or ...` and the
+    # configure()/._CFG fallback, which straddled two versions of that module. `ground`
+    # takes the threshold as an argument, so there is no global to set and no version to
+    # straddle. --max-box-area is not a grounding setting at all: it is applied below by
+    # box_stats, per box, when the boxes are rasterised onto the grid.
 
     meta, arrays = P.read_stage(args.scan_dir, "scan")
     man = {r["key"]: r for r in P.read_manifest(args.scan_dir)}
@@ -130,7 +121,7 @@ def main():
     print(f"{len(meta)} scanned, {len(done)} already grounded, {len(todo)} to do",
           flush=True)
 
-    clf = STEPS.OverlapStepsClassifier.load(device="cuda" if _cuda() else "cpu")
+    clf = StepClassifier.load(device="cuda" if _cuda() else "cpu")
     proc, _tok = None, None
     n_steps = 0
     with open(out_path, "a") as fh:
@@ -157,7 +148,8 @@ def main():
                      for a, b in spans]
             im = Image.open(row["path"]).convert("RGB")
             gh, gw = m["grid"]
-            got = OREW._dino_boxes([im] * len(sents), sents)
+            got = ground([im] * len(sents), sents,
+                         box_threshold=args.box_threshold)
             recs = []
             for (a, b), s, bx in zip(spans, sents, got):
                 st = box_stats([list(map(float, q)) for q in (bx or [])], gh, gw,

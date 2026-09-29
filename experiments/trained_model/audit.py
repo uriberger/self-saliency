@@ -129,16 +129,6 @@ def mean_in(smap, mask):
     return float(smap[mask].mean() / mx)
 
 
-_ROLL_NULL = None
-
-
-def roll_null_mod():
-    """trl/rewards/roll_null.py by path -- it is numpy-only, and importing the package
-    would pull torch into a report that has no business needing it."""
-    global _ROLL_NULL
-    if _ROLL_NULL is None:
-        _ROLL_NULL = _load_probe_module("_sg_roll_null", "trl/rewards/roll_null.py")
-    return _ROLL_NULL
 
 
 def null_stats(smap, mask, sib_masks=(), seed=0, n_offsets=16):
@@ -159,7 +149,8 @@ def null_stats(smap, mask, sib_masks=(), seed=0, n_offsets=16):
     `seed` fixes the offsets, so the same step draws the same translates under both
     models and the cross-model comparison stays paired.
     """
-    RN = roll_null_mod()
+    from selfsal.grounding import sample_offsets
+
     smap = np.asarray(smap, dtype=np.float64)
     mask = np.asarray(mask, dtype=bool)
     tot, nan = float(smap.sum()), float("nan")
@@ -167,7 +158,7 @@ def null_stats(smap, mask, sib_masks=(), seed=0, n_offsets=16):
            "share_sib": nan, "enr_sib": nan, "n_sib": 0}
     if tot <= 0 or not mask.any():
         return out
-    offs, _ = RN.sample_offsets(mask, int(n_offsets), np.random.default_rng(seed))
+    offs, _ = sample_offsets(mask, int(n_offsets), np.random.default_rng(seed))
     if offs:
         sh = [float(smap[np.roll(mask, o, axis=(0, 1))].sum() / tot) for o in offs]
         out["share_roll"] = float(np.mean(sh))
@@ -977,14 +968,6 @@ def merge_dino(out_dir):
 # ---------------------------------------------------------------------------
 # stage: crosspass -- phi(text of arm A, attention of model B), exactly
 # ---------------------------------------------------------------------------
-def _load_probe_module(name, rel):
-    spec = importlib.util.spec_from_file_location(name, ROOT / rel)
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules[name] = mod
-    spec.loader.exec_module(mod)
-    return mod
-
-
 def stage_crosspass(args, out_dir):
     """Teacher-force each arm's completions through each model and score the SAME stored
     masks with the resulting maps.
@@ -997,8 +980,10 @@ def stage_crosspass(args, out_dir):
     """
     import torch
 
-    PROBE = _load_probe_module("_sg_probe", "overlap_probe.py")
-    OSTEPS = PROBE.OSTEPS
+    # Imported here rather than at module scope: the probe pulls in torch, and the
+    # reporting stages of this file do not need it.
+    from experiments.trained_model import probe as PROBE
+    from selfsal.steps import segment as OSTEPS
     from PIL import Image
 
     arms = load_arms(args.probe, keep=set(args.keep_arm) if args.keep_arm else None,
@@ -1079,10 +1064,10 @@ def stage_crosspass(args, out_dir):
                     skipped["step_text_not_found"] += 1
                     continue
                 ce = cs + len(st["text"])
-                tok_a = OSTEPS._char_to_tok(out, 0, cs, n_chars)
+                tok_a = OSTEPS._char_to_token(out, 0, cs, n_chars)
                 tok_b_incl = out.char_to_token(0, ce - 1)
                 if tok_b_incl is None:
-                    tok_b_incl = OSTEPS._char_to_tok(out, 0, ce - 1, n_chars)
+                    tok_b_incl = OSTEPS._char_to_token(out, 0, ce - 1, n_chars)
                 if tok_a is None or tok_b_incl is None:
                     skipped["step_not_tokenisable"] += 1
                     continue

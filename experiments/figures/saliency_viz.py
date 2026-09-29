@@ -106,33 +106,36 @@ def repo_path(rel: str) -> Path:
     return p
 
 
-def _load_module(name: str, relpath: str):
-    import importlib.util
+from experiments import _progress as IV                            # noqa: E402
+from experiments._unavailable import unavailable                   # noqa: E402
+from experiments.trained_model import probe as PROBE               # noqa: E402
+from selfsal.data.prompt import IMAGE_TOKEN_ID                     # noqa: E402
+from selfsal.steps import StepClassifier                           # noqa: E402
+from selfsal.steps import segment as OSTEPS                        # noqa: E402
 
-    # Idempotent, because the edge can also be walked the other way: the flow probe
-    # loads THIS file to reach glimpse_map, registering itself as `_sv_flow` first, and
-    # without this guard the load below would execute the probe a second time under a
-    # second module object -- two copies of it and of the three modules it loads.
-    if name in sys.modules:
-        return sys.modules[name]
-    spec = importlib.util.spec_from_file_location(name, REPO / relpath)
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules[name] = mod
-    spec.loader.exec_module(mod)
-    return mod
+# ONE OF THE FIVE MAPS BELOW IS IN THIS REPOSITORY. `direct` is the attention map of
+# Section 3.3, the one the reward reads and the one every published number comes from, and
+# it needs nothing but the probe. The other four were explored and dropped:
+#
+#   rollout_mean, rollout_wnorm   the attention-rollout flow, `A flow_correlation_probe.py`
+#   grad                          the pixel-gradient map, `A trl/grad_maps.py`
+#   glimpse                       the GLIMPSE map, `A trl/glimpse_maps.py`
+#
+# so `--method direct` works here and the other four raise when the map is built, naming
+# the archive. See experiments/_unavailable.py. Note that no figure in the paper is
+# produced by this script -- docs/reproduce.md routes Figure 3 through
+# `figures/steps_figure.py` and Figure 5 through `attention_bias/tables.py --panels`.
+FC = unavailable("the attention-rollout flow", "flow_correlation_probe.py")
+GM = unavailable("grad maps", "trl/grad_maps.py")
 
 
-# flow_correlation_probe already imports the other three; going through it loads each
-# of them exactly once instead of a second copy under a different module name.
-FC = _load_module("_sv_flow", "flow_correlation_probe.py")
-PROBE, IV = FC.PROBE, FC.IV
-# The pixel->token regrouping now lives with the training-time gradient map, so the
-# picture drawn here and the map the reward scores cannot drift apart. `--stage selftest`
-# still gates it against the real processor.
-GM = _load_module("_sv_grad_maps", "trl/grad_maps.py")
-pixel_regroup = GM.pixel_regroup
-OSTEPS = PROBE.OSTEPS
-IMAGE_TOKEN_ID = PROBE.IMAGE_TOKEN_ID
+def pixel_regroup(*args, **kwargs):
+    """`GM.pixel_regroup`, reached through the sentinel so it raises with the message.
+
+    A plain `pixel_regroup = GM.pixel_regroup` here would be an attribute read at import
+    time, which is the one thing the sentinel forbids.
+    """
+    return GM.pixel_regroup(*args, **kwargs)
 
 METHODS = ("direct", "rollout_mean", "rollout_wnorm", "grad", "glimpse")
 TITLES = {
@@ -180,7 +183,7 @@ def segment_case(tok, clf, question: str, comp_ids: list[int]):
     if ts is None or te is None or te <= ts:
         return text, None, "bad_think_tokens"
 
-    steps = OSTEPS.segment_observe_steps(text, ts_char, te_char, enc, 0, ts, te,
+    steps = OSTEPS.segment_sentences(text, ts_char, te_char, enc, 0, ts, te,
                                          question, clf)
     steps = [(s, a, b) for (s, a, b) in steps if 0 <= a < b <= len(comp_ids)]
     if not steps:
@@ -283,46 +286,17 @@ def grad_map(model, processor, inputs, ids, prompt_len, steps, gh, gw, args, dev
 # ---------------------------------------------------------------------------
 # map 5: GLIMPSE -- gradient-weighted attention, adaptively propagated
 #
-# arXiv 2506.18985v1, sections 3.2-3.5. The algebra USED to live here; it now lives in
-# trl/glimpse_maps.py, beside trl/grad_maps.py, because the GLIMPSE grounding reward
-# needs the same map and a reward cannot import a probe script -- trl/ is copied into
-# trl_repo/ and executes there, where this file does not exist. Same reason
-# `pixel_regroup` moved to trl/grad_maps.py.
-#
-# Re-exported under the names the two gates already use, so test_glimpse_cpu.py and
-# test_glimpse_gpu.py keep testing exactly the code the reward runs.
+# arXiv 2506.18985v1, sections 3.2-3.5. The algebra lived in `A trl/glimpse_maps.py`,
+# beside `A trl/grad_maps.py`, because the GLIMPSE grounding reward needed the same map.
+# Neither the map nor that reward is in this repository, so this is the sentinel and
+# `--method glimpse` raises when the map is built.
 # ---------------------------------------------------------------------------
-def _load_trl_module(dotted: str, relpath: str):
-    """Load a trl/ leaf module under its DOTTED name, so its relative imports resolve.
-
-    `trl/glimpse_maps.py` does `from .grad_maps import ...` -- it has to, since inside
-    trl_repo/ that is the only way to reach it. Loading it under a flat alias would make
-    that import fail, so the parent package is stubbed and the already-loaded grad_maps is
-    registered under its dotted name FIRST. Registering the loaded copy rather than
-    letting it be imported again is what keeps one `grad_maps` in the process; the same
-    trick overlap_probe._load_grad_rewards uses, and for the same reason.
-    """
-    import types
-
-    if "trl" not in sys.modules:
-        pkg = types.ModuleType("trl")
-        pkg.__path__ = [str(REPO / "trl")]
-        sys.modules["trl"] = pkg
-    sys.modules.setdefault("trl.grad_maps", GM)
-    return _load_module(dotted, relpath)
+GLM = unavailable("GLIMPSE maps", "trl/glimpse_maps.py", "trl/rewards/glimpse_rewards.py")
 
 
-GLM = _load_trl_module("trl.glimpse_maps", "trl/glimpse_maps.py")
-
-glimpse_edge_matrix = GLM.glimpse_edge_matrix
-glimpse_layer_alphas = GLM.glimpse_layer_alphas
-glimpse_propagate = GLM.glimpse_propagate
-glimpse_token_weight = GLM.glimpse_token_weight
-prompt_positions = GLM.prompt_positions
-eager_one_attention = GLM.eager_one_attention
-checkpointing_off = GLM.checkpointing_off
-GlimpseGradCache = GLM.GlimpseGradCache
-glimpse_map = GLM.glimpse_map
+def glimpse_map(*args, **kwargs):
+    """`GLM.glimpse_map`, reached through the sentinel so it raises with the message."""
+    return GLM.glimpse_map(*args, **kwargs)
 
 
 # ---------------------------------------------------------------------------
@@ -369,7 +343,7 @@ def scan(args, device):
     if args.grad_checkpointing and "grad" in methods:
         model.gradient_checkpointing_enable(
             gradient_checkpointing_kwargs={"use_reentrant": False})
-    clf = OSTEPS.OverlapStepsClassifier.load(args.steps_ckpt, device=device)
+    clf = StepClassifier.load(args.steps_ckpt, device=device)
     tok = processor.tokenizer
 
     for i, row in todo:
@@ -705,7 +679,11 @@ def main():
                    help="propagate the last frac of the stack; the paper's ablation loses "
                         "nothing at 0.6. A method knob, not a memory knob -- peak memory "
                         "no longer scales with the number of propagated layers")
-    p.add_argument("--glimpse-target", default="logit", choices=list(GM.GRAD_TARGETS),
+    # The choices are written out rather than read off GM: building the parser must not
+    # touch the sentinel, or --method direct dies before it has read the flag that would
+    # have avoided the sentinel entirely. Same list as the archive's GM.GRAD_TARGETS.
+    p.add_argument("--glimpse-target", default="logit",
+                   choices=["clogit", "logit", "logprob"],
                    help="z_t in eqs 5 and 16; the paper's is the raw logit")
     # The reward's two cost dials, so the picture can be drawn for the map a capped or
     # trimmed run would actually score rather than only for the full one.

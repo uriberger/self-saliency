@@ -32,7 +32,6 @@ apparent centre preference was the region's size and nothing else.
 from __future__ import annotations
 
 import argparse
-import importlib.util
 import json
 import sys
 from pathlib import Path
@@ -46,14 +45,6 @@ sys.path.insert(0, str(REPO))
 #: the sentences in which the model says what it is looking at -- but the scan stores all
 #: four, so the aggregation can be changed here without rescanning anything.
 QUERY_MAPS = {"obs": "map_obs", "gen": "map_gen", "prompt": "map_q", "all": "map_all"}
-
-
-def _load(name, rel):
-    spec = importlib.util.spec_from_file_location(name, REPO / rel)
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules[name] = mod
-    spec.loader.exec_module(mod)
-    return mod
 
 
 def mask_from_boxes(boxes, gh, gw, max_area=0.5):
@@ -178,7 +169,9 @@ def main():
     ap.add_argument("--max-box-area", type=float, default=0.5)
     args = ap.parse_args()
 
-    P = _load("_3l_probe", "sink_location_probe.py")
+    # Imported here rather than at module scope because `probe` pulls in torch and the
+    # trained-model probe, and everything above this line is numpy over stored arrays.
+    from experiments.attention_bias import probe as P
     key = QUERY_MAPS[args.query]
     lines = []
 

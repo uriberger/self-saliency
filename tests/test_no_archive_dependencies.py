@@ -46,22 +46,93 @@ def _python_files():
         yield path
 
 
+#: The archive's own file names. A module is not always reached by `import` -- the port
+#: inherited a lot of `spec_from_file_location(name, "sink_location_probe.py")`, which is
+#: an archive dependency spelled as a string and is invisible to the import check below.
+#: Every one of these exists here under another name; `docs/provenance.md` maps them.
+FORBIDDEN_FILENAMES = {
+    "overlap_probe.py", "selfground_audit.py", "intervene_probe.py",
+    "flow_correlation_probe.py", "sink_location.py", "sink_location_probe.py",
+    "sink_location_xmodel_tables.py", "sink_location_html.py", "build_grpo_sets.py",
+    "build_boxed_corpus.py", "overlap_metric_spread.py", "centre_box_probe.py",
+    "patch_trl_qwen3.sh",
+    "trl/overlap_steps.py", "trl/grad_maps.py", "trl/glimpse_maps.py",
+    "trl/rewards/overlap_rewards.py", "trl/rewards/roll_null.py",
+    "trl/rewards/placebo_rewards.py", "trl/rewards/maskfree_rewards.py",
+    "trl/rewards/mismatch_rewards.py", "trl/rewards/length_guard_rewards.py",
+    "trl/rewards/grad_rewards.py", "trl/rewards/glimpse_rewards.py",
+}
+
+
 @pytest.mark.parametrize("path", list(_python_files()), ids=lambda p: str(p.name))
 def test_no_archive_module_imports(path):
-    """No `import <archive module>` survived the rewiring."""
+    """No `import <archive module>` survived the rewiring.
+
+    Checked at every component, not just the first. `from trl.rewards.overlap_rewards
+    import x` has `trl` as its head, so a head-only check passes it -- and that is exactly
+    what happened: the GRPO entry script carried seven such imports across the port and
+    this test, which names `overlap_rewards` outright, said nothing.
+    """
     tree = ast.parse(path.read_text(), filename=str(path))
     offenders = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
-            for alias in node.names:
-                if alias.name.split(".")[0] in FORBIDDEN_MODULES:
-                    offenders.append(alias.name)
+            names = [a.name for a in node.names]
         elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
-            if node.module.split(".")[0] in FORBIDDEN_MODULES:
-                offenders.append(node.module)
+            names = [node.module]
+        else:
+            continue
+        for name in names:
+            if set(name.split(".")) & FORBIDDEN_MODULES:
+                offenders.append(name)
     assert not offenders, (
         f"{path.relative_to(ROOT)} imports {sorted(set(offenders))}, which only resolve "
         f"inside the archive repos")
+
+
+@pytest.mark.parametrize("path", list(_python_files()), ids=lambda p: str(p.name))
+def test_no_archive_filenames_are_loaded(path):
+    """No archive FILE NAME is used as a value either.
+
+    The port's commonest survival was not an import but a path load: the archive was flat,
+    so its scripts reached each other with
+    `spec_from_file_location("_x", REPO / "sink_location_probe.py")`. Here they are
+    packages, that file does not exist, and the load raises -- at import for some of them.
+    Prose may still mention the old name (several modules point at where something went),
+    so this reads string literals out of the parsed tree and ignores docstrings, exactly
+    as the path check below does.
+    """
+    tree = ast.parse(path.read_text(), filename=str(path))
+    docstrings = set()
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef,
+                             ast.AsyncFunctionDef)):
+            doc = ast.get_docstring(node, clean=False)
+            if doc:
+                docstrings.add(doc)
+
+    # `unavailable("grad maps", "trl/grad_maps.py")` is the opposite of a load: it is a
+    # SIGNPOST, and naming the archive path is the whole point of it -- that string ends
+    # up in the NotImplementedError telling the reader where the code went. Exempted by
+    # where the literal sits, not by its value, so a real load of the same path elsewhere
+    # in the file is still caught.
+    signposts = {
+        id(arg) for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and ((isinstance(node.func, ast.Name) and node.func.id == "unavailable")
+             or (isinstance(node.func, ast.Attribute) and node.func.attr == "unavailable"))
+        for arg in node.args
+    }
+
+    offenders = sorted({
+        node.value for node in ast.walk(tree)
+        if isinstance(node, ast.Constant) and isinstance(node.value, str)
+        and id(node) not in signposts
+        and node.value not in docstrings and node.value in FORBIDDEN_FILENAMES
+    })
+    assert not offenders, (
+        f"{path.relative_to(ROOT)} loads {offenders} by file name. Those are the "
+        f"ARCHIVE's names; docs/provenance.md maps each to what it is called here")
 
 
 @pytest.mark.parametrize("path", list(_python_files()), ids=lambda p: str(p.name))

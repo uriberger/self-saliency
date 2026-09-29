@@ -35,7 +35,6 @@ artefact rather than a finding about that model.
 from __future__ import annotations
 
 import argparse
-import importlib.util
 import sys
 from pathlib import Path
 
@@ -43,14 +42,6 @@ import numpy as np
 
 REPO = Path(__file__).resolve().parents[2]   # the repository root
 sys.path.insert(0, str(REPO))
-
-
-def _load(name, rel):
-    spec = importlib.util.spec_from_file_location(name, REPO / rel)
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules[name] = mod
-    spec.loader.exec_module(mod)
-    return mod
 
 
 def box_mask(box, gh, gw):
@@ -114,7 +105,8 @@ def draw_grid(rows, path, note=""):
     from matplotlib.cm import ScalarMappable
     from matplotlib.colors import Normalize
 
-    XM = sys.modules["_bc_tables"]
+    from experiments.attention_bias import tables as XM
+
     cmap = LinearSegmentedColormap.from_list("fair", XM.DIVERGING)
     CLIP = XM.CLIP
     nr, nc = len(rows), 2
@@ -182,8 +174,10 @@ def main():
                     help="the pooled map to read (default map_gen: generated tokens)")
     args = ap.parse_args()
 
-    XM = _load("_bc_tables", "sink_location_xmodel_tables.py")
-    P = _load("_bc_probe", "sink_location_probe.py")
+    # Imported here rather than at module scope because `probe` pulls in torch and the
+    # trained-model probe, and everything above this line is numpy over stored arrays.
+    from experiments.attention_bias import probe as P
+    from experiments.attention_bias import tables as XM
     out = Path(args.out_dir)
     (out / "figures").mkdir(parents=True, exist_ok=True)
 

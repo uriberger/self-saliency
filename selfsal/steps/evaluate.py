@@ -5,8 +5,8 @@ The deployed checkpoint (checkpoint/steps_classifier/best, 4-class, include_chai
 has no recorded metrics: the only logged run in the vlm_reasoning repo is an earlier
 3-class --no_chain_context model. This script measures the deployed one.
 
-It scores through the exact inference path the reward uses — OverlapStepsClassifier.load()
-plus predict_many() per chain — so the numbers describe the code that runs in training,
+It scores through the exact inference path the reward uses — `StepClassifier.load()` plus
+`predict_many()` per chain — so the numbers describe the code that runs in training,
 padding and truncation included, not a re-implementation of it.
 
 READ THIS BEFORE QUOTING A NUMBER
@@ -40,43 +40,30 @@ Usage (fish)
     set -x HF_HUB_OFFLINE 1
 
     # smoke test, 20 chains
-    python eval_steps_classifier.py --device cuda:0 --limit-chains 20
+    python -m selfsal.steps.evaluate --device cuda:0 --limit-chains 20
 
     # full re-derived split, with the per-source-model breakdown
-    python eval_steps_classifier.py --device cuda:0 --by-source \
+    python -m selfsal.steps.evaluate --device cuda:0 --by-source \
         --json outputs/steps_clf_eval/rederived_val.json
 
     # a genuinely held-out set, after a retrain that saved its split
-    python eval_steps_classifier.py --device cuda:0 --holdout-json outputs/val_chains.json
+    python -m selfsal.steps.evaluate --device cuda:0 --holdout-json outputs/val_chains.json
 """
 
 from __future__ import annotations
 
 import argparse
 import collections
-import importlib.util
 import json
 import random
-import sys
 import time
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parent
+from selfsal.data.paths import DATA_ROOT
+from selfsal.steps.classifier import LABELS, StepClassifier, default_checkpoint
 
 # The distilled fragment labels of Appendix A.1, written by `make_data.py`.
 _DEFAULT_DATA = DATA_ROOT / "steps_classifier" / "labeled_steps.jsonl"
-
-
-def _load_module(name, relpath):
-    spec = importlib.util.spec_from_file_location(name, REPO / relpath)
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules[name] = mod
-    spec.loader.exec_module(mod)
-    return mod
-
-
-OSTEPS = _load_module("_eval_overlap_steps", "trl/overlap_steps.py")
-LABELS = OSTEPS.LABELS
 
 
 # ---------------------------------------------------------------------------
@@ -204,7 +191,7 @@ def print_report(m: dict, title: str) -> None:
 
 def main() -> None:
     p = argparse.ArgumentParser(description="Evaluate the deployed POD step classifier")
-    p.add_argument("--ckpt", default=str(REPO / "checkpoint/steps_classifier/best"))
+    p.add_argument("--ckpt", default=str(default_checkpoint()))
     p.add_argument("--data", default=_DEFAULT_DATA)
     p.add_argument("--device", default=None, help="default: cuda if available else cpu")
     p.add_argument("--split", choices=("val", "train", "all"), default="val")
@@ -266,7 +253,7 @@ def main() -> None:
         print(f"wrote {len(keep)} chain ids to {args.dump_split}")
 
     print(f"\nloading classifier from {args.ckpt}", flush=True)
-    clf = OSTEPS.OverlapStepsClassifier.load(args.ckpt, device=args.device)
+    clf = StepClassifier.load(args.ckpt, device=args.device)
     device = next(clf.parameters()).device
     print(f"  device {device}   include_chain {clf.include_chain}")
 

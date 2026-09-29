@@ -35,7 +35,6 @@ pixel shuffle / projector, i.e. `vlm_family.Family.row_module`):
 from __future__ import annotations
 
 import argparse
-import importlib.util
 import json
 import sys
 from pathlib import Path
@@ -46,17 +45,9 @@ REPO = Path(__file__).resolve().parents[2]   # the repository root
 sys.path.insert(0, str(REPO))
 
 
-def _load(name, rel):
-    spec = importlib.util.spec_from_file_location(name, REPO / rel)
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules[name] = mod
-    spec.loader.exec_module(mod)
-    return mod
-
-
-PROBE = _load("_enc_overlap_probe", "overlap_probe.py")
-from experiments.attention_bias import measure as SL
-from selfsal.models import families as VF
+from experiments.attention_bias import measure as SL          # noqa: E402
+from experiments.trained_model import probe as PROBE          # noqa: E402
+from selfsal.models import families as VF                     # noqa: E402
 
 
 class RowTap:

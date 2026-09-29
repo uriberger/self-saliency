@@ -70,9 +70,11 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT.parent))
 
-from analysis.aggregation_correlation import _filtered_boxes  # noqa: E402
+# `screen.py` IS the archive's `V analysis/aggregation_correlation.py` -- same functions,
+# same line numbers -- so this is the same implementation, reached by the name it has here.
+from experiments.head_selection.screen import _filtered_boxes  # noqa: E402
 
 METRICS = ("mean_in", "lift", "auroc", "enrichment", "enrichment_med",
            "mass_in", "sum_in", "image_mass")

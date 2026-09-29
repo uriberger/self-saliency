@@ -91,10 +91,10 @@ comparison of the metrics themselves.
 THE PLACEBO TABLE (--placebo roll|random|length, docs/next-reward-experiments.md) is
 printed underneath, from the SAME completions, and it is what those runs' weights come
 from: w_placebo = w_ref x sd_within(reference) / sd_within(placebo). The three controls
-are computed here by importing trl/rewards/placebo_rewards.py itself rather than
-reimplementing them, so the number a run is launched with is measured on the same
-function the run will use, and they inherit the reward's parity rule -- a completion
-enters the placebo table only if the reference metric scored it.
+are NOT in this repository -- no arm in the paper uses them, so they stayed in the
+archive with the other dropped variants -- and their tables are skipped with a note.
+Appendix C's alpha_sal_mean is unaffected: it comes from the METRIC table above, which is
+computed from the probe's stored per-step scores alone.
 
 `roll` needs the maps, so it is only available on a probe run made with
 ``--store-maps`` (the default). It is scored on the stored uint8 map, which is
@@ -108,10 +108,8 @@ from __future__ import annotations
 import argparse
 import base64
 import math
-import importlib.util
 import json
 import sys
-import types
 from pathlib import Path
 
 import numpy as np
@@ -131,68 +129,35 @@ METRICS = [
 CHANCE = {"mean_in": None, "mean_in_v2": 1.0, "auroc": 0.5, "logratio": 0.0}
 
 
-def _load_placebo_rewards():
-    """Import trl/rewards/placebo_rewards.py without importing the trl package.
+#: Said once, however many of the three control tables are asked for.
+_CONTROLS_WARNED = False
 
-    Same trick the CPU tests use, and for the same reason: `import trl` runs the lazy
-    module machinery and drags in torch/transformers, none of which this script needs.
-    The stub's __path__ points only at this checkout's trl/rewards/, so the sibling
-    imports inside placebo_rewards (roll_null, overlap_rewards) resolve there and
-    nowhere else. Returns None if the sources are missing (an older checkout).
+
+def _load_control_rewards(kind: str):
+    """The placebo / mask-free / length-guard reward module, or None if it is not here.
+
+    NONE OF THE THREE IS IN THIS REPOSITORY. They are controls for the overlap reward and
+    no arm in the paper was trained with one, so they stayed in the archive with the rest
+    of the dropped variants (`research/saliency_r1: trl/rewards/{placebo,maskfree,
+    length_guard}_rewards.py`; see docs/provenance.md). In the archive this loaded them by
+    path under a stub package, because importing `trl` drags in torch for a script that
+    needs numpy.
+
+    Returning None rather than raising is what the three callers already expect, and it is
+    the right answer: THE NUMBER THIS SCRIPT EXISTS FOR DOES NOT DEPEND ON THEM. Appendix
+    C's alpha_sal_mean = 0.4 x std(R_sal)/std(R_sal_mean) = 0.033 comes from the METRIC
+    table, which is computed from the probe's stored per-step scores and nothing else --
+    so `training/grpo/configs/self_saliency_mean.yaml` can still be checked against this.
+    The three control tables are simply skipped, loudly.
     """
-    src = ROOT / "trl" / "rewards" / "placebo_rewards.py"
-    if not src.exists():
-        return None
-    for name, path in (("trl_spread", src.parent.parent), ("trl_spread.rewards", src.parent)):
-        m = types.ModuleType(name)
-        m.__path__ = [str(path)]
-        sys.modules[name] = m
-    spec = importlib.util.spec_from_file_location("trl_spread.rewards.placebo_rewards", src)
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules["trl_spread.rewards.placebo_rewards"] = mod
-    spec.loader.exec_module(mod)
-    return mod
-
-
-def _load_maskfree_rewards():
-    """Import trl/rewards/maskfree_rewards.py the same way, and for the same reason.
-
-    Safe to call after _load_placebo_rewards(): both register the same `trl_spread`
-    stub packages, and re-registering them is idempotent.
-    """
-    src = ROOT / "trl" / "rewards" / "maskfree_rewards.py"
-    if not src.exists():
-        return None
-    for name, path in (("trl_spread", src.parent.parent), ("trl_spread.rewards", src.parent)):
-        if name not in sys.modules:
-            m = types.ModuleType(name)
-            m.__path__ = [str(path)]
-            sys.modules[name] = m
-    spec = importlib.util.spec_from_file_location("trl_spread.rewards.maskfree_rewards", src)
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules["trl_spread.rewards.maskfree_rewards"] = mod
-    spec.loader.exec_module(mod)
-    return mod
-
-
-def _load_length_guard_rewards():
-    """Import trl/rewards/length_guard_rewards.py the same way, and for the same reason.
-
-    Safe to call after the two loaders above: they all register the same `trl_spread`
-    stub package, and this module imports nothing from its siblings.
-    """
-    src = ROOT / "trl" / "rewards" / "length_guard_rewards.py"
-    pkg = sys.modules.get("trl_spread")
-    if pkg is None:
-        pkg = types.ModuleType("trl_spread"); pkg.__path__ = [str(ROOT / "trl")]
-        sys.modules["trl_spread"] = pkg
-        sub = types.ModuleType("trl_spread.rewards"); sub.__path__ = [str(src.parent)]
-        sys.modules["trl_spread.rewards"] = sub
-    spec = importlib.util.spec_from_file_location("trl_spread.rewards.length_guard_rewards", src)
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules["trl_spread.rewards.length_guard_rewards"] = mod
-    spec.loader.exec_module(mod)
-    return mod
+    global _CONTROLS_WARNED
+    if not _CONTROLS_WARNED:
+        _CONTROLS_WARNED = True
+        print("[controls] the placebo, mask-free and length-guard reward modules are not "
+              "in this repository (no arm in the paper uses them; see "
+              "docs/provenance.md). Their tables are skipped. The metric table, which is "
+              "where Appendix C's alpha_sal_mean comes from, is unaffected.", flush=True)
+    return None
 
 
 def length_guard_group_vals(samples, ref_key, lgr, l_ref, restrict_to_reference):
@@ -457,12 +422,12 @@ def main():
 
     w_refs = [float(w) for w in args.reference_weights.split(",") if w.strip()]
 
-    plc = None if args.no_placebo else _load_placebo_rewards()
+    plc = None if args.no_placebo else _load_control_rewards("placebo")
     # The mask-free rows need the stored maps for the same reason `placebo:roll` does.
-    mfr = None if args.no_placebo else _load_maskfree_rewards()
+    mfr = None if args.no_placebo else _load_control_rewards("maskfree")
     # The length guard needs neither maps nor boxes, only the stored token counts, so it
     # is measurable on any probe -- including one run without --store-maps.
-    lgr = None if args.no_length_guard else _load_length_guard_rewards()
+    lgr = None if args.no_length_guard else _load_control_rewards("length_guard")
     ref_key = next((k for k, n in METRICS if n == args.reference), None)
 
     for model, m in payload["models"].items():
