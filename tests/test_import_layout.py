@@ -130,7 +130,22 @@ def test_relative_imports_resolve_at_the_destination(copies, source):
 
 @pytest.mark.parametrize("source", sorted(copy_list()))
 def test_cross_module_imports_name_a_copied_file(copies, source):
-    """`from trl.rewards.X import ...` must name something the script installs."""
+    """`from trl.rewards.X import ...` must name something the script installs.
+
+    THE PACKAGE BEING UPSTREAM'S IS NOT ENOUGH. `trl.rewards` is upstream TRL's own
+    package, but every module inside it that this repository uses is one this repository
+    installs -- so accepting an import because its SECOND component is in UPSTREAM_TRL
+    accepts `trl.rewards.overlap_rewards` too, which is a research module that was left
+    in the archive. That is exactly what happened: the entry script was copied across the
+    port without being rewired, kept seven such imports, and this test passed on all of
+    them. Training could not start.
+
+    So `trl.<pkg>.<mod>` is checked at the MODULE, not at the package: either the patch
+    script installs that file, or it must be an upstream module named in UPSTREAM_TRL in
+    full. A bare `trl.<pkg>` is still allowed on the package name alone -- there is no
+    file to point at -- and `test_from_trl_rewards_names_an_export` covers what may be
+    taken out of it.
+    """
     installed = set(copies.values())
     problems = []
     for level, module, lineno in _imports(SRC / source):
@@ -139,9 +154,58 @@ def test_cross_module_imports_name_a_copied_file(copies, source):
         as_path = module.replace(".", "/") + ".py"
         if as_path in installed:
             continue
-        if module.split(".")[1] in UPSTREAM_TRL:
+        parts = module.split(".")
+        # `trl.x` (a package, or an upstream module) -- nothing deeper to resolve.
+        if len(parts) == 2 and parts[1] in UPSTREAM_TRL:
+            continue
+        # `trl.x.y` and deeper: the whole tail has to be upstream's, not just its head.
+        if ".".join(parts[1:]) in UPSTREAM_TRL:
             continue
         problems.append(f"line {lineno}: {module} is not installed by the patch script")
+    assert not problems, f"{source}:\n  " + "\n  ".join(problems)
+
+
+def _rewards_exports() -> set[str]:
+    """Names `rewards/__init__.py` binds, read out of the file rather than imported.
+
+    Importing it would need torch, transformers and an installed `selfsal`; this test has
+    to run in the bare CPU environment, which is the whole point of it running at all.
+    """
+    tree = ast.parse((SRC / "rewards/__init__.py").read_text())
+    names = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom):
+            names.update(a.asname or a.name for a in node.names)
+        elif isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    names.add(target.id)
+    return names
+
+
+@pytest.mark.parametrize("source", sorted(copy_list()))
+def test_from_trl_rewards_names_an_export(copies, source):
+    """`from trl.rewards import X` must name something `rewards/__init__.py` binds.
+
+    The other half of the same hole. The entry script's line 87 asked this package for
+    `openai_reward`, which moved to `selfsal.judge` during the port and was never
+    re-exported here -- an ImportError on the first line of training, found on a GPU.
+
+    The failure is worth catching cheaply because it is invisible on this machine: the
+    archive's TRL checkout still exports every one of these names, so anyone with the
+    research environment on their path imports the module and sees nothing wrong.
+    """
+    exports = _rewards_exports()
+    tree = ast.parse((SRC / source).read_text())
+    problems = [
+        f"line {node.lineno}: `from trl.rewards import {alias.name}` but "
+        f"rewards/__init__.py binds no such name"
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom) and node.level == 0
+        and node.module == "trl.rewards"
+        for alias in node.names
+        if alias.name not in exports
+    ]
     assert not problems, f"{source}:\n  " + "\n  ".join(problems)
 
 
@@ -160,18 +224,28 @@ def test_the_method_is_imported_absolutely(copies):
         f"must be imported absolutely so the import cannot depend on where the file lands")
 
 
-def test_trainer_no_longer_references_the_dropped_variants():
-    """grad and glimpse are not in the paper and their modules are not installed."""
-    trainer = (SRC / "grpo_trainer_qwen3.py").read_text()
-    tree = ast.parse(trainer)
+#: Modules of the research arms that did not come across. `docs/provenance.md` lists them.
+DROPPED_VARIANT_MODULES = (
+    "grad_maps", "glimpse_maps", "grad_rewards", "glimpse_rewards", "placebo_rewards",
+    "maskfree_rewards", "mismatch_rewards", "length_guard_rewards", "roll_null",
+    "overlap_rewards",
+)
+
+
+@pytest.mark.parametrize("source", sorted(copy_list()))
+def test_no_patched_file_references_the_dropped_variants(source):
+    """The gradient, GLIMPSE and control arms are not in the paper, and not installed.
+
+    Checked over every patched file, not just the trainer. It was the trainer alone that
+    this covered, and the entry script -- which is where all seven of these imports
+    actually were -- went unchecked.
+    """
+    tree = ast.parse((SRC / source).read_text())
     bad = []
     for node in ast.walk(tree):
         if isinstance(node, ast.ImportFrom) and node.module:
-            if any(k in node.module for k in ("grad_maps", "glimpse_maps", "grad_rewards",
-                                              "glimpse_rewards", "placebo_rewards",
-                                              "maskfree_rewards", "mismatch_rewards",
-                                              "length_guard_rewards", "roll_null")):
+            if any(k in node.module for k in DROPPED_VARIANT_MODULES):
                 bad.append(f"line {node.lineno}: {node.module}")
     assert not bad, (
-        "the trainer imports modules from research arms that are not in this repository "
+        f"{source} imports modules from research arms that are not in this repository "
         "and not installed by the patch script:\n  " + "\n  ".join(bad))

@@ -549,32 +549,14 @@ class GRPOTrainer(Trainer):
         overlap_heads=(28, 31),
         token_reduction: str = "mean",
         overlap_natural_only: bool = False,
-        grad_target: str = "clogit",
-        glimpse_target: str = "clogit",
-        glimpse_layer_frac: float = 1.0,
-        glimpse_temp: float = 0.5,
-        glimpse_depth_temp: float = 0.2,
-        glimpse_token_weight: str = "full",
-        glimpse_token_cap: int = 0,
-        glimpse_seed: int = 0,
     ):
         self.reforward_saliency = reforward_saliency
-        # --- attention-overlap reward config (reward_variant="ours") ---
+        # --- R_sal config (reward_variant="ours"; Section 3.4) ---
         self.reward_variant = reward_variant
-        # "ours", "grad" and "glimpse" differ only in what the per-case re-forward
-        # extracts -- raw attention at one layer, the pixel gradient of the step's own
-        # tokens, or GLIMPSE's gradient-weighted attention. All three segment observe
-        # steps, ground them with DINO and score per step, so every observe-step-shaped
-        # decision below applies to all of them.
+        # Whether the saliency term is scored PER OBSERVE STEP, which is what decides
+        # whether the per-case re-forward below runs at all. True only for "ours":
+        # "saliency_r1" scores one map for the whole completion and "none" scores none.
         self._per_step_reward = reward_variant == "ours"
-        self.grad_target = grad_target
-        self.glimpse_target = glimpse_target
-        self.glimpse_layer_frac = float(glimpse_layer_frac)
-        self.glimpse_temp = float(glimpse_temp)
-        self.glimpse_depth_temp = float(glimpse_depth_temp)
-        self.glimpse_token_weight = glimpse_token_weight
-        self.glimpse_token_cap = int(glimpse_token_cap or 0)
-        self.glimpse_seed = int(glimpse_seed)
         # Score the overlap reward on natural (photographic) rows only; non-natural rows
         # fall back to format + accuracy + judge. See think_overlap_reward's docstring.
         self.overlap_natural_only = bool(overlap_natural_only) and self._per_step_reward
@@ -591,8 +573,9 @@ class GRPOTrainer(Trainer):
             if isinstance(_cols, (list, tuple)) and "natural" not in _cols:
                 raise KeyError(
                     "overlap_natural_only=True requires a boolean 'natural' column in the "
-                    f"train dataset, but its columns are {sorted(_cols)}. Use a corpus built "
-                    "by build_grpo_sets.py (cold_data/grpo_sets/*), or drop the flag."
+                    f"train dataset, but its columns are {sorted(_cols)}. saliency-r1-8k "
+                    "does not have one, and no arm in the paper sets this -- drop the flag, "
+                    "or train on a corpus that labels its imagery."
                 )
         self.overlap_layer = int(overlap_layer)
         if isinstance(overlap_heads, str):
@@ -601,9 +584,9 @@ class GRPOTrainer(Trainer):
         self.token_reduction = token_reduction
         self._overlap_clf = None  # lazily loaded FLAN-T5 steps classifier
         if self._per_step_reward and not self.reforward_saliency:
-            # Both per-step extractions need a teacher-forced pass over the whole
-            # prompt+completion -- "ours" for full per-token attention, "grad" because a
-            # gradient has to be taken through one. Only the re-forward path provides it.
+            # R_sal needs full per-token attention over the whole prompt+completion, which
+            # only a teacher-forced re-forward provides. Capturing it during generate()
+            # does not give per-step slices, so this is forced rather than warned about.
             self.reforward_saliency = True
 
         # Args
@@ -1557,8 +1540,9 @@ class GRPOTrainer(Trainer):
         if not isinstance(row, dict) or "natural" not in row:
             raise KeyError(
                 "overlap_natural_only=True requires a boolean 'natural' column in the "
-                "dataset, but the batch row has none. Use a corpus built by "
-                "build_grpo_sets.py (cold_data/grpo_sets/*), or drop the flag."
+                "dataset, but the batch row has none. saliency-r1-8k does not have one, "
+                "and no arm in the paper sets this -- drop the flag, or train on a corpus "
+                "that labels its imagery."
             )
         return bool(row["natural"])
 
@@ -1805,6 +1789,19 @@ class GRPOTrainer(Trainer):
         # If the prompts are conversational and the inputs contain images, we need to convert the prompts from
         # [{"role": "user", "content": "What color is the sky?"}] to
         # [{"role": "user", "content": [{"type": "image"}, {"type": "text", "text": "What color is the sky?"}]}]
+        #
+        # THIS CONVERSION IS NOT COSMETIC, AND ITS FAILURE IS SILENT. The chat template
+        # only emits <|vision_start|><|image_pad|><|vision_end|> when the user message's
+        # content is a LIST containing a {"type": "image"} entry. Our conversations are
+        # built as plain strings (see the entry script's make_conversation), so without
+        # this the prompt carries no placeholder -- and handing vLLM an image with nowhere
+        # to bind it does not raise, it wedges the worker inside multimodal processing,
+        # forever. Measured: the identical request with images deadlocked past 1800s,
+        # without images returned in 7.1s. It is silent because vllm_serve calls
+        # llm.generate with no try/except, so a failure there skips connection.send() and
+        # the server blocks in recv() with no timeout. That deadlock propagated to the
+        # training job through the rank-0 client and killed two runs. Any other code path
+        # that sends these prompts to vLLM has to do this too.
         kwargs = {}
         has_images = "image" in inputs[0]
         if has_images:
@@ -2430,8 +2427,8 @@ class GRPOTrainer(Trainer):
         # completion then deviates from the group mean by exactly 0 on that dimension:
         # it neither gains nor loses advantage from a reward that was never measured on
         # it, while its groupmates still score against each other. This is the "masked ->
-        # neutral in the GRPO advantage" that overlap_rewards / grad_rewards /
-        # glimpse_rewards already promise in their docstrings.
+        # neutral in the GRPO advantage" that trl/rewards/self_saliency.py and
+        # selfsal/judge.py already promise in their docstrings.
         rewards = (impute_unscored_rewards(rewards_per_func, self.num_generations)
                    * self.reward_weights.to(device).unsqueeze(0)).sum(dim=1)
 

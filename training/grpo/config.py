@@ -18,14 +18,19 @@ from pathlib import Path
 
 import yaml
 
+from selfsal.data.saliency_r1_8k import TRAIN_ROWS  # noqa: F401  (re-export)
+
 CONFIG_DIR = Path(__file__).resolve().parent / "configs"
 
 #: Every arm the paper reports, in the order they appear in Tables 2 and 5.
 ARMS = ("self_saliency", "self_saliency_mean", "no_sal",
         "center_rect", "question_boxes", "saliency_r1")
 
-#: saliency-r1-8k, less the 100-row holdout.
-TRAIN_ROWS = 7980
+# TRAIN_ROWS is saliency-r1-8k less the 100-row holdout, and is imported rather than
+# written here because the holdout is applied by the entry script and its size is what
+# turns into the step count asserted below. Two copies of 7,980 would be two things to
+# keep in step, and the one that moved would produce a config that validates and trains
+# for the wrong number of steps.
 
 
 def _merge(base: dict, over: dict) -> dict:
