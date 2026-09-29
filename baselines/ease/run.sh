@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Run one arm of the EASE replication on saliency-r1-8k, inside an existing
-# allocation. launch_ease_train_job.sh is what asks SLURM for the allocation.
+# allocation. baselines/ease/submit.sh is what asks SLURM for the allocation.
 #
-#   bash launch_ease_train.sh --arm ease --exp ease_8k
-#   bash launch_ease_train.sh --arm dapo --exp dapo_8k
+#   bash baselines/ease/run.sh --arm ease --exp ease_8k
+#   bash baselines/ease/run.sh --arm dapo --exp dapo_8k
 #
 # TWO ARMS, AND BOTH ARE REQUIRED. EASE is DAPO-in-EasyR1 plus an auxiliary
 # attention loss; our overlap runs are GRPO-in-TRL. Scoring an EASE checkpoint
@@ -52,7 +52,7 @@
 # happened to be cut at. ~48 GB a checkpoint against ~16; take the disk.
 # --model-only-checkpoints for the other trade.
 #
-# The judge needs a key: NVIDIA_API_KEY=... bash launch_ease_train.sh ...
+# The judge needs a key: NVIDIA_API_KEY=... bash baselines/ease/run.sh ...
 set -euo pipefail
 
 if [[ -n "${SLURM_SUBMIT_DIR:-}" ]]; then
@@ -120,14 +120,14 @@ EASE_REPO="$REPO/ease_repo"
 TRAIN_FILE="$DATA/parquet/train.parquet"
 VAL_FILE="$DATA/parquet/val.parquet"
 IMAGE_DIR="$DATA/images"
-REWARD_FILE="$REPO/ease/reward_function/judged_perception.py"
+REWARD_FILE="$REPO/reward_function/judged_perception.py"
 
 for path in "$EASE_REPO" "$MODEL" "$IMAGE_DIR"; do
     [[ -e "$path" ]] || { echo "ERROR: missing $path" >&2; exit 1; }
 done
 for path in "$TRAIN_FILE" "$VAL_FILE"; do
     [[ -f "$path" ]] || {
-        echo "ERROR: missing $path -- run prepare_ease_saliency_data.sh first." >&2; exit 1; }
+        echo "ERROR: missing $path -- run baselines/ease/prepare_data.sh first." >&2; exit 1; }
 done
 
 # ── environment ─────────────────────────────────────────────────────────────
@@ -256,7 +256,7 @@ if [[ $PREFLIGHT -eq 1 ]]; then
     # verified is this command and not a paraphrase of it. Everything after
     # `config=...` is a key=value dotlist.
     echo
-    exec python3 "$REPO/verify_ease_setup.py" --ease-repo "$EASE_REPO" -- "${CMD[@]:4}"
+    exec python3 "$REPO/verify_setup.py" --ease-repo "$EASE_REPO" -- "${CMD[@]:4}"
 fi
 
 cd "$EASE_REPO"
