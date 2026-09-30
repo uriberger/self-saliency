@@ -113,3 +113,16 @@ exactly like a stale one.
 
 Fixing that belongs upstream in the lmms-eval fork -- the evaluator should stamp on the
 way out, not only on the way back through a repair script.
+
+## None of this can be re-run from a clone
+
+Every script in `evaluation/rescore/` reads the per-sample `*_samples_*.jsonl` files. Those
+are about 5 GB, are not in git, and are not being released. In a fresh clone each script
+finds the ten arms and skips all ten with `no samples file beside <stamp>_results.json`.
+That is correct and loud.
+
+So a re-score means **re-running the benchmark suite on GPUs first**. What comes out is
+then a new measurement, not the banked one this audit is about -- the numbers here were
+produced from the stored answers of the paper's own runs, and a fresh run does not
+reproduce those answers, it replaces them. The same applies to Appendix B's error bars;
+[reproduce.md](reproduce.md) says it from the other side.

@@ -82,6 +82,17 @@ released adapter rather than off a command line:
 under `evaluation/results/` and prints every arm it finds, which is exactly the ten of the
 table above — the tree carries the paper's runs and nothing else. Tables 2, 5, 6 and 7 are
 four readings of those ten rows, not four invocations: Table 5 is the ablation subset,
-Table 7 adds SELF-SALIENCY_mean, and Table 6 is Table 2 with error bars. Pass
-`--bootstrap` for App B's bars, which needs the per-sample `*_samples_*.jsonl` files —
-about 5 GB, not in git, and a release asset (see [publishing.md](publishing.md)).
+Table 7 adds SELF-SALIENCY_mean, and Table 6 is Table 2 with error bars.
+
+**Appendix B's error bars are not in this tree, and cannot be.** `--bootstrap` needs the
+per-sample `*_samples_*.jsonl` files — about 5 GB, not in git, and not going to be
+released (see [publishing.md](publishing.md)). In a fresh clone `tables.py --bootstrap`
+finds the ten arms and skips all ten, saying `no samples file beside <stamp>_results.json`.
+That is correct and loud, not a bug.
+
+Getting them back means **re-running the benchmark suite on GPUs**. The banked means in
+the table above survive that — they are read from `*_results.json`, which is tracked — but
+the bars you get are then **a new measurement, not the one the paper reports**. Same for
+anything under `evaluation/rescore/`: every script there reads the per-sample files, so a
+re-score is a fresh run too. [rescore-audit.md](rescore-audit.md) says the same from the
+other side.

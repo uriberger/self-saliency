@@ -24,13 +24,17 @@ deanonymises, whatever the file contents say.
 git log --format='%an <%ae>' | sort -u
 ```
 
-If the repository goes public **before** acceptance — an anonymised link for reviewers —
-the history has to be rewritten or replaced with a single squashed commit under a neutral
-identity. Nothing is pushed yet, so that is currently free. It stops being free the
-moment there is a remote anyone has fetched from.
+**The decision is taken: the history stays as it is, and is not to be rewritten.** A
+preprint may go on arXiv while the paper is under double-blind review, so the real name in
+the history is not a problem to solve.
 
-If it goes public **on acceptance**, anonymity no longer applies and the history can stay
-as it is.
+This is also no longer free to undo. The repository is pushed to
+`git@github.com:uriberger/self-saliency.git`, so rewriting the history now means a force
+push over a remote that exists.
+
+If an anonymised link for reviewers is ever needed before acceptance, the way to make one
+is a fresh repository from a single squashed commit under a neutral identity — not a
+rewrite of this one.
 
 ## 2. The organisational endpoints — done
 

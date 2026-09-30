@@ -5,25 +5,25 @@
 # test), POPE, MME, MME-RealWorld, MMStar, ChartQA, IllusionVQA, ScienceQA
 # (img), SalBench (P3).
 #
-# lmms-eval clone: ~/scratch/research/lmms-eval, conda env: lmms_eval.
-# Results land in results/lmms_eval/<model_slug>/ (json + per-sample logs).
+# lmms-eval: the pinned submodule at evaluation/lmms_eval. Conda env: selfsal-eval.
+# Results land in evaluation/results/<model_slug>/ (json + per-sample logs).
 #
 # Usage:
-#   bash scripts/slurm/launch_lmms_eval_job.sh                                   # Qwen3-VL-8B-Instruct, full paper suite
-#   bash scripts/slurm/launch_lmms_eval_job.sh --model Qwen/Qwen2.5-VL-7B-Instruct
-#   bash scripts/slurm/launch_lmms_eval_job.sh --tasks mmstar,pope --limit 64    # quick check
-#   bash scripts/slurm/launch_lmms_eval_job.sh --model /path/to/checkpoint --model-type qwen2_5_vl
-#   bash scripts/slurm/launch_lmms_eval_job.sh --direct                          # run in place (interactive GPU node)
-#   bash scripts/slurm/launch_lmms_eval_job.sh --num-gpus 4                      # data-parallel via accelerate
-#   bash scripts/slurm/launch_lmms_eval_job.sh --max-new-tokens 8192            # cap generation; results land in <slug>_mnt8192/
-#   bash scripts/slurm/launch_lmms_eval_job.sh --tasks mmerealworld --max-pixels 12845056
+#   bash evaluation/submit.sh                                   # Qwen3-VL-8B-Instruct, full paper suite
+#   bash evaluation/submit.sh --model Qwen/Qwen2.5-VL-7B-Instruct
+#   bash evaluation/submit.sh --tasks mmstar,pope --limit 64    # quick check
+#   bash evaluation/submit.sh --model /path/to/checkpoint --model-type qwen2_5_vl
+#   bash evaluation/submit.sh --direct                          # run in place (interactive GPU node)
+#   bash evaluation/submit.sh --num-gpus 4                      # data-parallel via accelerate
+#   bash evaluation/submit.sh --max-new-tokens 8192            # cap generation; results land in <slug>_mnt8192/
+#   bash evaluation/submit.sh --tasks mmerealworld --max-pixels 12845056
 #       # raise input resolution for high-res tasks (MME-RealWorld); dir gets _px<N>
-#   bash scripts/slurm/launch_lmms_eval_job.sh --model <coldstart-or-grpo-model> --r1-mode
+#   bash evaluation/submit.sh --model <coldstart-or-grpo-model> --r1-mode
 #       # one flag = R1 system prompt + repetition_penalty 1.05 + max_new_tokens 4096
 #       # + tag "r1" (results in <slug>_mnt4096_r1/). Individual flags still override.
-#   bash scripts/slurm/launch_lmms_eval_job.sh --model M --r1-mode --print-output-dir
+#   bash evaluation/submit.sh --model M --r1-mode --print-output-dir
 #       # print the results dir this config resolves to and exit (no job, no mkdir)
-#   bash scripts/slurm/launch_lmms_eval_job.sh --model M --ease-mode --tasks vstar_bench
+#   bash evaluation/submit.sh --model M --ease-mode --tasks vstar_bench
 #       # --r1-mode, PLUS strip each task's "answer with the letter directly"
 #       # instruction and raise max_pixels to 4194304, so the numbers are
 #       # comparable with EASE (arXiv 2605.30912) instead of with lmms-eval's
@@ -31,8 +31,8 @@
 #       # --r1-mode defaults for what it deliberately does NOT align.
 #
 # To sweep a whole benchmark suite one task at a time (resumable, skips what is
-# already done), use scripts/eval_saliency_r1_benchmarks.sh /
-# scripts/eval_our_benchmarks.sh instead of a comma-separated --tasks list.
+# already done), use evaluation/run_suite.sh instead of a comma-separated
+# --tasks list.
 #
 # MMBench answer extraction uses an OpenAI-compatible API for answer matching.
 # Export OPENAI_API_KEY before launching; the launcher defaults to OpenAI's public

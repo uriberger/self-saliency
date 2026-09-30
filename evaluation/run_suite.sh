@@ -11,16 +11,16 @@
 # Because each benchmark writes its own results.json, a crash / wall-clock kill
 # on benchmark N never loses the completion record of benchmarks 1..N-1.
 #
-# lmms-eval clone: ~/scratch/research/lmms-eval, conda env: lmms_eval.
-# Results land in results/lmms_eval/<model_slug>/<model_subdir>/.
+# lmms-eval: the pinned submodule at evaluation/lmms_eval. Conda env: selfsal-eval.
+# Results land in evaluation/results/<model_slug>/<model_subdir>/.
 #
 # Usage:
-#   bash scripts/run_lmms_eval_suite.sh --model Qwen/Qwen2.5-VL-7B-Instruct
-#   bash scripts/run_lmms_eval_suite.sh --model /path/to/ckpt --model-type qwen2_5_vl
-#   bash scripts/run_lmms_eval_suite.sh --model ... --benchmarks-file my_list.txt
-#   bash scripts/run_lmms_eval_suite.sh --model ... --num-gpus 4      # accelerate DP
-#   bash scripts/run_lmms_eval_suite.sh --model ... --direct          # run here (GPU node)
-#   bash scripts/run_lmms_eval_suite.sh --model ... --limit 8         # extra args forwarded
+#   bash evaluation/run_suite.sh --model Qwen/Qwen2.5-VL-7B-Instruct
+#   bash evaluation/run_suite.sh --model /path/to/ckpt --model-type qwen2_5_vl
+#   bash evaluation/run_suite.sh --model ... --benchmarks-file my_list.txt
+#   bash evaluation/run_suite.sh --model ... --num-gpus 4      # accelerate DP
+#   bash evaluation/run_suite.sh --model ... --direct          # run here (GPU node)
+#   bash evaluation/run_suite.sh --model ... --limit 8         # extra args forwarded
 #
 # MMBench-style answer extraction uses an OpenAI-compatible API; export
 # OPENAI_API_KEY before launching or it falls back to exact match. The default is

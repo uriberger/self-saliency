@@ -15,6 +15,12 @@ from typing import Optional
 import stats as eval_stats
 
 RESULTS_DIR = Path(__file__).resolve().parent / "results" / "inference"
+# WHERE THE RUNS ARE READ FROM -- not where lmms-eval's code lives. The name is a
+# collision with the LMMS_EVAL_DIR *environment variable*, which everywhere in this
+# repository means the lmms-eval CHECKOUT and is read into LMMS_EVAL_REPO below. Nothing
+# reads the env var into this constant, so exporting LMMS_EVAL_DIR does not move the
+# reading; `--results-root` does. `evaluation/ranking.py` and
+# `evaluation/bootstrap_check.py` assign to this one.
 LMMS_EVAL_DIR = Path(__file__).resolve().parent / "results"
 # Where the finished page is written. Always this tree's own results/, even when
 # --results-root points the *reading* somewhere else: a worktree that builds the
