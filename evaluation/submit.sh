@@ -35,9 +35,10 @@
 # scripts/eval_our_benchmarks.sh instead of a comma-separated --tasks list.
 #
 # MMBench answer extraction uses an OpenAI-compatible API for answer matching.
-# Export OPENAI_API_KEY (your NVIDIA API key) before launching; the launcher
-# defaults to the NVIDIA inference endpoint with azure/openai/gpt-4o-mini.
-# Override via OPENAI_API_URL or MODEL_VERSION if needed.
+# Export OPENAI_API_KEY before launching; the launcher defaults to OpenAI's public
+# API with gpt-4o-mini, which is the judge the paper reports (Appendix C).
+# OPENAI_API_URL and MODEL_VERSION override the pair, and they move TOGETHER: a
+# gateway addresses the same model by a provider-prefixed name. See docs/install.md.
 # Without a key it falls back to exact matching and under-reports.
 #
 # Task-name notes (paper name -> lmms-eval task): MME-RealWorld -> mmerealworld
@@ -51,8 +52,8 @@
 #
 # Environment overrides:
 #   PARTITION=batch   DURATION=4 (hours)
-#   OPENAI_API_KEY=...   MODEL_VERSION=azure/openai/gpt-4o-mini (default)
-#   OPENAI_API_URL=https://inference-api.nvidia.com/v1/chat/completions (default)
+#   OPENAI_API_KEY=...   MODEL_VERSION=gpt-4o-mini (default)
+#   OPENAI_API_URL=https://api.openai.com/v1/chat/completions (default)
 set -e
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
@@ -366,8 +367,8 @@ echo "GPUs:       $NUM_GPUS"
 [[ -n "$MAX_PIXELS" ]] && echo "Max pixels: $MAX_PIXELS"
 [[ $STRIP_ANSWER_FORMAT -eq 1 ]] && echo "Prompt:     answer-format instructions stripped (reasoning-mode eval)"
 echo "Output dir: $OUTPUT_DIR"
-OPENAI_API_URL=${OPENAI_API_URL:-https://inference-api.nvidia.com/v1/chat/completions}
-MODEL_VERSION=${MODEL_VERSION:-azure/openai/gpt-4o-mini}
+OPENAI_API_URL=${OPENAI_API_URL:-https://api.openai.com/v1/chat/completions}
+MODEL_VERSION=${MODEL_VERSION:-gpt-4o-mini}
 echo "OpenAI key: $([[ -n "$OPENAI_API_KEY" ]] && echo "(set — mmbench uses $MODEL_VERSION via $OPENAI_API_URL)" || echo '(unset — mmbench falls back to exact match)')"
 [[ -n "$EXTRA_ARGS" ]] && echo "Extra args: $EXTRA_ARGS"
 echo ""

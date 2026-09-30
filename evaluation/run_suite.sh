@@ -23,12 +23,15 @@
 #   bash scripts/run_lmms_eval_suite.sh --model ... --limit 8         # extra args forwarded
 #
 # MMBench-style answer extraction uses an OpenAI-compatible API; export
-# OPENAI_API_KEY (your NVIDIA key) before launching or it falls back to exact
-# match. See launch_lmms_eval_job.sh for the same env-override knobs.
+# OPENAI_API_KEY before launching or it falls back to exact match. The default is
+# OpenAI's public API with gpt-4o-mini, the judge the paper reports (Appendix C).
+# OPENAI_API_URL and MODEL_VERSION move TOGETHER -- a gateway addresses the same
+# model by a provider-prefixed name; see docs/install.md. evaluation/submit.sh has
+# the same env-override knobs.
 #
 # Environment overrides:  PARTITION=batch_block1  DURATION=4 (hours)
-#   OPENAI_API_KEY=...  MODEL_VERSION=azure/openai/gpt-4o-mini
-#   OPENAI_API_URL=https://inference-api.nvidia.com/v1/chat/completions
+#   OPENAI_API_KEY=...  MODEL_VERSION=gpt-4o-mini
+#   OPENAI_API_URL=https://api.openai.com/v1/chat/completions
 set -e
 
 # ADLR cluster-interface tools (submit_job, etc.) on PATH.
@@ -119,8 +122,8 @@ echo "Model:           $MODEL ($MODEL_TYPE)"
 echo "Benchmarks file: $BENCHMARKS_FILE"
 echo "GPUs:            $NUM_GPUS"
 echo "Output dir:      $OUTPUT_DIR"
-OPENAI_API_URL=${OPENAI_API_URL:-https://inference-api.nvidia.com/v1/chat/completions}
-MODEL_VERSION=${MODEL_VERSION:-azure/openai/gpt-4o-mini}
+OPENAI_API_URL=${OPENAI_API_URL:-https://api.openai.com/v1/chat/completions}
+MODEL_VERSION=${MODEL_VERSION:-gpt-4o-mini}
 echo "OpenAI key:      $([[ -n "$OPENAI_API_KEY" ]] && echo "(set — mmbench uses $MODEL_VERSION via $OPENAI_API_URL)" || echo '(unset — mmbench falls back to exact match)')"
 [[ -n "$EXTRA_ARGS" ]] && echo "Extra args:      $EXTRA_ARGS"
 echo ""

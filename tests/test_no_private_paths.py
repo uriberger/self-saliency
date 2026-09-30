@@ -13,10 +13,15 @@ script that works for exactly one person, and fails for everyone else with a con
 
 The pinned lmms-eval submodule is excluded -- it is upstream's tree, not ours.
 
-ORGANISATIONAL identifiers are deliberately NOT checked here. `inference-api.nvidia.com`
-is the LLM judge's gateway and is a real configuration default, not a leak. It does need
-a decision before the repository is made public, for the reason in docs/publishing.md,
-but failing a test on it every day until then would just train people to ignore this one.
+ORGANISATIONAL identifiers are deliberately NOT checked here, and still are not. They are
+real configuration defaults, not leaks, and failing a test on a default every day would
+train people to ignore this one.
+
+The judge defaults have since moved to OpenAI's public API, so `inference-api.nvidia.com`
+now survives in one place by design: `selfsal/steps/make_data.py`, which distils the step
+classifier's labels from a model no OpenAI endpoint serves (docs/publishing.md section 2).
+`tests/test_judge_endpoint_and_model_agree.py` is what holds the judge defaults where they
+are; this file is still only about identifiers that name a person or a machine.
 """
 
 from __future__ import annotations

@@ -74,9 +74,9 @@ Through `worker.reward.reward_function_kwargs` (all optional):
 
 and through the environment, matching our TRL stack so one key serves both:
 
-    NVIDIA_API_KEY / OPENAI_API_KEY   required, or every judged row falls back
-    OPENAI_BASE_URL                   default https://inference-api.nvidia.com
-    JUDGE_MODEL                       default azure/openai/gpt-4o-mini
+    OPENAI_API_KEY / NVIDIA_API_KEY   required, or every judged row falls back
+    OPENAI_BASE_URL                   default https://api.openai.com/v1
+    JUDGE_MODEL                       default gpt-4o-mini
     JUDGE_MAX_WORKERS                 default 32
     EASE_REPO                         where to import their perception.py from
 
@@ -133,17 +133,21 @@ _perception = _load_their_perception()
 
 
 # ── the judge ────────────────────────────────────────────────────────────────
-_JUDGE_KEY = os.environ.get("NVIDIA_API_KEY") or os.environ.get("OPENAI_API_KEY")
+_JUDGE_KEY = os.environ.get("OPENAI_API_KEY") or os.environ.get("NVIDIA_API_KEY")
 if not _JUDGE_KEY:
     print(
-        "[judged_perception] WARNING: neither NVIDIA_API_KEY nor OPENAI_API_KEY is set. "
+        "[judged_perception] WARNING: neither OPENAI_API_KEY nor NVIDIA_API_KEY is set. "
         "Every judged row will fall back to the rule score, which on flickr30k means 0.",
         flush=True,
     )
 
-JUDGE_MODEL = os.environ.get("JUDGE_MODEL", "azure/openai/gpt-4o-mini")
+# JUDGE_MODEL and OPENAI_BASE_URL move together, never one alone: a gateway addresses
+# the same model by a provider-prefixed name and 403s the bare alias. See
+# docs/install.md, and `selfsal/judge.py`, which this deliberately mirrors so that
+# EASE and our arms are judged by the same model reached the same way.
+JUDGE_MODEL = os.environ.get("JUDGE_MODEL", "gpt-4o-mini")
 JUDGE_MAX_WORKERS = max(1, int(os.environ.get("JUDGE_MAX_WORKERS", "32")))
-_JUDGE_BASE_URL = os.environ.get("OPENAI_BASE_URL", "https://inference-api.nvidia.com")
+_JUDGE_BASE_URL = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
 
 _client = None
 

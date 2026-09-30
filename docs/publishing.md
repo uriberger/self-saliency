@@ -32,21 +32,36 @@ moment there is a remote anyone has fetched from.
 If it goes public **on acceptance**, anonymity no longer applies and the history can stay
 as it is.
 
-## 2. The organisational endpoints
+## 2. The organisational endpoints — done
 
-Seven files name `inference-api.nvidia.com` or `integrate.api.nvidia.com`. These are real
-configuration defaults for the LLM judge (`selfsal/judge.py`, and the EASE baseline's
-reward), not leaks — but they identify the organisation, and they point at a gateway no
-external reader can reach.
+Every judge default now points at OpenAI's public API with the bare `gpt-4o-mini`, which
+is the model the paper reports (§5 Auxiliary models, App. A.2, App. C) — only the route
+to it changed. A reader with an `OPENAI_API_KEY` needs no other configuration;
+`docs/install.md` §4 has the five exports that put it back on the NVIDIA gateway, and
+says why the URL and the model name have to move together.
+
+Six defaults moved, in `selfsal/judge.py`,
+`baselines/ease/reward_function/judged_perception.py`, `baselines/ease/run.sh`,
+`experiments/trained_model/audit.py`, `evaluation/submit.sh` and
+`evaluation/run_suite.sh`. The key precedence inverted with them —
+`OPENAI_API_KEY` is now tried before `NVIDIA_API_KEY`, because a stale key in the shell
+must not be the one sent to the default endpoint.
 
 ```bash
 git grep -lI "nvidia\.com" -- . ':!evaluation/lmms_eval'
 ```
 
-Both already read `OPENAI_BASE_URL` from the environment, so the change is to the
-default, not to the mechanism. The judge is GPT-4o-mini either way (Appendix A.2); only
-the route to it differs. Point the default at the public OpenAI API and say in the README
-that a key is required for the benchmarks that use a judge.
+What that still finds is not a default:
+
+* `experiments/head_selection/generate.py` — `--api-base` defaults to `None`, and
+  `integrate.api.nvidia.com` appears only as an example of an OpenAI-compatible endpoint
+  in its help text, beside a local NIM.
+* `selfsal/steps/make_data.py` — distils the step classifier's training labels from
+  Gemini 2.5 Pro, addressed by the gateway name `gcp/google/gemini-2.5-pro`. It is the
+  one judge-adjacent default not flipped, because there is no public OpenAI endpoint that
+  serves that model, and changing the model would change what a reader regenerates rather
+  than how they reach it. The shipped classifier checkpoint is what the paper used; this
+  script is only for retraining from scratch.
 
 `tests/test_no_private_paths.py` deliberately does **not** fail on these. A test that
 fails every day until an unrelated decision is made is a test people learn to ignore.

@@ -31,15 +31,20 @@ skipped so you can kill and restart without losing progress.
 
 Usage
 -----
-  python generate_data.py --api_key YOUR_KEY
-  python generate_data.py --api_key YOUR_KEY --split_mode rules
-  python generate_data.py --api_key YOUR_KEY --model gcp/google/gemini-2.5-pro --max_samples 50
+  python -m selfsal.steps.make_data --api_key YOUR_KEY
+  python -m selfsal.steps.make_data --api_key YOUR_KEY --split_mode rules
+  python -m selfsal.steps.make_data --api_key YOUR_KEY --max_samples 50
+
+The endpoint is OPENAI_BASE_URL and the model is --model; they are a pair, and the
+defaults are a gateway that serves Gemini 2.5 Pro rather than OpenAI's public API. See
+docs/publishing.md §2 for why this one script is not defaulted to api.openai.com.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import random
 import re
 import sys
@@ -57,7 +62,11 @@ from openai import OpenAI
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 _INFERENCE_DIR = _PROJECT_ROOT / "results" / "inference"
 _OUTPUT_FILE = Path(__file__).resolve().parent / "data" / "labeled_steps.jsonl"
-_NVIDIA_BASE_URL = "https://inference-api.nvidia.com/v1"
+#: THE ENDPOINT AND `--model` ARE A PAIR. Unlike the judge in `selfsal/judge.py`, this
+#: default is NOT OpenAI's public API, because `--model` defaults to Gemini 2.5 Pro and
+#: api.openai.com does not serve it. Override both together, with OPENAI_BASE_URL and
+#: --model, to distil from any OpenAI-compatible endpoint. See docs/publishing.md §2.
+_BASE_URL = os.environ.get("OPENAI_BASE_URL", "https://inference-api.nvidia.com/v1")
 
 # ---------------------------------------------------------------------------
 # Coarse step extraction (format-aware, no type classification yet)
@@ -363,7 +372,8 @@ def load_done_ids(output_path: Path) -> set[tuple[str, str]]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate POD step-classification data via Gemini")
-    parser.add_argument("--api_key", required=True, help="NVIDIA API key")
+    parser.add_argument("--api_key", required=True,
+                        help="Bearer token for whichever endpoint OPENAI_BASE_URL names")
     parser.add_argument(
         "--model",
         default="gcp/google/gemini-2.5-pro",
@@ -409,7 +419,7 @@ def main() -> None:
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
 
-    client = OpenAI(api_key=args.api_key, base_url=_NVIDIA_BASE_URL)
+    client = OpenAI(api_key=args.api_key, base_url=_BASE_URL)
 
     if args.input_file is not None:
         if not args.input_file.exists():

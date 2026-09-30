@@ -98,10 +98,48 @@ The step classifier's checkpoint is needed by training and by every probe; point
 `SELFSAL_STEPS_CKPT` at it, or put it in `checkpoint/steps_classifier/best`. To train it
 from scratch, see `selfsal/steps/make_data.py` and `selfsal/steps/train.py`.
 
-## 4. Check it
+## 4. The judge
+
+Four things call an LLM judge: `R_llm` during GRPO (`selfsal/judge.py`), the EASE
+baseline's judged perception reward, `--judge` on `experiments/trained_model/{probe,audit}.py`,
+and the benchmarks whose scoring needs answer extraction during evaluation. The judge is
+GPT-4o mini in all four, which is what the paper reports (§5 Auxiliary models, App. A.2,
+App. C).
+
+The defaults are OpenAI's public API, so one variable is the whole setup:
 
 ```bash
-pytest                                        # 2,300+ CPU tests, no GPU
+export OPENAI_API_KEY=sk-...
+```
+
+Without a key nothing crashes. A training sample the judge cannot score is **masked** to
+its group's mean, not scored zero — an unreachable API must not become a training signal.
+Evaluation falls back to exact matching, which under-reports.
+
+**Pointing it elsewhere means moving two variables, never one.** A gateway addresses the
+same model by a different name: the NVIDIA inference gateway wants the provider-prefixed
+`azure/openai/gpt-4o-mini` and returns `403 key_model_access_denied` for the bare alias,
+so changing only the URL fails every judged sample. For that gateway:
+
+```bash
+# training, the probes, the EASE baseline -- the openai SDK's own variables
+export OPENAI_API_KEY=$NVIDIA_API_KEY   # or just leave NVIDIA_API_KEY set; it is the fallback
+export OPENAI_BASE_URL=https://inference-api.nvidia.com
+export JUDGE_MODEL=azure/openai/gpt-4o-mini
+
+# the evaluation suite -- lmms-eval posts to a full URL under its own two names
+export OPENAI_API_URL=https://inference-api.nvidia.com/v1/chat/completions
+export MODEL_VERSION=azure/openai/gpt-4o-mini
+```
+
+The two pairs are separate because the consumers are: `selfsal/judge.py` builds an
+`openai.OpenAI` client, which wants a base URL, while lmms-eval posts to a full endpoint
+path. Note the `/v1/chat/completions` on one and not the other.
+
+## 5. Check it
+
+```bash
+pytest                                        # 3,800+ CPU tests, no GPU
 python -m training.grpo.config --all          # the six arms and their settings
 bash training/grpo/run.sh self_saliency --dry-run
 ```

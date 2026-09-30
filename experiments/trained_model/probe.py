@@ -903,7 +903,7 @@ def main():
     # spelling launch_overlap_probe.sh accepts (the two interfaces drifting apart is
     # exactly what made the hand-run commands fail).
     p.add_argument("--judge", action=argparse.BooleanOptionalAction, default=False,
-                   help="query the LLM judge for openai_reward (needs NVIDIA_API_KEY)")
+                   help="query the LLM judge for openai_reward (needs OPENAI_API_KEY)")
     p.add_argument("--device", default="cuda:0")
     p.add_argument("--store-maps", action=argparse.BooleanOptionalAction, default=True,
                    help="persist each step's quantised attention map + DINO boxes for the viewer")

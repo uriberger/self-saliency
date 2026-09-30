@@ -69,6 +69,12 @@ Three external repos are cloned and patched at install time rather than vendored
 TRL, LLaMA-Factory, and EasyR1/verl. `lmms-eval` is a pinned submodule — the suite
 needs tasks and answer-parser fixes that are not upstream.
 
+Training and the benchmarks that score by answer extraction both call GPT-4o mini as a
+judge, so export `OPENAI_API_KEY`. Without it training masks that reward rather than
+scoring it zero, and those benchmarks fall back to exact matching and under-report.
+[docs/install.md §4](docs/install.md) has the rest, including how to point it at another
+OpenAI-compatible endpoint.
+
 ## Status
 
 Private, pending review. The paper is under double-blind review and promises code and

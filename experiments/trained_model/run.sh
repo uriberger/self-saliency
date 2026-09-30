@@ -73,8 +73,8 @@ fi
 # reason training needs it. Without it every judged sample MASKS rather than scoring zero
 # (see selfsal/judge.py), which is safe but makes that column empty -- so say so once,
 # here, rather than letting it show up as a blank column in the table.
-if [[ -z "${NVIDIA_API_KEY:-}${OPENAI_API_KEY:-}" ]]; then
-    echo "NOTE: neither NVIDIA_API_KEY nor OPENAI_API_KEY is set; the judge reward will be"
+if [[ -z "${OPENAI_API_KEY:-}${NVIDIA_API_KEY:-}" ]]; then
+    echo "NOTE: neither OPENAI_API_KEY nor NVIDIA_API_KEY is set; the judge reward will be"
     echo "      masked on every sample. Table 3 does not use it, so this is only a warning."
 fi
 

@@ -3,8 +3,8 @@
 # launch_sink_location_job.sh: this builds a runner and hands it to submit_job;
 # launch_ease_train.sh is what runs inside the allocation.
 #
-#   NVIDIA_API_KEY=... bash launch_ease_train_job.sh --arm ease --exp ease_8k
-#   NVIDIA_API_KEY=... bash launch_ease_train_job.sh --arm dapo --exp dapo_8k
+#   OPENAI_API_KEY=... bash baselines/ease/submit.sh --arm ease --exp ease_8k
+#   OPENAI_API_KEY=... bash baselines/ease/submit.sh --arm dapo --exp dapo_8k
 #
 # Both arms, always -- see the header of launch_ease_train.sh for why a lone
 # EASE number cannot be compared against our overlap runs.
@@ -73,7 +73,7 @@ RUNNER="$LOG_ROOT/$NAME.runner.sh"
     [[ -n "${OPENAI_BASE_URL:-}" ]] && printf 'export OPENAI_BASE_URL=%q\n' "$OPENAI_BASE_URL"
     [[ -n "${JUDGE_MODEL:-}"       ]] && printf 'export JUDGE_MODEL=%q\n' "$JUDGE_MODEL"
     [[ -n "${JUDGE_MAX_WORKERS:-}" ]] && printf 'export JUDGE_MAX_WORKERS=%q\n' "$JUDGE_MAX_WORKERS"
-    printf 'bash launch_ease_train.sh --arm %q --exp %q --gpus %q' "$ARM" "$EXP" "$GPUS"
+    printf 'bash run.sh --arm %q --exp %q --gpus %q' "$ARM" "$EXP" "$GPUS"
     for a in ${EXTRA[@]+"${EXTRA[@]}"}; do printf ' %q' "$a"; done
     echo
 } > "$RUNNER"
@@ -82,7 +82,7 @@ chmod +x "$RUNNER"
 echo "=========================================================================="
 echo "Job    : $NAME   ($ACCOUNT, $PARTITION, ${DURATION}h, ${GPUS} GPU)"
 echo "Arm    : $ARM"
-echo "Judge  : $([[ -n "${NVIDIA_API_KEY:-}${OPENAI_API_KEY:-}" ]] && echo 'key set' || echo 'NO KEY -- judged rows fall back to the rule score')"
+echo "Judge  : $([[ -n "${OPENAI_API_KEY:-}${NVIDIA_API_KEY:-}" ]] && echo 'key set' || echo 'NO KEY -- judged rows fall back to the rule score')"
 echo "Runner : $RUNNER"
 echo "=========================================================================="
 cat "$RUNNER"

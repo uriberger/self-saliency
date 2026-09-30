@@ -52,7 +52,7 @@
 # happened to be cut at. ~48 GB a checkpoint against ~16; take the disk.
 # --model-only-checkpoints for the other trade.
 #
-# The judge needs a key: NVIDIA_API_KEY=... bash baselines/ease/run.sh ...
+# The judge needs a key: OPENAI_API_KEY=... bash baselines/ease/run.sh ...
 set -euo pipefail
 
 if [[ -n "${SLURM_SUBMIT_DIR:-}" ]]; then
@@ -141,7 +141,9 @@ export HF_HOME=${HF_HOME:-${HF_HOME:?set HF_HOME}}
 export HF_HUB_OFFLINE=${HF_HUB_OFFLINE:-1}
 # judged_perception.py imports their perception.py through this.
 export EASE_REPO
-export JUDGE_MODEL=${JUDGE_MODEL:-azure/openai/gpt-4o-mini}
+# Moves with OPENAI_BASE_URL, never alone: a gateway addresses the same model by a
+# provider-prefixed name and 403s the bare alias. See docs/install.md.
+export JUDGE_MODEL=${JUDGE_MODEL:-gpt-4o-mini}
 # 64, not 32. At rollout batch 128 a step judges ~480 completions (measured:
 # judge_called runs 0.73-0.90), and the reward actor fans out inside one Ray
 # actor. 32 workers is ~15 sequential rounds; 64 halves that, keeping the judge
@@ -153,8 +155,8 @@ export JUDGE_MAX_WORKERS=${JUDGE_MAX_WORKERS:-64}
 
 if [[ $JUDGE -eq 1 ]]; then
     REWARD_FUNCTION="$REWARD_FILE:compute_score"
-    if [[ -z "${NVIDIA_API_KEY:-}${OPENAI_API_KEY:-}" ]]; then
-        echo "WARNING: no NVIDIA_API_KEY/OPENAI_API_KEY. Every judged row falls back to" >&2
+    if [[ -z "${OPENAI_API_KEY:-}${NVIDIA_API_KEY:-}" ]]; then
+        echo "WARNING: no OPENAI_API_KEY/NVIDIA_API_KEY. Every judged row falls back to" >&2
         echo "         the rule score, which on flickr30k means 0. Pass --no-judge if" >&2
         echo "         that is what you want." >&2
     fi
@@ -202,7 +204,7 @@ echo "arm       : $ARM     experiment: $EXP"
 echo "model     : $MODEL"
 echo "train     : $TRAIN_FILE   ($ROWS rows)"
 echo "reward    : $REWARD_FUNCTION"
-echo "judge     : $([[ $JUDGE -eq 1 ]] && echo "$JUDGE_MODEL, $JUDGE_MAX_WORKERS workers, key $([[ -n "${NVIDIA_API_KEY:-}${OPENAI_API_KEY:-}" ]] && echo set || echo MISSING)" || echo 'off (their rule reward)')"
+echo "judge     : $([[ $JUDGE -eq 1 ]] && echo "$JUDGE_MODEL, $JUDGE_MAX_WORKERS workers, key $([[ -n "${OPENAI_API_KEY:-}${NVIDIA_API_KEY:-}" ]] && echo set || echo MISSING)" || echo 'off (their rule reward)')"
 echo "batching  : rollout $ROLLOUT_BATCH x n5, global $GLOBAL_BATCH prompts, $EPOCHS epochs -> ~$STEPS steps"
 echo "gpus      : $GPUS   (rollout tp $TP)"
 echo "save      : $SAVE_PATH  every $SAVE_FREQ steps, model_only=$SAVE_MODEL_ONLY, limit $SAVE_LIMIT"

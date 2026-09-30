@@ -29,29 +29,30 @@ from concurrent.futures import ThreadPoolExecutor
 # from Azure) is deterministic -> fail fast and mask that sample rather than crash.
 _TRANSIENT = (openai.RateLimitError, openai.APIConnectionError, openai.APITimeoutError)
 
-# LLM-as-judge via the NVIDIA inference API. Key is supplied at run time through
-# NVIDIA_API_KEY (falls back to OPENAI_API_KEY). NVIDIA_API_KEY wins because the
-# default base_url is the NVIDIA gateway: a stale OPENAI_API_KEY in the shell must
-# not be sent there. Endpoint/model overridable via env.
-_JUDGE_KEY = os.environ.get("NVIDIA_API_KEY") or os.environ.get("OPENAI_API_KEY")
+# Key is supplied at run time through OPENAI_API_KEY (falls back to NVIDIA_API_KEY).
+# OPENAI_API_KEY wins because the default base_url is OpenAI's: a stale NVIDIA_API_KEY
+# in the shell must not be sent there.
+_JUDGE_KEY = os.environ.get("OPENAI_API_KEY") or os.environ.get("NVIDIA_API_KEY")
 if not _JUDGE_KEY:
     # openai.OpenAI() raises on a None key, and this module is imported whether or
     # not the judge reward is actually used -- a missing key must not kill the run
     # at import. Use a placeholder and warn; every judged sample then masks to None.
-    print("[selfsal.judge] WARNING: neither NVIDIA_API_KEY nor OPENAI_API_KEY is set. "
+    print("[selfsal.judge] WARNING: neither OPENAI_API_KEY nor NVIDIA_API_KEY is set. "
           "If openai_reward is among the reward funcs, every sample's judge reward "
           "will be masked (401).", flush=True)
     _JUDGE_KEY = "xxx"
 
 client = openai.OpenAI(
     api_key=_JUDGE_KEY,
-    base_url=os.environ.get("OPENAI_BASE_URL", "https://inference-api.nvidia.com"),
+    base_url=os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1"),
 )
 
-# The NVIDIA inference gateway requires provider-prefixed model names
-# (e.g. "azure/openai/gpt-4o-mini"); the bare "gpt-4o-mini" alias returns a
-# 403 key_model_access_denied. Override with the JUDGE_MODEL env var.
-JUDGE_MODEL = os.environ.get("JUDGE_MODEL", "azure/openai/gpt-4o-mini")
+# THE ENDPOINT AND THE MODEL NAME MOVE TOGETHER, NEVER ONE ALONE. A gateway addresses
+# the same model by a different name: the NVIDIA inference gateway wants the
+# provider-prefixed "azure/openai/gpt-4o-mini" and returns 403 key_model_access_denied
+# for the bare alias, so pointing OPENAI_BASE_URL at it without also setting
+# JUDGE_MODEL fails every judged sample. docs/install.md has the pair.
+JUDGE_MODEL = os.environ.get("JUDGE_MODEL", "gpt-4o-mini")
 
 @retry(wait_exponential_multiplier=200, wait_exponential_max=2000, retry_on_exception=lambda e: isinstance(e, openai.RateLimitError) or isinstance(e, openai.APIConnectionError))
 def openai_reward(completions, solution, problem, **kwargs):
@@ -67,7 +68,7 @@ def openai_reward(completions, solution, problem, **kwargs):
     def query_gpt4o(question, ground_truth, prediction):
         # Compute the correctness score
         chat_completion = client.chat.completions.create(
-            model=JUDGE_MODEL,  # override via JUDGE_MODEL env, e.g. "azure/openai/gpt-4o"
+            model=JUDGE_MODEL,  # override via JUDGE_MODEL env, e.g. "gpt-4o"
             temperature=0,
             max_tokens=512,
             messages=[

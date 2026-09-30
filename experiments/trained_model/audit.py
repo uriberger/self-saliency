@@ -1290,14 +1290,15 @@ def judge_sheet(items, out_dir, args):
     import openai
     from PIL import Image
 
-    key = os.environ.get("NVIDIA_API_KEY") or os.environ.get("OPENAI_API_KEY")
+    key = os.environ.get("OPENAI_API_KEY") or os.environ.get("NVIDIA_API_KEY")
     if not key:
-        raise SystemExit("--judge needs NVIDIA_API_KEY (or OPENAI_API_KEY) in the "
+        raise SystemExit("--judge needs OPENAI_API_KEY (or NVIDIA_API_KEY) in the "
                          "environment; the sheet itself is already written")
+    # OPENAI_BASE_URL and JUDGE_MODEL move together; see docs/install.md.
     client = openai.OpenAI(api_key=key,
                            base_url=os.environ.get("OPENAI_BASE_URL",
-                                                   "https://inference-api.nvidia.com"))
-    model = os.environ.get("JUDGE_MODEL", "azure/openai/gpt-4o-mini")
+                                                   "https://api.openai.com/v1"))
+    model = os.environ.get("JUDGE_MODEL", "gpt-4o-mini")
 
     def _b64(path):
         im = Image.open(path).convert("RGB")
@@ -2048,7 +2049,7 @@ def main():
     p.add_argument("--n-sheet", type=int, default=25,
                    help="items per arm on the manual review sheet")
     p.add_argument("--judge", action="store_true",
-                   help="also score the sheet with a vision judge (needs NVIDIA_API_KEY)")
+                   help="also score the sheet with a vision judge (needs OPENAI_API_KEY)")
     # shared
     p.add_argument("--device", default="cuda:0")
     p.add_argument("--shard", type=int, default=0)
