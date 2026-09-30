@@ -48,8 +48,9 @@ import sys
 from pathlib import Path
 
 # The scorer comes from the PINNED submodule, not from a checkout beside this one. A
-# re-score is only meaningful against the scorer the paper's numbers were produced by,
-# and `evaluation/lmms_eval` is checked out at that commit (a9a806b).
+# re-score is only meaningful against the scorer the paper's numbers were produced by.
+# `evaluation/lmms_eval` is checked out at 4ea4f15 = a9a806b, the commit those numbers
+# were scored under, plus one commit that only stamps a version and changes no score.
 LMMS_EVAL_DIR = Path(
     os.environ.get("LMMS_EVAL_DIR", Path(__file__).resolve().parents[1] / "lmms_eval")
 )

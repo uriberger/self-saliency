@@ -114,6 +114,39 @@ exactly like a stale one.
 Fixing that belongs upstream in the lmms-eval fork -- the evaluator should stamp on the
 way out, not only on the way back through a repair script.
 
+## The gap is closed, and the pin moved to close it
+
+`save_results_aggregated()` in the fork now writes `reasoning_parser_version` and
+`mathvision_parser_version` into every `results.json` as it is written, beside `results`
+and never inside it. A file with no stamp now means an old file, and a stamp that does
+not match the scorer on disk means a stale one. Both were previously indistinguishable
+from a correct fresh run.
+
+**The pin moved, deliberately, and this is the record of it.**
+
+| | |
+|---|---|
+| was | `a9a806b`, on the fork's `main` |
+| now | `4ea4f15`, on the fork's `paper-pin` branch |
+| between them | one commit: `feat(results): stamp the scorer's PARSER_VERSION at evaluation time` |
+
+`paper-pin` is branched from `a9a806b` and **not** from the fork's `main`. `main` had
+already moved one commit ahead, to a response-cache resume fix; basing the stamp there
+would have pulled that into the pinned tree as well. Branching from the pin keeps the
+promise this section is making: the tree this repository pins is the scoring code the
+published numbers came from, plus a label.
+
+**No number changes, and that is checked rather than asserted.** The commit adds
+top-level keys to a dict and touches nothing under `results`;
+`test/eval/test_parser_version_stamp.py` in the fork asserts exactly that, alongside each
+stamp matching the `PARSER_VERSION` actually in its scorer's source. On this side, all 32
+banked results files that use a tracked scorer already carried the correct stamp, written
+by the re-score scripts, and `tables.py` flags none of them stale. So the change affects
+runs made from now on and no banked number at all.
+
+What it does not do is retrofit provenance. A `results.json` written before this commit
+still carries a stamp only if a repair script put one there.
+
 ## None of this can be re-run from a clone
 
 Every script in `evaluation/rescore/` reads the per-sample `*_samples_*.jsonl` files. Those

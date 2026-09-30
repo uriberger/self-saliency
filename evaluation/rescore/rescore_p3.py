@@ -28,9 +28,11 @@ REPO = Path(__file__).resolve().parent.parent
 # below made the default glob match nothing and the script report no work to do.
 LMMS_EVAL_DIR = REPO / "results"
 # The scorer comes from the PINNED submodule, not from a checkout beside this one. A
-# re-score is only meaningful against the scorer the paper's numbers were produced by,
-# and `evaluation/lmms_eval` is checked out at that commit (a9a806b). LMMS_EVAL_DIR the
-# environment variable overrides it; note it means the CHECKOUT, not the constant above.
+# re-score is only meaningful against the scorer the paper's numbers were produced by.
+# `evaluation/lmms_eval` is checked out at 4ea4f15 = a9a806b, the commit those numbers
+# were scored under, plus one commit that only stamps a version and changes no score.
+# The LMMS_EVAL_DIR environment variable overrides it; note that it means the CHECKOUT,
+# not the constant of the same name above.
 LMMS_EVAL_SRC = Path(os.environ.get("LMMS_EVAL_DIR", REPO / "lmms_eval"))
 UTILS_PATH = LMMS_EVAL_SRC / "lmms_eval/tasks/salbench/utils.py"
 

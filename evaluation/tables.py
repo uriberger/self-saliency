@@ -50,7 +50,8 @@ MANUAL_SCORES_PATH = Path(__file__).resolve().parent / "paper_comparison_manual.
 # shared one behind every `*_reasoning` task, and MathVision's own, which is not
 # built on it.
 # The pinned submodule is the source of truth. It is checked out at the commit the
-# paper's numbers were scored under (a9a806b), so the PARSER_VERSION strings below are
+# paper's numbers were scored under (4ea4f15 = a9a806b plus the stamping commit, which
+# changes no score), so the PARSER_VERSION strings below are
 # not a hand-maintained copy of something elsewhere -- they are checkable, and
 # tests/test_eval_scorers.py fails if they and the submodule ever disagree.
 LMMS_EVAL_REPO = Path(os.environ.get(

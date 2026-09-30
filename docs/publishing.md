@@ -83,13 +83,28 @@ it wants error bars.
 
 ## 4. The submodule has to be reachable
 
-`evaluation/lmms_eval` is pinned to `a9a806b` on `github.com/uriberger/lmms-eval`. If that
-fork is private or is renamed, `git clone --recurse-submodules` fails for everyone and the
-25 benchmarks are simply absent.
+`evaluation/lmms_eval` is pinned to `4ea4f15` on `github.com/uriberger/lmms-eval`, on the
+`paper-pin` branch. If that fork is private or is renamed, `git clone
+--recurse-submodules` fails for everyone and the 25 benchmarks are simply absent.
+
+`paper-pin` is branched from `a9a806b`, the commit the paper's numbers were scored under,
+and carries one commit on top of it: the parser-version stamp. It is NOT the fork's
+`main`, which has moved on — deliberately, so that the tree this repository pins stays the
+scoring code the published numbers came from. See [rescore-audit.md](rescore-audit.md).
 
 Two things to check before publishing:
 
-* the fork is public, and `a9a806b` is reachable on its default branch;
+* the fork is public, and `4ea4f15` is reachable. Being on a non-default branch is fine:
+  `git clone` fetches every branch, so an anonymous clone of the fork carries the commit
+  and can check it out. Checked, with every credential helper disabled:
+
+  ```bash
+  GIT_TERMINAL_PROMPT=0 git -c credential.helper= clone https://github.com/uriberger/lmms-eval
+  git -C lmms-eval cat-file -e 4ea4f15   # exits 0
+  ```
+
+  What would break it is deleting the `paper-pin` branch. The commit is on no other
+  branch, so nothing else keeps it alive;
 * the fork's `lmms_eval/models/chat/qwen3_vl_vga.py` is a **symlink** into a sibling
   research repository — one line, no content. A plain clone of the fork gets a dangling
   link. This repository does not depend on it (VGA installs from `baselines/vga/` as a

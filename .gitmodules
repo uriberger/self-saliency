@@ -1,4 +1,4 @@
 [submodule "evaluation/lmms_eval"]
 	path = evaluation/lmms_eval
 	url = https://github.com/uriberger/lmms-eval.git
-	branch = main
+	branch = paper-pin
