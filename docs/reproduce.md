@@ -72,11 +72,16 @@ released adapter rather than off a command line:
 | Table 2, Table 5, Table 6, Table 7 | `python evaluation/tables.py` |
 | Table 3 (§4.4) | `bash experiments/trained_model/run.sh --out-dir DIR --arm coldstart=CKPT --arm self_saliency=CKPT` |
 | Table 4, Figure 4, Table 8 (§5) | `bash experiments/attention_bias/run.sh --stage corpus\|selftest\|scan\|report --out-dir DIR` |
-| Figure 3 | `python -m experiments.figures.steps_figure` |
 | Figure 5 | `python -m experiments.attention_bias.tables --panels ...` |
 | §3.5 head selection | `bash experiments/head_selection/run.sh --out-dir DIR` — selects (22,28) and (22,31) |
 | App C's α_sal_mean = 0.033 | `python -m experiments.alpha_calibration <probe_merged.json>` |
 | App A.1 classifier (91.9% / 93%) | `python -m selfsal.steps.evaluate` |
+
+**The figure-drawing code is not in this repository.** Every row above produces the
+numbers a table or a figure is built from; turning those numbers into the drawn figure is
+not reproduced here. Figures 4 and 5 are the exception, because the commands that produce
+them also produce Table 4 and Table 8 and it would take more work to separate them than to
+keep them. Figure 3 has no row at all: it was only ever a picture of one reasoning chain.
 
 **Four tables, one command.** `evaluation/tables.py` reads the banked `*_results.json`
 under `evaluation/results/` and prints every arm it finds, which is exactly the ten of the

@@ -159,8 +159,6 @@ the paper. Here the six paper arms are six YAML files and the runner is thin.
 | `_unavailable.py` | new | the sentinel for a dropped arm's module |
 | `attention_bias/*` | `A sink_location{,_probe,_xmodel_tables,_html}.py`, `A sink_{box_coverage,three_legs,observe_boxes,encoder_probe}.py` |
 | `trained_model/{probe,audit}.py` | `A overlap_probe.py`, `A selfground_audit.py` |
-| `figures/steps_figure.py` | `A fig1_steps_figure.py` |
-| `figures/saliency_viz.py` | `A saliency_viz.py`, `A saliency_viz_compare.py` |
 | `alpha_calibration.py` | `A overlap_metric_spread.py` — App C's α_sal_mean = 0.033 |
 | `center_rect_calibration.py` | `A centre_box_probe.py` — where 0.565 comes from |
 

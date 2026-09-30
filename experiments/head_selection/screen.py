@@ -86,7 +86,9 @@ from pathlib import Path
 import numpy as np
 import torch
 
-ROOT = Path(__file__).resolve().parent.parent
+# parents[2] is the REPOSITORY root. `parent.parent` is `experiments/`, which put
+# every default output path under `experiments/results/` instead of `results/`.
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 # ---------------------------------------------------------------------------

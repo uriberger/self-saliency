@@ -278,7 +278,10 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.results_root:
-        results_table.LMMS_EVAL_DIR = args.results_root / "lmms_eval"
+        # No `/ "lmms_eval"`. The archive kept `<root>/inference` and `<root>/lmms_eval`
+        # side by side; here the lmms-eval runs ARE `results/`, so the extra level made
+        # this flag find nothing. Same shape as `tables.py`'s flag of the same name.
+        results_table.LMMS_EVAL_DIR = args.results_root
 
     _data, runs = results_table.collect_lmms_eval()
     if not runs:

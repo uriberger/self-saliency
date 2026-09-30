@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 import shutil
 from collections import defaultdict
 from pathlib import Path
@@ -31,7 +32,12 @@ REPO = Path(__file__).resolve().parent.parent
 # and `<root>/lmms_eval` side by side and the port flattened them, so the extra level
 # below made the default glob match nothing and the script report no work to do.
 LMMS_EVAL_DIR = REPO / "results"
-PARSER_PATH = Path.home() / "scratch/research/lmms-eval/lmms_eval/tasks/omnispatial/answer_parsing.py"
+# The parser comes from the PINNED submodule, not from a checkout beside this one. A
+# re-score is only meaningful against the scorer the paper's numbers were produced by,
+# and `evaluation/lmms_eval` is checked out at that commit (a9a806b). LMMS_EVAL_DIR the
+# environment variable overrides it; note it means the CHECKOUT, not the constant above.
+LMMS_EVAL_SRC = Path(os.environ.get("LMMS_EVAL_DIR", REPO / "lmms_eval"))
+PARSER_PATH = LMMS_EVAL_SRC / "lmms_eval/tasks/omnispatial/answer_parsing.py"
 
 # Load the deployed parser directly from the lmms-eval checkout so this script
 # and the live scorer can never drift apart. answer_parsing.py is import-safe

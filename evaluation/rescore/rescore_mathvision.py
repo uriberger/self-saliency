@@ -47,8 +47,11 @@ import re
 import sys
 from pathlib import Path
 
+# The scorer comes from the PINNED submodule, not from a checkout beside this one. A
+# re-score is only meaningful against the scorer the paper's numbers were produced by,
+# and `evaluation/lmms_eval` is checked out at that commit (a9a806b).
 LMMS_EVAL_DIR = Path(
-    os.environ.get("LMMS_EVAL_DIR", Path.home() / "scratch/research/lmms-eval")
+    os.environ.get("LMMS_EVAL_DIR", Path(__file__).resolve().parents[1] / "lmms_eval")
 )
 sys.path.insert(0, str(LMMS_EVAL_DIR))
 

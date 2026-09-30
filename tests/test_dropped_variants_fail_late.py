@@ -39,7 +39,6 @@ ROOT = Path(__file__).resolve().parents[1]
 #: Every module that stands a dropped dependency up as a sentinel.
 SENTINEL_USERS = [
     "experiments/trained_model/probe.py",
-    "experiments/figures/saliency_viz.py",
 ]
 
 
@@ -96,8 +95,6 @@ def test_no_sentinel_is_read_before_a_flag_is(source):
 @pytest.mark.parametrize("module", [
     "experiments.trained_model.probe",
     "experiments.trained_model.audit",
-    "experiments.figures.saliency_viz",
-    "experiments.figures.step_referent",
     "experiments.attention_bias.probe",
     "experiments.attention_bias.observe_boxes",
     "experiments.alpha_calibration",

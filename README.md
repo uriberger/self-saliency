@@ -41,7 +41,6 @@ experiments/
   head_selection/ §3.5            why layer 22, heads 28 and 31
   attention_bias/ §5              the border-ring result across four VLMs
   trained_model/  §4.4            does the text move, or does the attention?
-  figures/                        Figures 3 and 5
 
 baselines/        App D           VGA, Saliency-R1, EASE (+ the DAPO reference)
 evaluation/       §4.2, App A/B   the 25-benchmark suite, its scorers, its error bars

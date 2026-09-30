@@ -69,8 +69,10 @@ from pathlib import Path
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT.parent))
+# parents[2] is the REPOSITORY root. `parent.parent` is `experiments/`, which put
+# every default output path under `experiments/results/` instead of `results/`.
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 # `screen.py` IS the archive's `V analysis/aggregation_correlation.py` -- same functions,
 # same line numbers -- so this is the same implementation, reached by the name it has here.
