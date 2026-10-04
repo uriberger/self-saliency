@@ -106,6 +106,16 @@ fi
     echo "no TRL checkout at $TRL_REPO. See docs/install.md, then: bash env/patches/trl.sh" >&2
     exit 1; }
 
+# DeepSpeed JIT-compiles its fused ops on the execution node and needs a real toolkit at
+# CUDA_HOME. Both helpers below came across in the port and nothing called either, so the
+# first thing any arm did on a GPU node was raise MissingCUDAException("CUDA_HOME does not
+# exist") -- out of ZeRO-3 init, after the two sidecars had already loaded their models.
+# setup_ derives it (conda env's nvcc, then a system toolkit, then this cluster's path);
+# check_ refuses to launch on a node where what it derived is not actually there.
+# shellcheck source=/dev/null
+source "$REPO/env/setup_cuda_home.sh"
+bash "$REPO/env/check_cuda_home.sh" || exit 1
+
 mkdir -p "$OUTPUT_DIR/sidecar_logs"
 PIDS=()
 cleanup() { for p in "${PIDS[@]:-}"; do kill "$p" 2>/dev/null || true; done; }
