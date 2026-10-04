@@ -120,6 +120,24 @@ placeholder, which now sits at the conversion site in `grpo_trainer_qwen3.py`.
 | `data/boxed_corpus.py` | `A build_boxed_corpus.py` | §5's 1,800 VisualCoT pairs |
 | `judge.py` | `A trl/rewards/openai_rewards.py` | R_llm, shared with re-scoring |
 
+## env/
+
+| Here | From |
+|---|---|
+| `patches/transformers_patch/sdpa_attention_tf5x.py` | `A transformer/sdpa_attention_tf5x.py` |
+
+A modified copy of upstream `transformers.integrations.sdpa_attention` (Apache-2.0),
+carrying one change: the identity trick. Stock SDPA never materialises `softmax(QK^T)`,
+so it returns `None` for attention weights and `output_attentions=True` is unsupported.
+Calling SDPA a second time with V replaced by the identity recovers the probability matrix
+— `softmax(QK^T) @ I == softmax(QK^T)` — and transformers 5.x's record-outputs hooks then
+capture it.
+
+**Nothing in Section 5 or the saliency reward works without this.** It is where the
+attention the method is about becomes observable at all. It was missed in the first port:
+`env/patches/transformers.sh` referenced it at a path that did not exist here, so the
+patch could not run.
+
 ## training/
 
 | Here | From |
