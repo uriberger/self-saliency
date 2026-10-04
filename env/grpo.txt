@@ -42,7 +42,12 @@ fastapi-cli==0.0.8
 fastapi-cloud-cli==0.1.5
 fastrlock==0.8.3
 filelock==3.18.0
-fitz==0.0.1.dev2
+# fitz==0.0.1.dev2 REMOVED: this file could not be installed at all with it in.
+# 0.0.1.dev2 is gone from PyPI (0.0.0 is all that is left), so every build of this env
+# failed at resolution. It was wrong to be here regardless: PyPI's `fitz` is an unrelated
+# package, the `fitz` MODULE comes from PyMuPDF, and the only consumer in this tree is
+# lmms-eval's mmlongbench_doc task -- which is in the EVAL stack, not training, is not in
+# the paper's suite, and guards the import with try/except ImportError anyway.
 fonttools==4.59.0
 frontend==0.0.3
 frozendict==2.4.7
