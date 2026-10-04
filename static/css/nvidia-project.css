@@ -1,0 +1,164 @@
+/* Shared NVIDIA Research style for PAR project pages.
+   Usage: <link rel="stylesheet" href="../assets/nvidia-project.css"> */
+
+:root {
+  --nv-green: #76b900;
+  --nv-green-dark: #5e9400;
+  --nv-black: #000000;
+  --nv-ink: #1a1a1a;
+  --nv-ink-2: #444444;
+  --nv-ink-3: #666666;
+  --nv-rule: #e5e5e5;
+  --nv-bg-alt: #f7f7f7;
+  --nv-white: #ffffff;
+  --nv-max: 1080px;
+  --nv-font: "NVIDIA Sans", "NVIDIA", Arial, Helvetica, sans-serif;
+  --nv-mono: "Roboto Mono", Menlo, Consolas, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body.nv {
+  margin: 0;
+  font-family: var(--nv-font);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--nv-ink);
+  background: var(--nv-white);
+  -webkit-font-smoothing: antialiased;
+}
+
+.nv a { color: var(--nv-green-dark); text-decoration: none; }
+.nv a:hover { text-decoration: underline; }
+
+.nv-container { max-width: var(--nv-max); margin: 0 auto; padding: 0 24px; }
+
+/* Top bar */
+.nv-topbar {
+  background: var(--nv-black);
+  border-bottom: 4px solid var(--nv-green);
+}
+.nv-topbar .nv-container {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
+.nv-topbar a { color: var(--nv-white); font-weight: 700; letter-spacing: .02em; }
+.nv-topbar a:hover { color: var(--nv-green); text-decoration: none; }
+.nv-brand { display: flex; align-items: center; gap: 12px; font-size: 15px; }
+.nv-brand .nv-brand-mark { color: var(--nv-green); font-weight: 800; letter-spacing: .08em; }
+.nv-brand .nv-brand-sep { width: 1px; height: 20px; background: #555; }
+.nv-topnav { display: flex; gap: 22px; font-size: 14px; }
+
+/* Hero */
+.nv-hero {
+  background: var(--nv-black);
+  color: var(--nv-white);
+  padding: 64px 0 56px;
+}
+.nv-eyebrow {
+  display: inline-block;
+  color: var(--nv-green);
+  font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .14em;
+  margin-bottom: 14px;
+}
+.nv-hero h1 {
+  margin: 0 0 18px;
+  font-size: clamp(30px, 4.4vw, 48px);
+  line-height: 1.12; font-weight: 800; letter-spacing: -.01em;
+}
+.nv-hero .nv-lede { max-width: 820px; font-size: 19px; color: #d0d0d0; margin: 0; }
+.nv-authors { margin: 18px 0 6px; font-size: 17px; }
+.nv-authors a { color: var(--nv-white); border-bottom: 1px solid #555; }
+.nv-authors a:hover { border-color: var(--nv-green); text-decoration: none; }
+.nv-affil { font-size: 14px; color: #aaaaaa; }
+.nv-venue {
+  display: inline-block; margin-top: 16px; padding: 4px 10px;
+  border: 1px solid var(--nv-green); color: var(--nv-green);
+  font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+}
+
+/* Buttons */
+.nv-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.nv-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px;
+  background: var(--nv-green); color: var(--nv-black) !important;
+  font-weight: 700; font-size: 15px;
+  border: 2px solid var(--nv-green);
+  transition: background .15s, color .15s;
+}
+.nv-btn:hover { background: transparent; color: var(--nv-green) !important; text-decoration: none; }
+.nv-btn.nv-btn-outline { background: transparent; color: var(--nv-white) !important; border-color: #666; }
+.nv-btn.nv-btn-outline:hover { border-color: var(--nv-green); color: var(--nv-green) !important; }
+
+/* Sections */
+.nv-section { padding: 56px 0; }
+.nv-section.nv-alt { background: var(--nv-bg-alt); }
+.nv-section h2 {
+  margin: 0 0 20px; font-size: 28px; font-weight: 800; line-height: 1.2;
+}
+.nv-section h2::after {
+  content: ""; display: block; width: 48px; height: 4px;
+  background: var(--nv-green); margin-top: 12px;
+}
+.nv-section h3 { font-size: 20px; margin: 28px 0 10px; }
+.nv-section p { color: var(--nv-ink-2); max-width: 860px; }
+
+.nv-figure { margin: 24px 0; }
+.nv-figure img, .nv-figure video { display: block; width: 100%; height: auto; }
+.nv-figure figcaption { font-size: 14px; color: var(--nv-ink-3); margin-top: 8px; }
+
+.nv-bibtex {
+  background: var(--nv-ink); color: #e6e6e6;
+  padding: 18px 20px; overflow-x: auto;
+  font-family: var(--nv-mono); font-size: 13.5px; line-height: 1.5;
+  border-left: 4px solid var(--nv-green);
+}
+
+/* Project cards (used by /projects/ index) */
+.nv-grid {
+  display: grid; gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.nv-card {
+  display: flex; flex-direction: column;
+  background: var(--nv-white);
+  border: 1px solid var(--nv-rule);
+  border-top: 4px solid var(--nv-black);
+  padding: 22px 22px 20px;
+  color: var(--nv-ink) !important;
+  transition: border-color .15s, transform .15s, box-shadow .15s;
+}
+.nv-card:hover {
+  border-top-color: var(--nv-green);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  text-decoration: none !important;
+}
+.nv-card .nv-card-name { font-size: 22px; font-weight: 800; margin: 0 0 6px; }
+.nv-card .nv-card-title { font-size: 15px; color: var(--nv-ink-2); margin: 0 0 14px; flex: 1; }
+.nv-card .nv-card-meta {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--nv-green-dark);
+}
+.nv-card .nv-card-cta { margin-top: 10px; font-size: 14px; font-weight: 700; color: var(--nv-black); }
+.nv-card:hover .nv-card-cta { color: var(--nv-green-dark); }
+
+/* Footer */
+.nv-footer {
+  background: var(--nv-black); color: #999999;
+  padding: 36px 0 44px; font-size: 13.5px;
+  border-top: 4px solid var(--nv-green);
+}
+.nv-footer a { color: #cccccc; }
+.nv-footer a:hover { color: var(--nv-green); }
+.nv-footer .nv-legal { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 10px 0 0; padding: 0; list-style: none; }
+.nv-footer .nv-copy { margin: 0; }
+
+@media (max-width: 640px) {
+  .nv-topnav { display: none; }
+  .nv-hero { padding: 44px 0 40px; }
+  .nv-section { padding: 40px 0; }
+}

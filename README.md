@@ -6,12 +6,13 @@ evaluation results are on it. `main` keeps its `docs/` directory for the
 developer documentation; nothing here collides with it.
 
 ```
-index.html            the whole page
-.nojekyll             serve the files as-is; do not run Jekyll over them
-static/css/index.css  design tokens + layout
-static/js/index.js    theme toggle, motion-respecting teaser playback
-static/images/        figures 2-5 (WebP, from the paper PDF), poster, social card
-static/videos/        the teaser clip
+index.html                     the whole page
+.nojekyll                      serve the files as-is; do not run Jekyll over them
+static/css/nvidia-project.css  the shared NVIDIA Research project stylesheet, vendored
+static/css/index.css           what that file does not cover
+static/js/index.js             motion-respecting teaser playback
+static/images/                 figures 2-5 (WebP, from the paper PDF), poster, social card
+static/videos/                 the teaser clip
 ```
 
 Total payload is about 3.5 MB, nearly all of it the teaser.
@@ -73,7 +74,32 @@ different background, change that value too.
 It is one static HTML file with no build step and no dependencies. Open
 `index.html` in a browser and reload.
 
-The design tokens at the top of `index.css` (surfaces, ink roles, the blue
-accent) come from a validated palette, with the dark mode stepped for the dark
-surface rather than flipped from the light one. Both modes are deliberate; if
-you change one, change the other.
+### The styling
+
+The page follows the NVIDIA Research project-page template, the one
+[PlaMo](https://research.nvidia.com/labs/par/projects/plamo/) uses.
+`static/css/nvidia-project.css` is NVIDIA's own shared stylesheet, vendored
+byte-for-byte from
+`research.nvidia.com/labs/par/projects/assets/nvidia-project.css`. It supplies
+the top bar, the green section rules, `.nv-btn`, `.nv-bibtex`, the footer and
+every `--nv-*` token. It is **copied rather than hot-linked**: a GitHub Pages
+site should not depend on another origin's asset for its whole appearance, and
+hot-linking would break the page silently if NVIDIA moved it. If this page ever
+moves under `research.nvidia.com`, delete the copy and link the shared asset.
+
+`index.css` is only the parts that file does not cover: the paper head, the
+tables, the teaser canvas, the placeholder banner.
+
+Two things to know before editing:
+
+- **It is light only.** The NVIDIA template has no dark variant, so the theme
+  toggle that used to be here is gone. Adding one back means picking dark steps
+  for every `--nv-*` token, not flipping them.
+- **The shared file's `.nv-authors a` is white with a grey underline** — it is
+  written for `.nv-hero`, the black hero block this page does not use. On the
+  white paper head that renders author names invisible above their underlines.
+  `index.css` overrides it. Expect the same trap from any other `.nv-hero`
+  descendant rule you reuse outside that block.
+
+The top bar links to NVIDIA Research, the PAR Lab and its project index, with
+absolute URLs because this page is not served from that site.

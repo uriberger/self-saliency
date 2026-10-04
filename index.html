@@ -22,19 +22,32 @@
 <meta name="citation_author" content="Chechik, Gal">
 <meta name="citation_author" content="Dalal, Gal">
 
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='none' stroke='%232a78d6' stroke-width='3'/><circle cx='16' cy='16' r='4' fill='%232a78d6'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='none' stroke='%2376b900' stroke-width='3'/><circle cx='16' cy='16' r='4' fill='%2376b900'/></svg>">
+<link rel="stylesheet" href="static/css/nvidia-project.css">
 <link rel="stylesheet" href="static/css/index.css">
 </head>
 
-<body>
+<body class="nv">
 <a class="skip" href="#main">Skip to content</a>
 
+<header class="nv-topbar">
+  <div class="nv-container">
+    <a class="nv-brand" href="https://research.nvidia.com/">
+      <span class="nv-brand-mark">NVIDIA</span><span class="nv-brand-sep"></span><span>Research</span>
+    </a>
+    <nav class="nv-topnav" aria-label="NVIDIA Research">
+      <a href="https://research.nvidia.com/labs/par/">PAR Lab</a>
+      <a href="https://research.nvidia.com/labs/par/projects/">Projects</a>
+    </nav>
+  </div>
+</header>
+
 <!-- ====================================================================
-     TODO(publish): delete this entire banner once the placeholders below
-     are filled in. Each item is also marked inline with <mark class="todo">.
+     TODO(publish): delete this entire banner once the items below are done.
+     Each is also marked inline with a TODO(publish) comment.
      ==================================================================== -->
 <div class="todo-banner" id="todo-banner">
-  <div class="wrap">
+  <div class="nv-container">
     <strong>Placeholder content &mdash; not ready to publish.</strong>
     <ul>
       <li>arXiv link and ID, and the <code>arXiv:</code> field of the BibTeX entry.</li>
@@ -44,49 +57,47 @@
   </div>
 </div>
 
-<button class="theme-toggle" id="theme-toggle" type="button"
-        aria-label="Switch between light and dark theme">&#9681;</button>
-
 <main id="main">
 
 <!-- ================================ hero ================================ -->
-<header class="hero wrap">
+<div class="nv-container nv-paper-head">
   <h1>Look Where You Say You&rsquo;re Looking</h1>
-  <p class="subtitle">Self-Grounded Attention for Visual Reasoning</p>
+  <p class="nv-subtitle">Self-Grounded Attention for Visual Reasoning</p>
 
-  <!-- Homepage/ORCID links can be added by wrapping each name in an <a>. -->
-  <p class="authors">
+  <!-- TODO(publish): Uri Berger has no research.nvidia.com/person page (404);
+       wrap the name in an <a> once there is a homepage to point at. -->
+  <p class="nv-authors">
     Uri Berger<sup>1,2,3</sup>,
-    Gal Chechik<sup>1,4</sup>,
-    Gal Dalal<sup>1</sup>
+    <a href="https://research.nvidia.com/person/gal-chechik">Gal Chechik</a><sup>1,4</sup>,
+    <a href="https://research.nvidia.com/person/gal-dalal">Gal Dalal</a><sup>1</sup>
   </p>
-  <p class="affil">
+  <p class="nv-affil">
     <span><sup>1</sup>NVIDIA Research</span>
     <span><sup>2</sup>University of Melbourne</span>
     <span><sup>3</sup>The Hebrew University of Jerusalem</span>
     <span><sup>4</sup>Bar-Ilan University</span>
   </p>
 
-  <ul class="links">
-    <li><a aria-disabled="true" title="TODO(publish): arXiv link">
+  <ul class="nv-buttons">
+    <li><a class="nv-btn" aria-disabled="true" title="TODO(publish): arXiv link">
       <svg class="ico-stroke" viewBox="0 0 16 16" aria-hidden="true"><path d="M9.2 1.6H4.4a1 1 0 00-1 1v10.8a1 1 0 001 1h7.2a1 1 0 001-1V5zM9.2 1.6V5h3.4M5.7 8.4h4.6M5.7 10.8h3.2"/></svg>
       Paper</a></li>
-    <li><a aria-disabled="true" title="TODO(publish): link the repository once it is public">
+    <li><a class="nv-btn" aria-disabled="true" title="TODO(publish): link the repository once it is public">
       <svg class="ico-fill" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0a8 8 0 00-2.5 15.6c.4.07.55-.17.55-.38v-1.3C3.83 14.3 3.35 13 3.35 13c-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.23 1.88.87 2.34.67.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 014 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.14.46.55.38A8 8 0 008 0z"/></svg>
-      Code</a><span class="soon">Coming soon</span></li>
-    <li><a aria-disabled="true" title="TODO(publish): Hugging Face links">
+      Code</a><span class="nv-soon">Coming soon</span></li>
+    <li><a class="nv-btn" aria-disabled="true" title="TODO(publish): Hugging Face links">
       <svg class="ico-stroke" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l6.3 3.1L8 7.7 1.7 4.6zM1.7 8l6.3 3.1L14.3 8M1.7 11.4l6.3 3.1 6.3-3.1"/></svg>
-      Weights</a><span class="soon">Coming soon</span></li>
-    <li><a href="#bibtex">
+      Weights</a><span class="nv-soon">Coming soon</span></li>
+    <li><a class="nv-btn" href="#bibtex">
       <svg class="ico-stroke" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.1 2.2c-2 0-2.7 1.2-2.7 2.7v1.3c0 1-.5 1.5-1.4 1.8.9.3 1.4.8 1.4 1.8v1.3c0 1.5.7 2.7 2.7 2.7M9.9 2.2c2 0 2.7 1.2 2.7 2.7v1.3c0 1 .5 1.5 1.4 1.8-.9.3-1.4.8-1.4 1.8v1.3c0 1.5-.7 2.7-2.7 2.7"/></svg>
       BibTeX</a></li>
   </ul>
-</header>
+</div>
 
 <!-- ============================== teaser ================================ -->
-<section class="wrap" aria-label="Teaser">
-  <figure class="fig-narrow">
-    <div class="fig fig--dark">
+<section class="nv-section" aria-label="Teaser">
+  <div class="nv-container">
+    <figure class="nv-figure nv-figure--dark">
       <video id="teaser" playsinline muted loop controls preload="metadata"
              poster="static/images/chain-poster.webp">
         <source src="static/videos/chain.mp4" type="video/mp4">
@@ -95,14 +106,14 @@
         it miscounts, while Self-Saliency's attention lands on the people its
         reasoning names and it counts correctly.
       </video>
-    </div>
-  </figure>
+    </figure>
+  </div>
 </section>
 
 <!-- =============================== tl;dr =============================== -->
-<section class="wrap" aria-labelledby="tldr-h">
-  <h2 id="tldr-h">TL;DR</h2>
-  <div class="prose">
+<section class="nv-section nv-alt" aria-labelledby="tldr-h">
+  <div class="nv-container nv-tldr">
+    <h2 id="tldr-h">TL;DR</h2>
     <p>
       We introduce <b>Self-Saliency</b>, a method for aligning <b>where a model
       looks</b> with <b>what it talks about</b>. Self-Saliency uses a grounding
@@ -115,114 +126,113 @@
 </section>
 
 <!-- =============================== method =============================== -->
-<section class="wrap" aria-labelledby="method-h">
-  <h2 id="method-h">Method</h2>
-
-  <figure class="fig-narrow">
-    <div class="fig">
+<section class="nv-section" aria-labelledby="method-h">
+  <div class="nv-container">
+    <h2 id="method-h">Method</h2>
+    <figure class="nv-figure">
       <img src="static/images/fig2.webp" width="1800" height="642" loading="lazy"
            alt="Pipeline diagram: an input image and reasoning step feed a grounding model that produces bounding boxes; the model's visual attention produces a saliency map; the two are combined into a saliency score.">
-    </div>
-    <figcaption>
-      <b>The saliency-scoring pipeline.</b> Given an input image and reasoning
-      step, we extract bounding boxes corresponding to the mentioned image
-      regions, compute a saliency map from the model's visual attention, and
-      calculate the saliency score from the overlap between the two.
-    </figcaption>
-  </figure>
+      <figcaption>
+        <b>The saliency-scoring pipeline.</b> Given an input image and reasoning
+        step, we extract bounding boxes corresponding to the mentioned image
+        regions, compute a saliency map from the model's visual attention, and
+        calculate the saliency score from the overlap between the two.
+      </figcaption>
+    </figure>
+  </div>
 </section>
 
 <!-- =============================== results ============================== -->
-<section class="wrap" aria-labelledby="results-h">
-  <h2 id="results-h">Results</h2>
+<section class="nv-section nv-alt" aria-labelledby="results-h">
+  <div class="nv-container">
+    <h2 id="results-h">Results</h2>
 
-  <figure>
-    <div class="table-scroll">
-      <table>
-        <thead>
-          <tr class="colgroup">
-            <td></td>
-            <th colspan="3" scope="colgroup" data-span>No attention intervention</th>
-            <th colspan="3" scope="colgroup" data-span>Prior work</th>
-            <th class="col-ours" scope="colgroup" data-span>Ours</th>
-          </tr>
-          <tr>
-            <th scope="col">Benchmark</th>
-            <th scope="col">Qwen3-VL<br>8B-Instruct</th>
-            <th scope="col">Coldstart</th>
-            <th scope="col">No-Sal</th>
-            <th scope="col">VGA</th>
-            <th scope="col">Saliency-R1</th>
-            <th scope="col">EASE</th>
-            <th scope="col" class="col-ours">Self-Saliency</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><th scope="row">AlgoPuzzleVQA</th><td>32.8</td><td>36.9</td><td>39.9</td><td>34.3</td><td>38.7</td><td>36.4</td><td class="col-ours best">41.4</td></tr>
-          <tr><th scope="row">ChartQA</th><td>85.0</td><td>88.8</td><td>89.4</td><td>84.9</td><td>89.7</td><td>88.9</td><td class="col-ours best">90.0</td></tr>
-          <tr><th scope="row">CV-Bench</th><td>86.0</td><td>83.4</td><td>84.9</td><td class="best">86.1</td><td>83.8</td><td>84.2</td><td class="col-ours">85.9</td></tr>
-          <tr><th scope="row">DailyClue</th><td class="best">35.4</td><td>32.4</td><td>34.2</td><td>34.2</td><td>32.0</td><td>32.7</td><td class="col-ours">31.2</td></tr>
-          <tr><th scope="row">HallusionBench</th><td class="best">63.2</td><td>59.7</td><td>57.1</td><td>62.0</td><td>58.3</td><td>62.6</td><td class="col-ours">55.7</td></tr>
-          <tr><th scope="row">HR-Bench 4K</th><td>78.0</td><td>76.9</td><td>77.4</td><td>78.1</td><td>78.9</td><td>76.9</td><td class="col-ours best">79.5</td></tr>
-          <tr><th scope="row">HR-Bench 8K</th><td>74.1</td><td>72.9</td><td>72.0</td><td>74.2</td><td class="best">76.0</td><td>72.8</td><td class="col-ours">74.5</td></tr>
-          <tr><th scope="row">IllusionVQA</th><td>40.0</td><td>41.9</td><td>41.5</td><td>40.1</td><td class="best">43.8</td><td>40.5</td><td class="col-ours">43.5</td></tr>
-          <tr><th scope="row">LogicVista</th><td>52.5</td><td>54.9</td><td>55.1</td><td>51.3</td><td class="best">56.5</td><td>52.9</td><td class="col-ours">56.2</td></tr>
-          <tr><th scope="row">MathVerse</th><td>34.4</td><td>51.0</td><td class="best">52.8</td><td>33.8</td><td>49.5</td><td>50.4</td><td class="col-ours">50.9</td></tr>
-          <tr><th scope="row">MathVision</th><td>29.6</td><td>33.5</td><td>37.5</td><td>31.2</td><td>33.9</td><td>35.9</td><td class="col-ours best">41.5</td></tr>
-          <tr><th scope="row">MathVista</th><td>73.5</td><td>69.5</td><td>71.8</td><td class="best">73.8</td><td>71.0</td><td>70.0</td><td class="col-ours">70.4</td></tr>
-          <tr><th scope="row">MME</th><td>2375.9</td><td>2371.7</td><td>2376.1</td><td>2379.8</td><td class="best">2395.7</td><td>2395.4</td><td class="col-ours">2355.1</td></tr>
-          <tr><th scope="row">MME-RealWorld</th><td>63.7</td><td>64.2</td><td>66.7</td><td>63.8</td><td>66.4</td><td>65.1</td><td class="col-ours best">68.7</td></tr>
-          <tr><th scope="row">MMK12</th><td class="best">68.2</td><td>63.1</td><td>62.3</td><td>67.9</td><td>61.1</td><td>63.1</td><td class="col-ours">62.0</td></tr>
-          <tr><th scope="row">MMMU-Pro</th><td>40.4</td><td class="best">48.6</td><td class="best">48.6</td><td>41.9</td><td>47.7</td><td>47.1</td><td class="col-ours">48.4</td></tr>
-          <tr><th scope="row">MMStar</th><td>64.0</td><td>69.8</td><td class="best">70.9</td><td>64.7</td><td>69.9</td><td>69.5</td><td class="col-ours">69.6</td></tr>
-          <tr><th scope="row">OmniSpatial</th><td>47.4</td><td>50.3</td><td>48.2</td><td>46.8</td><td>50.2</td><td>50.2</td><td class="col-ours best">51.0</td></tr>
-          <tr><th scope="row">SalBench</th><td>43.3</td><td>60.7</td><td>59.8</td><td>43.3</td><td>62.7</td><td>58.6</td><td class="col-ours best">64.7</td></tr>
-          <tr><th scope="row">POPE</th><td>88.8</td><td>87.4</td><td>88.2</td><td>88.8</td><td>88.5</td><td>88.5</td><td class="col-ours best">88.9</td></tr>
-          <tr><th scope="row">RealWorldQA</th><td>68.5</td><td>67.1</td><td>67.8</td><td>68.4</td><td class="best">68.8</td><td>67.5</td><td class="col-ours">68.2</td></tr>
-          <tr><th scope="row">ScienceQA-IMG</th><td>94.4</td><td>96.3</td><td>97.2</td><td>94.4</td><td class="best">97.6</td><td>96.2</td><td class="col-ours">97.4</td></tr>
-          <tr><th scope="row">VisuLogic</th><td class="best">26.6</td><td>24.9</td><td>24.8</td><td>26.4</td><td>24.9</td><td>24.4</td><td class="col-ours">24.4</td></tr>
-          <tr><th scope="row">V*</th><td>84.3</td><td>79.6</td><td>79.6</td><td class="best">85.3</td><td>80.6</td><td>81.2</td><td class="col-ours">82.7</td></tr>
-          <tr><th scope="row">WeMath</th><td>69.4</td><td>68.6</td><td>74.3</td><td>68.2</td><td>73.8</td><td>71.1</td><td class="col-ours best">75.5</td></tr>
+    <figure class="nv-figure">
+      <div class="nv-table-scroll">
+        <table>
+          <thead>
+            <tr class="colgroup">
+              <td></td>
+              <th colspan="3" scope="colgroup">No attention intervention</th>
+              <th colspan="3" scope="colgroup">Prior work</th>
+              <th class="col-ours" scope="colgroup">Ours</th>
+            </tr>
+            <tr>
+              <th scope="col">Benchmark</th>
+              <th scope="col">Qwen3-VL<br>8B-Instruct</th>
+              <th scope="col">Coldstart</th>
+              <th scope="col">No-Sal</th>
+              <th scope="col">VGA</th>
+              <th scope="col">Saliency-R1</th>
+              <th scope="col">EASE</th>
+              <th scope="col" class="col-ours">Self-Saliency</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">AlgoPuzzleVQA</th><td>32.8</td><td>36.9</td><td>39.9</td><td>34.3</td><td>38.7</td><td>36.4</td><td class="col-ours best">41.4</td></tr>
+            <tr><th scope="row">ChartQA</th><td>85.0</td><td>88.8</td><td>89.4</td><td>84.9</td><td>89.7</td><td>88.9</td><td class="col-ours best">90.0</td></tr>
+            <tr><th scope="row">CV-Bench</th><td>86.0</td><td>83.4</td><td>84.9</td><td class="best">86.1</td><td>83.8</td><td>84.2</td><td class="col-ours">85.9</td></tr>
+            <tr><th scope="row">DailyClue</th><td class="best">35.4</td><td>32.4</td><td>34.2</td><td>34.2</td><td>32.0</td><td>32.7</td><td class="col-ours">31.2</td></tr>
+            <tr><th scope="row">HallusionBench</th><td class="best">63.2</td><td>59.7</td><td>57.1</td><td>62.0</td><td>58.3</td><td>62.6</td><td class="col-ours">55.7</td></tr>
+            <tr><th scope="row">HR-Bench 4K</th><td>78.0</td><td>76.9</td><td>77.4</td><td>78.1</td><td>78.9</td><td>76.9</td><td class="col-ours best">79.5</td></tr>
+            <tr><th scope="row">HR-Bench 8K</th><td>74.1</td><td>72.9</td><td>72.0</td><td>74.2</td><td class="best">76.0</td><td>72.8</td><td class="col-ours">74.5</td></tr>
+            <tr><th scope="row">IllusionVQA</th><td>40.0</td><td>41.9</td><td>41.5</td><td>40.1</td><td class="best">43.8</td><td>40.5</td><td class="col-ours">43.5</td></tr>
+            <tr><th scope="row">LogicVista</th><td>52.5</td><td>54.9</td><td>55.1</td><td>51.3</td><td class="best">56.5</td><td>52.9</td><td class="col-ours">56.2</td></tr>
+            <tr><th scope="row">MathVerse</th><td>34.4</td><td>51.0</td><td class="best">52.8</td><td>33.8</td><td>49.5</td><td>50.4</td><td class="col-ours">50.9</td></tr>
+            <tr><th scope="row">MathVision</th><td>29.6</td><td>33.5</td><td>37.5</td><td>31.2</td><td>33.9</td><td>35.9</td><td class="col-ours best">41.5</td></tr>
+            <tr><th scope="row">MathVista</th><td>73.5</td><td>69.5</td><td>71.8</td><td class="best">73.8</td><td>71.0</td><td>70.0</td><td class="col-ours">70.4</td></tr>
+            <tr><th scope="row">MME</th><td>2375.9</td><td>2371.7</td><td>2376.1</td><td>2379.8</td><td class="best">2395.7</td><td>2395.4</td><td class="col-ours">2355.1</td></tr>
+            <tr><th scope="row">MME-RealWorld</th><td>63.7</td><td>64.2</td><td>66.7</td><td>63.8</td><td>66.4</td><td>65.1</td><td class="col-ours best">68.7</td></tr>
+            <tr><th scope="row">MMK12</th><td class="best">68.2</td><td>63.1</td><td>62.3</td><td>67.9</td><td>61.1</td><td>63.1</td><td class="col-ours">62.0</td></tr>
+            <tr><th scope="row">MMMU-Pro</th><td>40.4</td><td class="best">48.6</td><td class="best">48.6</td><td>41.9</td><td>47.7</td><td>47.1</td><td class="col-ours">48.4</td></tr>
+            <tr><th scope="row">MMStar</th><td>64.0</td><td>69.8</td><td class="best">70.9</td><td>64.7</td><td>69.9</td><td>69.5</td><td class="col-ours">69.6</td></tr>
+            <tr><th scope="row">OmniSpatial</th><td>47.4</td><td>50.3</td><td>48.2</td><td>46.8</td><td>50.2</td><td>50.2</td><td class="col-ours best">51.0</td></tr>
+            <tr><th scope="row">SalBench</th><td>43.3</td><td>60.7</td><td>59.8</td><td>43.3</td><td>62.7</td><td>58.6</td><td class="col-ours best">64.7</td></tr>
+            <tr><th scope="row">POPE</th><td>88.8</td><td>87.4</td><td>88.2</td><td>88.8</td><td>88.5</td><td>88.5</td><td class="col-ours best">88.9</td></tr>
+            <tr><th scope="row">RealWorldQA</th><td>68.5</td><td>67.1</td><td>67.8</td><td>68.4</td><td class="best">68.8</td><td>67.5</td><td class="col-ours">68.2</td></tr>
+            <tr><th scope="row">ScienceQA-IMG</th><td>94.4</td><td>96.3</td><td>97.2</td><td>94.4</td><td class="best">97.6</td><td>96.2</td><td class="col-ours">97.4</td></tr>
+            <tr><th scope="row">VisuLogic</th><td class="best">26.6</td><td>24.9</td><td>24.8</td><td>26.4</td><td>24.9</td><td>24.4</td><td class="col-ours">24.4</td></tr>
+            <tr><th scope="row">V*</th><td>84.3</td><td>79.6</td><td>79.6</td><td class="best">85.3</td><td>80.6</td><td>81.2</td><td class="col-ours">82.7</td></tr>
+            <tr><th scope="row">WeMath</th><td>69.4</td><td>68.6</td><td>74.3</td><td>68.2</td><td>73.8</td><td>71.1</td><td class="col-ours best">75.5</td></tr>
 
-          <tr class="summary"><th scope="row">Mean score &uarr;</th><td>61.1</td><td>62.7</td><td>63.5</td><td>61.2</td><td>63.6</td><td>62.9</td><td class="col-ours best">64.3</td></tr>
-          <tr class="summary"><th scope="row">Mean rank &darr;</th><td>4.42</td><td>4.64</td><td>3.68</td><td>4.48</td><td>3.26</td><td>4.50</td><td class="col-ours best">3.02</td></tr>
-          <tr class="summary"><th scope="row">Wins &uarr;</th><td>4</td><td>0</td><td>3</td><td>3</td><td>6</td><td>0</td><td class="col-ours best">9</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <figcaption>
-      <b>Results across 25 benchmarks.</b> Best per benchmark in bold. Mean
-      score is computed over all 25 benchmarks after rescaling MME to [0,&nbsp;100]
-      (raw&nbsp;/&nbsp;2800). Mean rank averages the per-benchmark ranks
-      (1&nbsp;=&nbsp;best). The largest gains are on benchmarks that need
-      low-level visual saliency and multi-step reasoning &mdash; AlgoPuzzleVQA,
-      SalBench, MME-RealWorld &mdash; and, unexpectedly, on mathematical
-      reasoning (WeMath, MathVision), where Grounding-DINO was never trained to
-      operate.
-    </figcaption>
-  </figure>
+            <tr class="summary"><th scope="row">Mean score &uarr;</th><td>61.1</td><td>62.7</td><td>63.5</td><td>61.2</td><td>63.6</td><td>62.9</td><td class="col-ours best">64.3</td></tr>
+            <tr class="summary"><th scope="row">Mean rank &darr;</th><td>4.42</td><td>4.64</td><td>3.68</td><td>4.48</td><td>3.26</td><td>4.50</td><td class="col-ours best">3.02</td></tr>
+            <tr class="summary"><th scope="row">Wins &uarr;</th><td>4</td><td>0</td><td>3</td><td>3</td><td>6</td><td>0</td><td class="col-ours best">9</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figcaption>
+        <b>Results across 25 benchmarks.</b> Best per benchmark in bold. Mean
+        score is computed over all 25 benchmarks after rescaling MME to
+        [0,&nbsp;100] (raw&nbsp;/&nbsp;2800). Mean rank averages the
+        per-benchmark ranks (1&nbsp;=&nbsp;best). The largest gains are on
+        benchmarks that need low-level visual saliency and multi-step reasoning
+        &mdash; AlgoPuzzleVQA, SalBench, MME-RealWorld &mdash; and, unexpectedly,
+        on mathematical reasoning (WeMath, MathVision), where Grounding-DINO was
+        never trained to operate.
+      </figcaption>
+    </figure>
 
-  <figure class="fig-narrow spaced-lg">
-    <div class="fig">
+    <figure class="nv-figure nv-figure--narrow">
       <img src="static/images/fig3.webp" width="1800" height="1032" loading="lazy"
            alt="Qualitative examples in which Self-Saliency attends to and correctly reads small, low-level visual details.">
-    </div>
-    <figcaption>
-      <b>Qualitative examples</b> of how Self-Saliency correctly identifies
-      low-level visual information.
-    </figcaption>
-  </figure>
+      <figcaption>
+        <b>Qualitative examples</b> of how Self-Saliency correctly identifies
+        low-level visual information.
+      </figcaption>
+    </figure>
+  </div>
 </section>
 
 <!-- ============================== analysis ============================== -->
-<section class="wrap" aria-labelledby="analysis-h">
-  <h2 id="analysis-h">Analysis</h2>
+<section class="nv-section" aria-labelledby="analysis-h">
+  <div class="nv-container">
+    <h2 id="analysis-h">Analysis</h2>
 
-  <h3 class="prose subhead">
-    Training changes the text at the selected heads, and the attention across
-    all of layer 22
-  </h3>
-  <div class="prose">
+    <h3>
+      Training changes the text at the selected heads, and the attention across
+      all of layer 22
+    </h3>
     <p>
       The model can raise the reward two ways: by changing its attention, or by
       changing its text.
@@ -236,40 +246,38 @@
       Across all the heads of layer 22, attention inside the grounded regions
       increases significantly.
     </p>
-  </div>
 
-  <figure>
-    <div class="table-scroll">
-      <table>
-        <thead>
-          <tr class="colgroup">
-            <td></td>
-            <th colspan="2" scope="colgroup" data-span>Text-related</th>
-            <th colspan="2" scope="colgroup" data-span>Attention-related</th>
-          </tr>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col">Completion length</th>
-            <th scope="col">Box union area</th>
-            <th scope="col">In-region share<br>(selected heads)</th>
-            <th scope="col">In-region share<br>(layer-22 heads)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><th scope="row">Vanilla</th><td>230.0</td><td>0.533</td><td>0.462</td><td>0.612</td></tr>
-          <tr><th scope="row">Self-Saliency</th><td>149.6</td><td>0.566</td><td>0.462</td><td>0.621</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <figcaption>
-      <b>Text and attention statistics before and after training</b>, averaged
-      over 100 held-out validation samples. In-region share is attention inside
-      grounded regions divided by all visual attention.
-    </figcaption>
-  </figure>
+    <figure class="nv-figure">
+      <div class="nv-table-scroll">
+        <table>
+          <thead>
+            <tr class="colgroup">
+              <td></td>
+              <th colspan="2" scope="colgroup">Text-related</th>
+              <th colspan="2" scope="colgroup">Attention-related</th>
+            </tr>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Completion length</th>
+              <th scope="col">Box union area</th>
+              <th scope="col">In-region share<br>(selected heads)</th>
+              <th scope="col">In-region share<br>(layer-22 heads)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Vanilla</th><td>230.0</td><td>0.533</td><td>0.462</td><td>0.612</td></tr>
+            <tr><th scope="row">Self-Saliency</th><td>149.6</td><td>0.566</td><td>0.462</td><td>0.621</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figcaption>
+        <b>Text and attention statistics before and after training</b>, averaged
+        over 100 held-out validation samples. In-region share is attention inside
+        grounded regions divided by all visual attention.
+      </figcaption>
+    </figure>
 
-  <h3 class="prose subhead">Attention piles up on the image border</h3>
-  <div class="prose">
+    <h3>Attention piles up on the image border</h3>
     <p>
       Across four instruction-tuned VLMs, visual attention is enriched along the
       geometric border of the image and depleted in the center &mdash; and in
@@ -277,67 +285,63 @@
       Human annotators marking the regions that matter for answering the
       question do the opposite.
     </p>
-  </div>
 
-  <figure>
-    <div class="table-scroll">
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">Model</th>
-            <th scope="col">En border ring</th>
-            <th scope="col">En center</th>
-            <th scope="col">Largest En</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><th scope="row">Qwen3-VL-8B-Instruct</th><td>1.20</td><td>0.92</td><td>Top left, 6.64</td></tr>
-          <tr><th scope="row">InternVL3.5-8B</th><td>1.18</td><td>0.95</td><td>Bottom left, 2.29</td></tr>
-          <tr><th scope="row">GLM-4.1V-Thinking</th><td>1.50</td><td>0.82</td><td>Top right, 7.79</td></tr>
-          <tr><th scope="row">Nemotron-Omni</th><td>1.43</td><td>0.87</td><td>Top right, 3.86</td></tr>
-          <tr><th scope="row">Human boxes</th><td>0.53</td><td>1.14</td><td>Non-border, 1.87</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <figcaption>
-      <b>Attention enrichment.</b> Enrichment is the share of visual attention a
-      set of patches receives divided by the share of patches it contains;
-      En&nbsp;=&nbsp;1 means no effect. Every model is above 1 on the border ring
-      and below 1 in the center. Human boxes invert it.
-    </figcaption>
-  </figure>
+    <figure class="nv-figure">
+      <div class="nv-table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Model</th>
+              <th scope="col">En border ring</th>
+              <th scope="col">En center</th>
+              <th scope="col">Largest En</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Qwen3-VL-8B-Instruct</th><td>1.20</td><td>0.92</td><td>Top left, 6.64</td></tr>
+            <tr><th scope="row">InternVL3.5-8B</th><td>1.18</td><td>0.95</td><td>Bottom left, 2.29</td></tr>
+            <tr><th scope="row">GLM-4.1V-Thinking</th><td>1.50</td><td>0.82</td><td>Top right, 7.79</td></tr>
+            <tr><th scope="row">Nemotron-Omni</th><td>1.43</td><td>0.87</td><td>Top right, 3.86</td></tr>
+            <tr><th scope="row">Human boxes</th><td>0.53</td><td>1.14</td><td>Non-border, 1.87</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figcaption>
+        <b>Attention enrichment.</b> Enrichment is the share of visual attention
+        a set of patches receives divided by the share of patches it contains;
+        En&nbsp;=&nbsp;1 means no effect. Every model is above 1 on the border
+        ring and below 1 in the center. Human boxes invert it.
+      </figcaption>
+    </figure>
 
-  <figure class="spaced">
-    <div class="fig">
+    <figure class="nv-figure">
       <img src="static/images/fig4.webp" width="1800" height="380" loading="lazy"
            alt="Five patch-grid heatmaps. The four model maps light up along the image border with a bright corner; the human-annotation map is brightest in the middle.">
-    </div>
-    <figcaption>
-      <b>Saliency maps for different models and human-annotated boxes.</b> For
-      each model, a cell is the fraction of total visual attention assigned to
-      that image patch. For the human annotations (right), a cell is the
-      fraction of images in which that patch falls inside an annotated box.
-    </figcaption>
-  </figure>
+      <figcaption>
+        <b>Saliency maps for different models and human-annotated boxes.</b> For
+        each model, a cell is the fraction of total visual attention assigned to
+        that image patch. For the human annotations (right), a cell is the
+        fraction of images in which that patch falls inside an annotated box.
+      </figcaption>
+    </figure>
 
-  <figure class="fig-narrow spaced">
-    <div class="fig">
+    <figure class="nv-figure nv-figure--narrow">
       <img src="static/images/fig5.webp" width="1800" height="722" loading="lazy"
            alt="Two patch-grid heatmaps of the two heads used to compute the reward, before and after training. The bright top-left corner is much weaker after training and the mass is spread along the border and toward the center.">
-    </div>
-    <figcaption>
-      <b>The two heads used to compute the reward, before and after
-      training.</b> Attention is redistributed primarily from the corner sinks
-      to the image border, with a smaller fraction moving toward the center.
-    </figcaption>
-  </figure>
+      <figcaption>
+        <b>The two heads used to compute the reward, before and after
+        training.</b> Attention is redistributed primarily from the corner sinks
+        to the image border, with a smaller fraction moving toward the center.
+      </figcaption>
+    </figure>
+  </div>
 </section>
 
 <!-- ============================= ablations ============================== -->
-<section class="wrap" aria-labelledby="ablation-h">
-  <h2 id="ablation-h">Ablations</h2>
+<section class="nv-section nv-alt" aria-labelledby="ablation-h">
+  <div class="nv-container">
+    <h2 id="ablation-h">Ablations</h2>
 
-  <div class="prose">
     <p>
       Two variants change only where the target boxes come from.
       <b>Center rect</b> uses a fixed rectangle in the middle of the image
@@ -347,43 +351,44 @@
       own reasoning steps &mdash; testing whether chain-level grounding beats
       image-level text. Neither closes the gap.
     </p>
-  </div>
 
-  <figure>
-    <div class="table-scroll">
-      <table>
-        <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col">Qwen3-VL-8B<br>Instruct</th>
-            <th scope="col">Coldstart</th>
-            <th scope="col">No-Sal</th>
-            <th scope="col">Center rect</th>
-            <th scope="col">Question boxes</th>
-            <th scope="col" class="col-ours">Self-Saliency</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><th scope="row">Mean score &uarr;</th><td>61.14</td><td>62.69</td><td>63.47</td><td>63.39</td><td>63.33</td><td class="col-ours best">64.26</td></tr>
-          <tr><th scope="row">Mean rank &darr;</th><td>3.90</td><td>4.06</td><td>3.34</td><td>3.68</td><td>3.38</td><td class="col-ours best">2.64</td></tr>
-          <tr><th scope="row">Wins &uarr;</th><td class="best">7</td><td>0</td><td>3</td><td>2</td><td>5</td><td class="col-ours best">9</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <figcaption>
-      <b>Ablations across the same 25-benchmark suite.</b> Grounding the model's
-      own reasoning chain provides a meaningfully better training signal than
-      either a fixed central rectangle or the grounded question text.
-    </figcaption>
-  </figure>
+    <figure class="nv-figure">
+      <div class="nv-table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Qwen3-VL-8B<br>Instruct</th>
+              <th scope="col">Coldstart</th>
+              <th scope="col">No-Sal</th>
+              <th scope="col">Center rect</th>
+              <th scope="col">Question boxes</th>
+              <th scope="col" class="col-ours">Self-Saliency</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Mean score &uarr;</th><td>61.14</td><td>62.69</td><td>63.47</td><td>63.39</td><td>63.33</td><td class="col-ours best">64.26</td></tr>
+            <tr><th scope="row">Mean rank &darr;</th><td>3.90</td><td>4.06</td><td>3.34</td><td>3.68</td><td>3.38</td><td class="col-ours best">2.64</td></tr>
+            <tr><th scope="row">Wins &uarr;</th><td class="best">7</td><td>0</td><td>3</td><td>2</td><td>5</td><td class="col-ours best">9</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figcaption>
+        <b>Ablations across the same 25-benchmark suite.</b> Grounding the
+        model's own reasoning chain provides a meaningfully better training
+        signal than either a fixed central rectangle or the grounded question
+        text.
+      </figcaption>
+    </figure>
+  </div>
 </section>
 
 <!-- ============================== bibtex =============================== -->
-<section class="wrap" id="bibtex" aria-labelledby="bibtex-h">
-  <h2 id="bibtex-h">BibTeX</h2>
-  <div class="prose">
+<section class="nv-section" id="bibtex" aria-labelledby="bibtex-h">
+  <div class="nv-container">
+    <h2 id="bibtex-h">BibTeX</h2>
 <!-- TODO(publish): fill in the arXiv ID once the preprint is posted. -->
-<pre><code>@article{berger2026selfsaliency,
+<pre class="nv-bibtex"><code>@article{berger2026selfsaliency,
   title   = {Look Where You Say You're Looking:
              Self-Grounded Attention for Visual Reasoning},
   author  = {Berger, Uri and Chechik, Gal and Dalal, Gal},
@@ -395,8 +400,8 @@
 
 </main>
 
-<footer class="wrap">
-  <div class="prose">
+<footer class="nv-footer">
+  <div class="nv-container">
     <p>
       Evaluation runs on <a href="https://github.com/EvolvingLMMs-Lab/lmms-eval">lmms-eval</a>;
       grounding uses <a href="https://github.com/IDEA-Research/GroundingDINO">Grounding-DINO</a>;
