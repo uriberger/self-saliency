@@ -56,14 +56,20 @@ mapfile -t TRAIN_ARGS < <("$PYTHON" -m training.grpo.config "$CONFIG" --emit-fla
 
 # ---- allocate the GPUs -------------------------------------------------------
 if [[ -z "$NUM_GPUS" ]]; then
-    NUM_GPUS=$(nvidia-smi --list-gpus 2>/dev/null | wc -l)
-    [[ "$NUM_GPUS" -gt 0 ]] || { echo "no GPUs found; pass --num-gpus" >&2; exit 1; }
+    # `|| NUM_GPUS=0` is load-bearing. Under `set -e` with `pipefail`, a machine without
+    # nvidia-smi makes this pipeline exit 127 -- wc succeeds, nvidia-smi does not -- and
+    # the script dies on the assignment, before any message. That is every login node,
+    # which is exactly where --dry-run is meant to be run.
+    NUM_GPUS=$(nvidia-smi --list-gpus 2>/dev/null | wc -l) || NUM_GPUS=0
+    if [[ "$NUM_GPUS" -eq 0 && "$DRY_RUN" != true ]]; then
+        echo "no GPUs found; pass --num-gpus" >&2; exit 1
+    fi
 fi
 SIDECARS=0
 [[ "$GENERATION" == vllm ]] && SIDECARS=$(( SIDECARS + 1 ))
 [[ "$NEEDS_DINO" == true ]] && SIDECARS=$(( SIDECARS + 1 ))
 NEEDED=$(( TRAINING_RANKS + SIDECARS ))
-if (( NUM_GPUS < NEEDED )); then
+if (( NUM_GPUS < NEEDED )) && [[ "$DRY_RUN" != true ]]; then
     echo "ERROR: $ARM needs $TRAINING_RANKS training ranks + $SIDECARS sidecar(s) = $NEEDED GPUs, have $NUM_GPUS." >&2
     echo "       Reducing the rank count changes prompts-per-step and therefore the" >&2
     echo "       total optimizer steps, so it is not a free knob -- see the config." >&2
@@ -75,7 +81,7 @@ DINO_GPU=""; if [[ "$NEEDS_DINO" == true ]]; then DINO_GPU=$NEXT; NEXT=$(( NEXT 
 DINO_DESC=$([[ -n "$DINO_GPU" ]] && echo "GPU $DINO_GPU, port $DINO_PORT" || echo "not needed by this arm")
 GEN_DESC=$([[ -n "$VLLM_GPU" ]] && echo "vLLM on GPU $VLLM_GPU, port $VLLM_PORT" || echo "in-process (use_vllm=False)")
 TRAIN_GPUS=$(seq -s, "$SIDECARS" $(( SIDECARS + TRAINING_RANKS - 1 )))
-IDLE=$(( NUM_GPUS - NEEDED ))
+IDLE=$(( NUM_GPUS > NEEDED ? NUM_GPUS - NEEDED : 0 ))
 
 cat <<EOF
 === $ARM ===
