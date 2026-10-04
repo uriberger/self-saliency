@@ -140,7 +140,12 @@ fi
 # classifier's `checkpoint/steps_classifier/best` default -- are relative to $REPO. Run
 # this from inside third_party/trl_repo and both resolve under the TRL checkout, where
 # neither exists.
-CUDA_VISIBLE_DEVICES="$TRAIN_GPUS" accelerate launch \
+# `$PYTHON -m accelerate.commands.launch`, not a bare `accelerate`. Everything else here
+# runs through $PYTHON, so a bare `accelerate` is the one command that ignores
+# SELFSAL_PYTHON and takes whatever is first on PATH -- which, in a batch job that sets
+# SELFSAL_PYTHON instead of activating the env, is nothing: `accelerate: command not
+# found`, after both sidecars have already loaded their models onto GPUs.
+CUDA_VISIBLE_DEVICES="$TRAIN_GPUS" "$PYTHON" -m accelerate.commands.launch \
     --config_file "$TRL_REPO/examples/accelerate_configs/deepspeed_zero3.yaml" \
     --num_processes "$TRAINING_RANKS" \
     "$TRL_REPO/examples/scripts/grpo_vlm_qwen3.py" \
