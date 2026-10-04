@@ -33,6 +33,11 @@ evaluation/results/**/*_samples_*.jsonl
 # view of the tracked results.json files, regenerable from them, so it is not tracked.
 evaluation/results/*.html
 
+# Scratch job harnesses for one-off checks. They hardcode this cluster's account,
+# partition and absolute paths, which is exactly what tests/test_no_private_paths.py
+# keeps out of the tree -- so they stay local and the real runners stay the interface.
+experiments/_smoke*.sbatch
+
 # Working handoff for the next session. Not repository documentation:
 # docs/publishing.md and docs/provenance.md are what a reader should find.
 NEXT_SESSION.md

@@ -133,11 +133,17 @@ for _ in $(seq 1 120); do
 done
 fi
 
-cd "$TRL_REPO"
+# STAY IN $REPO. The two files below are the only reason this ever chdir'd into the TRL
+# checkout, and naming them absolutely is cheaper than the bug that cost: the trainer
+# inherits the launcher's working directory, and the repo-relative asset paths it is
+# given -- `--model_name_or_path checkpoint/...` from the arm config, and the step
+# classifier's `checkpoint/steps_classifier/best` default -- are relative to $REPO. Run
+# this from inside third_party/trl_repo and both resolve under the TRL checkout, where
+# neither exists.
 CUDA_VISIBLE_DEVICES="$TRAIN_GPUS" accelerate launch \
-    --config_file examples/accelerate_configs/deepspeed_zero3.yaml \
+    --config_file "$TRL_REPO/examples/accelerate_configs/deepspeed_zero3.yaml" \
     --num_processes "$TRAINING_RANKS" \
-    examples/scripts/grpo_vlm_qwen3.py \
+    "$TRL_REPO/examples/scripts/grpo_vlm_qwen3.py" \
     "${TRAIN_ARGS[@]}" \
     ${VLLM_GPU:+--vllm_server_host 127.0.0.1 --vllm_server_port "$VLLM_PORT"} \
     --report_to wandb \
