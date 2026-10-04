@@ -11,13 +11,30 @@
   --measure: 62rem;   /* prose column; --nv-max is the page's outer width */
 }
 
+/* ---------- type scale ----------
+   Every size in the shared stylesheet is an absolute px value, so raising the
+   body alone scales nothing: each one has to be lifted by hand. These are the
+   vendored sizes at roughly 1.15x, rounded to whole px. This block is the only
+   place that overrides nvidia-project.css purely for size — change the factor
+   here rather than sprinkling sizes through the rules below. */
+
+body.nv            { font-size: 19px; }
+.nv-brand          { font-size: 17px; }
+.nv-topnav         { font-size: 16px; }
+.nv-btn            { font-size: 17px; }
+.nv-section h2     { font-size: 32px; }
+.nv-section h3     { font-size: 23px; }
+.nv-figure figcaption { font-size: 16px; }
+.nv-bibtex         { font-size: 15px; }
+.nv-footer         { font-size: 15px; }
+
 /* ---------- placeholder banner (delete before publishing) ---------- */
 
 .todo-banner {
   background: #fff8e1;
   border-bottom: 1px solid #f0d58a;
   color: #6b4a00;
-  font-size: 14px;
+  font-size: 16px;
   padding: 12px 0;
 }
 .todo-banner strong { font-weight: 700; }
@@ -42,7 +59,7 @@
 
 .nv-paper-head h1 {
   margin: 0;
-  font-size: clamp(28px, 3.6vw, 42px);
+  font-size: clamp(32px, 4.1vw, 48px);
   line-height: 1.18;
   font-weight: 800;
   letter-spacing: -0.01em;
@@ -54,7 +71,7 @@
 .nv-paper-head .nv-subtitle {
   margin: 12px auto 0;
   max-width: 46ch;
-  font-size: 19px;
+  font-size: 22px;
   color: var(--nv-ink-3);
   text-wrap: balance;
 }
@@ -66,7 +83,7 @@
 .nv-paper-head .nv-authors {
   margin: 26px auto 0;
   max-width: 60ch;
-  font-size: 18px;
+  font-size: 21px;
   color: var(--nv-green-dark);
 }
 .nv-paper-head .nv-authors sup { font-size: 0.7em; color: var(--nv-ink-3); }
@@ -81,7 +98,7 @@
 .nv-paper-head .nv-affil {
   margin: 10px auto 0;
   max-width: 68ch;
-  font-size: 14.5px;
+  font-size: 17px;
   color: var(--nv-ink-3);
 }
 /* each affiliation is atomic: lines break between them, never inside a name */
@@ -108,7 +125,7 @@
   border-color: var(--nv-rule);
 }
 .nv-soon {
-  font-size: 11px; font-weight: 700;
+  font-size: 12.5px; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--nv-ink-3);
 }
@@ -123,8 +140,8 @@
 /* ---------- TL;DR ---------- */
 
 .nv-tldr p {
-  font-size: 21px;
-  line-height: 1.62;
+  font-size: 24px;
+  line-height: 1.6;
   color: var(--nv-ink);
   max-width: 60ch;
 }
@@ -158,7 +175,7 @@
 table {
   border-collapse: collapse;
   width: 100%;
-  font-size: 14px;
+  font-size: 16px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -179,7 +196,7 @@ thead th {
   background: var(--nv-white);
   color: var(--nv-ink-2);
   font-weight: 700;
-  font-size: 13px;
+  font-size: 15px;
   vertical-align: bottom;
   border-bottom: 2px solid var(--nv-ink);
 }
@@ -197,7 +214,7 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 
 .colgroup th {
   text-align: center;
-  font-size: 11.5px; font-weight: 700;
+  font-size: 13px; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--nv-ink-3);
   border-bottom: 1px solid var(--nv-rule);
@@ -216,6 +233,6 @@ tr.summary td, tr.summary th[scope="row"] { font-weight: 700; }
 
 @media (max-width: 640px) {
   .nv-paper-head { padding-top: 36px; }
-  .nv-tldr p { font-size: 19px; }
+  .nv-tldr p { font-size: 21px; }
   th, td { padding: 7px 10px; }
 }
