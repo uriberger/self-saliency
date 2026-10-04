@@ -10,11 +10,11 @@ index.html            the whole page
 .nojekyll             serve the files as-is; do not run Jekyll over them
 static/css/index.css  design tokens + layout
 static/js/index.js    theme toggle, motion-respecting teaser playback
-static/images/        figures 1-5 (WebP, from the paper PDF), poster, social card
+static/images/        figures 2-5 (WebP, from the paper PDF), poster, social card
 static/videos/        the teaser clip
 ```
 
-Total payload is about 1.7 MB.
+Total payload is about 3.5 MB, nearly all of it the teaser.
 
 ## Publishing it
 
@@ -33,6 +33,9 @@ or a `TODO(publish)` comment, so nothing ships silently:
 
 - **arXiv link and ID** — the link button, the `arXiv:` field of the BibTeX
   entry, and the `citation_arxiv_id` / `citation_pdf_url` meta tags.
+- **The code repository.** The Code button is deliberately dead and captioned
+  "Coming soon" until `main` is public; the footer does not link it either, so
+  the URL is not advertised anywhere on the page.
 - **Hugging Face links** for the released checkpoints (one repository per arm —
   see `docs/publishing.md` on `main`).
 
@@ -43,33 +46,27 @@ Delete the banner element once they are all done.
 
 ## Where the assets came from
 
-Figures 1–5 are rendered straight from `self_saliency_final.pdf` at ~1800 px
+Figures 2–5 are rendered straight from `self_saliency_final.pdf` at ~1800 px
 wide and converted to WebP. Regenerating them means re-running the extraction
-against the current PDF — they are not hand-edited.
+against the current PDF — they are not hand-edited. Paper Figure 1 is no longer
+shown on the page (the teaser carries that example instead), but
+`og-image.jpg`, the social card, is still rendered from it.
 
-The teaser is `fig1_steps_video.py` in the research repository, on
-CV-Bench row 167:
+The teaser is the research repository's
+`outputs/fig1-multistep/video-count-soccer/landscape/chain.mp4`: two counting
+questions, vanilla and Self-Saliency side by side, concatenated — see
+`concat.json` beside it for the two source clips and their samples.
 
-```
---run-dir outputs/saliency_viz/fig1d-search --model ours \
---sample sample_167_row000167 \
---smooth 1.0 --upsample map --overlay-mode alpha --alpha 0.8 \
---map-label "" \
---question "Estimate the real-world distances between objects in this image. \
-Which object is closer to the chair (red box), the bookcase (blue box) or the \
-table (green box)? (A) bookcase (B) table"
-```
+It is **not** committed as rendered. The source is 2066×1586 and 6.8 MB, which
+is too heavy to put in front of a reader, so it is transcoded to 1600×1228 with
+`libx264 -crf 25 -preset slow -tune stillimage +faststart` (2.8 MB). `tune
+stillimage` is the right one here: the clip is held frames with dissolves
+between them, not motion. Re-run that transcode rather than editing the file in
+place.
 
-`--map-label ""` drops the `step k of n · glimpse` suffix; `glimpse` is an
-internal saliency-map name and means nothing to a reader. The overlay knobs
-were not recorded anywhere and were recovered by sweeping against an earlier
-render until a frame matched pixel-for-pixel.
-
-That command reproduces this clip as long as the script is at `ec94522` or
-later. Frames are 1346×716; an earlier render of the same sample was 694 tall,
-because `355c4ef` reserved a footer line and centred the chain against the
-picture. `--smooth` is cosmetic and its sigma is in patches, so it does not
-carry over to a sample on a different grid.
+The video's own canvas is `#111111`; `.fig--dark` in the stylesheet matches it
+so the clip does not sit inside a lighter box. If the clip is re-rendered on a
+different background, change that value too.
 
 ## Editing
 

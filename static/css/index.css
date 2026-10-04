@@ -176,19 +176,8 @@ mark.todo {
   text-wrap: balance;
 }
 
-.venue {
-  display: inline-block;
-  margin-top: 1.5rem;
-  font-size: 0.85rem; font-weight: 600;
-  letter-spacing: 0.04em; text-transform: uppercase;
-  color: var(--accent);
-  background: var(--accent-wash);
-  padding: 0.3rem 0.75rem;
-  border-radius: 999px;
-}
-
 .authors {
-  margin: 1.5rem auto 0;
+  margin: 2rem auto 0;
   max-width: 52ch;
   font-size: 1.02rem;
   color: var(--ink);
@@ -197,21 +186,30 @@ mark.todo {
 .authors sup { color: var(--ink-muted); font-size: 0.72em; padding-left: 0.1em; }
 
 .affil {
-  margin: 0.5rem auto 0;
-  max-width: 52ch;
+  margin: 0.55rem auto 0;
+  max-width: 60ch;
   font-size: 0.92rem;
   color: var(--ink-2);
 }
+/* each affiliation is atomic: lines break between them, never inside a name */
+.affil span { display: inline-block; white-space: nowrap; margin: 0 0.55rem; }
 .affil sup { color: var(--ink-muted); font-size: 0.78em; }
 
 /* link buttons */
 
 .links {
-  display: flex; flex-wrap: wrap; justify-content: center;
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;
   gap: 0.6rem;
   margin-top: 2rem;
   padding: 0;
   list-style: none;
+}
+.links li { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; }
+
+.soon {
+  font-size: 0.7rem; font-weight: 650;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-muted);
 }
 .links a {
   display: inline-flex; align-items: center; gap: 0.45rem;
@@ -252,8 +250,9 @@ figure { margin: 0; }
   display: block; width: 100%; height: auto;
   border-radius: 5px;
 }
-/* the teaser is rendered on its own near-black canvas */
-.fig--dark { background: #1c1c1c; border-color: rgba(255, 255, 255, 0.10); }
+/* the teaser is rendered on its own near-black canvas; match it so the video
+   does not sit in a lighter box */
+.fig--dark { background: #111111; border-color: rgba(255, 255, 255, 0.10); }
 
 figcaption {
   max-width: var(--measure);
@@ -272,42 +271,6 @@ figcaption b { color: var(--ink); font-weight: 620; }
 
 /* a centred sub-heading inside a section */
 .subhead { text-align: center; }
-
-/* ---------- KPI row ---------- */
-
-.kpis {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-  gap: 1rem;
-  max-width: 52rem;
-  margin: 0 auto 2.5rem;
-  padding: 0;
-  list-style: none;
-}
-.kpi {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1.25rem 1.35rem;
-}
-.kpi dt {
-  font-size: 0.8rem; font-weight: 600;
-  letter-spacing: 0.04em; text-transform: uppercase;
-  color: var(--ink-muted);
-}
-.kpi dd {
-  margin: 0.35rem 0 0;
-  font-size: 2.6rem; font-weight: 680;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-}
-.kpi .note {
-  display: block;
-  margin-top: 0.35rem;
-  font-size: 0.85rem; font-weight: 450;
-  letter-spacing: 0;
-  color: var(--ink-2);
-}
 
 /* ---------- tables ---------- */
 
@@ -331,6 +294,9 @@ th, td {
   white-space: nowrap;
   border-bottom: 1px solid var(--rule);
 }
+
+/* losing cells recede, so the winner carries both weight and ink contrast */
+tbody td { color: var(--ink-2); }
 
 thead th {
   position: sticky; top: 0;
@@ -366,7 +332,10 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 }
 .colgroup th[data-span] { border-bottom: 1px solid var(--baseline); }
 
-td.best { font-weight: 700; color: var(--ink); }
+/* the winner carries weight AND ink contrast: losing cells sit at secondary ink,
+   so the bold reads at a glance without recruiting a hue, which would collide
+   with the "Ours" column wash */
+td.best { font-weight: 800; color: var(--ink); }
 
 .col-ours { background: var(--accent-wash); }
 thead th.col-ours { background: var(--accent-wash); }
@@ -374,47 +343,6 @@ thead th.col-ours { background: var(--accent-wash); }
 tr.summary th[scope="row"], tr.summary td { border-top: 1px solid var(--baseline); }
 tr.summary td, tr.summary th[scope="row"] { font-weight: 620; }
 tr.summary:first-of-type td { padding-top: 0.6rem; }
-
-/* ---------- equation ---------- */
-
-.eq {
-  display: flex; align-items: center; justify-content: center;
-  gap: 0.6rem;
-  margin: 1.75rem auto;
-  padding: 1.25rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  font-size: 1.02rem;
-}
-.frac { display: inline-flex; flex-direction: column; text-align: center; }
-.frac > span { padding: 0.2rem 0.6rem; }
-.frac > span:first-child { border-bottom: 1.5px solid var(--ink-2); }
-.eq i { font-style: italic; }
-.eq sub { font-size: 0.72em; }
-
-/* ---------- steps list ---------- */
-
-.steps { counter-reset: step; list-style: none; padding: 0; margin: 1.5rem 0 0; }
-.steps li {
-  counter-increment: step;
-  position: relative;
-  padding-left: 2.6rem;
-  margin-bottom: 1.1rem;
-  color: var(--ink-2);
-}
-.steps li::before {
-  content: counter(step);
-  position: absolute; left: 0; top: 0.05rem;
-  width: 1.75rem; height: 1.75rem;
-  display: grid; place-items: center;
-  background: var(--accent-wash);
-  color: var(--accent);
-  border-radius: 50%;
-  font-size: 0.85rem; font-weight: 660;
-  font-variant-numeric: tabular-nums;
-}
-.steps b { color: var(--ink); font-weight: 620; }
 
 /* ---------- bibtex ---------- */
 
@@ -444,6 +372,5 @@ footer p { margin: 0.4rem 0; }
 @media (max-width: 40rem) {
   body { font-size: 16px; }
   section { padding-block: 2.5rem; }
-  .kpi dd { font-size: 2.1rem; }
   th, td { padding: 0.45rem 0.6rem; }
 }
