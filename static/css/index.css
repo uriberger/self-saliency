@@ -28,19 +28,6 @@ body.nv            { font-size: 19px; }
 .nv-bibtex         { font-size: 15px; }
 .nv-footer         { font-size: 15px; }
 
-/* ---------- placeholder banner (delete before publishing) ---------- */
-
-.todo-banner {
-  background: #fff8e1;
-  border-bottom: 1px solid #f0d58a;
-  color: #6b4a00;
-  font-size: 16px;
-  padding: 12px 0;
-}
-.todo-banner strong { font-weight: 700; }
-.todo-banner ul { margin: 6px 0 0; padding-left: 20px; }
-.todo-banner code { font-family: var(--nv-mono); font-size: 0.9em; }
-
 .skip { position: absolute; left: -9999px; }
 .skip:focus {
   left: 16px; top: 16px; z-index: 100;

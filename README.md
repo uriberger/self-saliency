@@ -26,30 +26,30 @@ Total payload is about 3.5 MB, nearly all of it the teaser.
 Note that GitHub Pages on a *private* repository needs a paid plan; on the free
 plan the site only builds once the repository is public.
 
-## Before it goes live
+## Still to land
 
-`index.html` opens with a yellow placeholder banner listing everything still
-unresolved. Every one of those is also marked inline with `<mark class="todo">`
-or a `TODO(publish)` comment, so nothing ships silently:
+The page is meant to be live as it stands; the placeholder banner is gone and
+nothing on it is a stub. Two artefacts are not out yet, and each is represented
+by a dead button captioned "Coming soon" rather than by a link that 404s:
 
-- **The code repository.** The Code button is deliberately dead and captioned
-  "Coming soon" until `main` is public; the footer does not link it either, so
-  the URL is not advertised anywhere on the page.
-- **Hugging Face links** for the released checkpoints (one repository per arm —
-  see `docs/publishing.md` on `main`).
+- **The code repository.** The Code button is inert and the footer does not link
+  it either, so the URL is not advertised anywhere on the page. To release:
+  make `main` public, point the button at it and drop the caption.
+- **The weights.** A Hugging Face repository per arm — see `docs/publishing.md`
+  on `main`. Same change: give the button an `href` and remove its caption.
+
+Each dead button also carries a plain-English `title`, because that attribute
+is a tooltip a visitor can read. Never park a note to yourself in one.
 
 The paper is on arXiv as
 [2610.05023](https://arxiv.org/abs/2610.05023) (v1, 2026-10-04). The Paper
-button, the BibTeX entry and the `citation_*` meta tags all carry that id;
-if a v2 goes up, none of them need to change — arXiv's unversioned URLs
-resolve to the latest.
+button, the BibTeX entry and the `citation_*` meta tags all carry that id; if a
+v2 goes up, none of them need to change — arXiv's unversioned URLs resolve to
+the latest.
 
-Authors are filled in. Gal Chechik and Gal Dalal link to their
-`research.nvidia.com/person/` pages; Uri Berger has none (that URL 404s), so
-the green is set on the paragraph rather than per-name. Add a link by wrapping
-the name in an `<a>`.
-
-Delete the banner element once they are all done.
+Gal Chechik and Gal Dalal link to their `research.nvidia.com/person/` pages;
+Uri Berger has none (that URL 404s), so the green is set on the paragraph
+rather than per-name. Add a link by wrapping the name in an `<a>`.
 
 ## Where the assets came from
 
