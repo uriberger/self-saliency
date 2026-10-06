@@ -74,12 +74,6 @@ scoring it zero, and those benchmarks fall back to exact matching and under-repo
 [docs/install.md §4](docs/install.md) has the rest, including how to point it at another
 OpenAI-compatible endpoint.
 
-## Status
-
-Private, pending review. The paper is under double-blind review and promises code and
-weights on acceptance; **[docs/publishing.md](docs/publishing.md) is what has to happen
-first**, starting with the fact that the git history is authored under a real name.
-
 ## Derived work, and its licences
 
 This repository is Apache-2.0 (see [LICENSE](LICENSE)). Parts of it are derived from other
