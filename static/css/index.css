@@ -124,11 +124,16 @@ body.nv            { font-size: 19px; }
   color: var(--nv-ink-3) !important;
   border-color: var(--nv-rule);
 }
-.nv-soon {
+/* the small line under a button: the paper's arXiv id, or a release status.
+   The status variant is upper-cased; an identifier must not be, or 2610.05023
+   arrives under a shouted "ARXIV:". */
+.nv-btn-note {
   font-size: 12.5px; font-weight: 700;
-  letter-spacing: 0.08em; text-transform: uppercase;
+  letter-spacing: 0.03em;
   color: var(--nv-ink-3);
+  font-variant-numeric: tabular-nums;
 }
+.nv-btn-note--soon { letter-spacing: 0.08em; text-transform: uppercase; }
 
 .nv-btn svg { width: 1.05em; height: 1.05em; flex: none; }
 .nv-btn svg.ico-fill { fill: currentColor; }

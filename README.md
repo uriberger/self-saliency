@@ -32,16 +32,22 @@ plan the site only builds once the repository is public.
 unresolved. Every one of those is also marked inline with `<mark class="todo">`
 or a `TODO(publish)` comment, so nothing ships silently:
 
-- **arXiv link and ID** — the link button, the `arXiv:` field of the BibTeX
-  entry, and the `citation_arxiv_id` / `citation_pdf_url` meta tags.
 - **The code repository.** The Code button is deliberately dead and captioned
   "Coming soon" until `main` is public; the footer does not link it either, so
   the URL is not advertised anywhere on the page.
 - **Hugging Face links** for the released checkpoints (one repository per arm —
   see `docs/publishing.md` on `main`).
 
-Authors are filled in. They carry no homepage links; add them by wrapping each
-name in the `.authors` paragraph in an `<a>`.
+The paper is on arXiv as
+[2610.05023](https://arxiv.org/abs/2610.05023) (v1, 2026-10-04). The Paper
+button, the BibTeX entry and the `citation_*` meta tags all carry that id;
+if a v2 goes up, none of them need to change — arXiv's unversioned URLs
+resolve to the latest.
+
+Authors are filled in. Gal Chechik and Gal Dalal link to their
+`research.nvidia.com/person/` pages; Uri Berger has none (that URL 404s), so
+the green is set on the paragraph rather than per-name. Add a link by wrapping
+the name in an `<a>`.
 
 Delete the banner element once they are all done.
 
