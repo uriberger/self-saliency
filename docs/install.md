@@ -94,9 +94,19 @@ lands in `~/.cache/huggingface` unless you say otherwise. On a cluster, where th
 usually a small quota, export it alongside `SELFSAL_DATA` — every `submit.sh` here
 already requires it.
 
-The step classifier's checkpoint is needed by training and by every probe; point
-`SELFSAL_STEPS_CKPT` at it, or put it in `checkpoint/steps_classifier/best`. To train it
-from scratch, see `selfsal/steps/make_data.py` and `selfsal/steps/train.py`.
+The step classifier's checkpoint is needed by training and by every probe — it finds the
+*observe* steps, which are the only ones the saliency reward scores. **Download it**
+(422 MB; see the arms table in [reproduce.md](reproduce.md) for the link), then either
+point `SELFSAL_STEPS_CKPT` at it or put it in `checkpoint/steps_classifier/best`:
+
+```bash
+export SELFSAL_STEPS_CKPT=/somewhere/selfsal-steps-classifier
+```
+
+Training it from scratch instead is not currently a route for anyone outside NVIDIA:
+`selfsal/steps/make_data.py` distils the labels from Gemini 2.5 Pro through an internal
+gateway, over reasoning chains that are not released. See
+[publishing.md](publishing.md) §5.
 
 ## 4. The judge
 

@@ -117,6 +117,35 @@ The paper promises weights as well as code. They are not in this repository and 
 not be: the adapters are ~116 MB each and the merged models are far larger. A Hugging Face
 repository per arm, linked from `docs/reproduce.md`, is the obvious home.
 
+**There are TEN models, not nine.** The tenth is the step classifier, and it is the one
+that blocks everything else.
+
+| | size | note |
+|---|---|---|
+| the nine arms and bases | ~153 GB | cold start, six adapters, EASE, DAPO |
+| **step classifier** | **422 MB** | **a clone cannot train or probe without it** |
+
+The GRPO trainer loads it to segment every chain, and so do all four attention probes: no
+classifier, no saliency reward, no Section 5. It is also not derivable from what is
+released. `docs/install.md` says "to train it from scratch, see `selfsal/steps/make_data.py`",
+but that distils from Gemini 2.5 Pro — which no public OpenAI endpoint serves, see section
+2 — over reasoning chains that are not released either. Both routes are closed, so the
+weights have to go out.
+
+`tools/package_steps_classifier.py` builds the repository, and
+`docs/model_cards/steps_classifier.md` is its card. The packaging rewrites `head.pt` as
+`head.safetensors` — the same tensors, but a 1.2 MB `torch.load` of a file fetched over
+the network executes whatever is in it. It deliberately does NOT repackage the model as an
+`AutoModel`: the encoder is a stock `T5EncoderModel`, the head is a bespoke MLP, and there
+is no stock T5 classification head matching it, so an Auto path would mean shipping a
+custom modeling file behind `trust_remote_code` to fake a standalone load that is not
+real. The card states the dependency instead, and gives the six lines to rebuild the head.
+
+The card carries the input contract, which is the part that silently breaks: the model was
+fitted on `[STEP] ... [CHAIN] Question: ... Chain: ...` with `include_chain: true`, and on
+the label order `plan, observe, deduce, none`. Classify a bare sentence and you are running
+a different model. Same argument as `selfsal/data/prompt.py` makes for the policy weights.
+
 ## 6. Licence
 
 `LICENSE` is Apache-2.0, matching every file header. Note the derived work:

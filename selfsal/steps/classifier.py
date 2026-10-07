@@ -193,7 +193,16 @@ class StepClassifier(nn.Module):
         obj = cls(num_labels=num_labels,
                   include_chain=bool(cfg.get("include_chain", True)),
                   _encoder=encoder)
-        obj.head.load_state_dict(torch.load(ckpt / "head.pt", map_location="cpu"))
+        # Prefer safetensors, fall back to the pickle. A published checkpoint ships
+        # `head.safetensors` (see tools/package_steps_classifier.py) because a 1.2 MB
+        # `torch.load` of a file fetched from the internet executes whatever is in it.
+        # Locally-trained checkpoints still write head.pt, so both are read.
+        head_st = ckpt / "head.safetensors"
+        if head_st.exists():
+            from safetensors.torch import load_file
+            obj.head.load_state_dict(load_file(str(head_st), device="cpu"))
+        else:
+            obj.head.load_state_dict(torch.load(ckpt / "head.pt", map_location="cpu"))
         obj._tokenizer = AutoTokenizer.from_pretrained(ckpt / "tokenizer")
         if device is None:
             device = "cuda" if torch.cuda.is_available() else "cpu"
