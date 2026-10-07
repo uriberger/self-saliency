@@ -154,6 +154,14 @@ body.nv            { font-size: 19px; }
 
 .nv-figure figcaption b { color: var(--nv-ink-2); font-weight: 700; }
 .nv-figure--narrow { max-width: 54rem; }
+.nv-figure--half   { max-width: 27rem; }
+
+/* the significance key under a caption: same size and colour, its own block */
+.nv-footnotes {
+  display: block;
+  margin-top: 8px;
+  font-variant-numeric: tabular-nums;
+}
 
 /* ---------- tables ---------- */
 
@@ -216,8 +224,11 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 .col-ours { background: rgba(118, 185, 0, 0.09); }
 thead th.col-ours { background: rgba(118, 185, 0, 0.09); }
 
-tr.summary th[scope="row"], tr.summary td { border-top: 2px solid var(--nv-ink); }
+/* the summary rows lead the table, so the rule that sets them apart goes under
+   the last of them rather than over the first */
 tr.summary td, tr.summary th[scope="row"] { font-weight: 700; }
+tbody:first-of-type tr.summary:last-child th[scope="row"],
+tbody:first-of-type tr.summary:last-child td { border-bottom: 2px solid var(--nv-ink); }
 
 /* ---------- footer ---------- */
 

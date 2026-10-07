@@ -53,11 +53,24 @@ rather than per-name. Add a link by wrapping the name in an `<a>`.
 
 ## Where the assets came from
 
-Figures 2–5 are rendered straight from `self_saliency_final.pdf` at ~1800 px
+Figures 3 and 5 are rendered straight from `self_saliency_final.pdf` at ~1800 px
 wide and converted to WebP. Regenerating them means re-running the extraction
 against the current PDF — they are not hand-edited. Paper Figure 1 is no longer
 shown on the page (the teaser carries that example instead), but
 `og-image.jpg`, the social card, is still rendered from it.
+
+Two are not straight from the PDF:
+
+- **`fig2.webp`** is `pipeline_with_rewards.png` from the research repository,
+  not the paper's Figure 2. It is the same pipeline with the three reward terms
+  and their path into GRPO drawn on.
+- **`fig4.webp`** is the paper's Figure 4 with a vertical rule added at
+  x&nbsp;=&nbsp;1400 of the 1801 px render, in the gutter between `nemotron` and
+  `human boxes`, to separate the four models from the human annotation. The
+  gutter was found by scanning for columns that are white across the plot band,
+  so the rule sits between panels rather than over one. Nothing else in the
+  figure is touched. Re-extracting Figure 4 from the PDF drops the rule; re-run
+  that step if you do.
 
 The teaser is the research repository's
 `outputs/fig1-multistep/video-count-soccer/landscape/chain.mp4`: two counting
