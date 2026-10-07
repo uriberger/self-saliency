@@ -23,8 +23,8 @@ body.nv            { font-size: 19px; }
 .nv-topnav         { font-size: 16px; }
 .nv-btn            { font-size: 17px; }
 .nv-section h2     { font-size: 32px; }
-.nv-section h3     { font-size: 23px; }
-.nv-figure figcaption { font-size: 16px; }
+.nv-section h3     { font-size: 26px; }
+.nv-figure figcaption { font-size: 18.5px; }
 .nv-bibtex         { font-size: 15px; }
 .nv-footer         { font-size: 15px; }
 
@@ -132,8 +132,8 @@ body.nv            { font-size: 19px; }
 /* ---------- TL;DR ---------- */
 
 .nv-tldr p {
-  font-size: 24px;
-  line-height: 1.6;
+  font-size: 27px;
+  line-height: 1.58;
   color: var(--nv-ink);
   max-width: 60ch;
 }
@@ -141,7 +141,10 @@ body.nv            { font-size: 19px; }
 
 /* ---------- sections ---------- */
 
-.nv-section p { max-width: var(--measure); }
+/* Section copy and captions both go up ~1.15x, keeping the gap between them: 22/18.5
+   is the 19/16 they were. h3 and the TL;DR move with them, since both sizes exist to
+   sit a fixed step above body copy -- raise the body alone and h3 lands on top of it. */
+.nv-section p { max-width: var(--measure); font-size: 22px; }
 .nv-section h3 { font-weight: 700; }
 .nv-section h3:first-of-type { margin-top: 0; }
 
@@ -154,7 +157,7 @@ body.nv            { font-size: 19px; }
 
 .nv-figure figcaption b { color: var(--nv-ink-2); font-weight: 700; }
 .nv-figure--narrow { max-width: 54rem; }
-.nv-figure--half   { max-width: 27rem; }
+.nv-figure--mid    { max-width: 40.5rem; }   /* 1.5x the half-width it replaced */
 
 /* the significance key under a caption: same size and colour, its own block */
 .nv-footnotes {
@@ -236,6 +239,6 @@ tbody:first-of-type tr.summary:last-child td { border-bottom: 2px solid var(--nv
 
 @media (max-width: 640px) {
   .nv-paper-head { padding-top: 36px; }
-  .nv-tldr p { font-size: 21px; }
+  .nv-tldr p { font-size: 24px; }
   th, td { padding: 7px 10px; }
 }
