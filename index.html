@@ -285,12 +285,16 @@
     </figure>
 
     <figure class="nv-figure nv-figure--half">
-      <img src="static/images/fig5.webp" width="1800" height="722" loading="lazy"
-           alt="Two patch-grid heatmaps of the two heads used to compute the reward, before and after training. The bright top-left corner is much weaker after training and the mass is spread along the border and toward the center.">
+      <img src="static/images/fig5.webp" width="1600" height="694" loading="lazy"
+           alt="Two patch-grid heatmaps of the two heads used to compute the reward, before and after training. Before training the top-left corner is violet, the colour reserved for patches above 16 times a fair share. After training the same corner is red, inside the scale, and the attention is spread along the border and toward the center.">
       <figcaption>
         <b>The two heads used to compute the reward, before and after
         training.</b> Attention is redistributed primarily from the corner sinks
         to the image border, with a smaller fraction moving toward the center.
+        The top-left patch falls from 22&times; a fair share to 12&times;; violet
+        marks a patch past 16&times;, where the colour ramp stops separating
+        values. Measured over the generated tokens on 1,800 pictures, area
+        weighted onto the modal 12&times;16 patch grid.
       </figcaption>
     </figure>
   </div>

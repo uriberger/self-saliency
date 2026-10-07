@@ -59,7 +59,7 @@ against the current PDF — they are not hand-edited. Paper Figure 1 is no longe
 shown on the page (the teaser carries that example instead), but
 `og-image.jpg`, the social card, is still rendered from it.
 
-Two are not straight from the PDF:
+Three are not straight from the PDF:
 
 - **`fig2.webp`** is `pipeline_with_rewards.png` from the research repository,
   not the paper's Figure 2. It is the same pipeline with the three reward terms
@@ -71,6 +71,23 @@ Two are not straight from the PDF:
   so the rule sits between panels rather than over one. Nothing else in the
   figure is touched. Re-extracting Figure 4 from the PDF drops the rule; re-run
   that step if you do.
+- **`fig5.webp`** is regenerated from the scans, not taken from the paper at
+  all. `sink_location_xmodel_tables.py --panels` draws the two arms
+  (`box_qwen3vl_auto` and `box_overlap_wov04_auto`, generated tokens, L22
+  h28/31) and `fig5_overrange_compose.py` joins them; both live in the research
+  repository. The colour ramp stops at 4x, so a 22x corner and a 12x corner were
+  both "saturated red" and the figure said they were equal — patches past 16x
+  now carry their own colour and their own key. The per-panel subtitles and the
+  provenance note are cropped for the web copy: both are illegible at the size
+  this renders, and both now sit in the figcaption instead.
+
+  **The numbers differ from the paper.** This pair reads 22 → 12; the published
+  Figure 5 reads 51 → 12. The *after* panel matches the scan exactly (11.51
+  renders as "12", its top-right 1.41 as "1.4"); the *before* panel does not —
+  the scan gives 22.22 and 0.75 against the published 51 and 1.1 — and no
+  `tables.md` under `outputs/sink_location/` holds a top-left anywhere in 46–56.
+  The page shows the regenerated pair because both of its panels come from one
+  scan. Whether the paper's 51 is right is an open question for the paper.
 
 The teaser is the research repository's
 `outputs/fig1-multistep/video-count-soccer/landscape/chain.mp4`: two counting
