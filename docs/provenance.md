@@ -69,7 +69,8 @@ names an old file:
 | archive | here |
 |---|---|
 | `overlap_probe.py` | `experiments/trained_model/probe.py` |
-| `sink_location{,_probe,_xmodel_tables,_html}.py` | `experiments/attention_bias/{measure,probe,tables,report_html}.py` |
+| `sink_location{,_probe,_xmodel_tables}.py` | `experiments/attention_bias/{measure,probe,tables}.py` |
+| `sink_location_html.py` | removed — it rendered `assets/sink_location_template.html`, whose origin could not be confirmed |
 | `trl/overlap_steps.py` | `selfsal/steps/segment.py` (`segment_observe_steps` → `segment_sentences`, `OverlapStepsClassifier` → `StepClassifier`) |
 | `trl/rewards/overlap_rewards.py` | `selfsal/{grounding,saliency}` — `_dino_boxes` → `ground`, `_union_mask` → `union_mask`, `_mean_in`/`_mean_in_v2`/`_auroc` → `phi`/`phi_mean`/`auroc` |
 | `V analysis/aggregation_correlation.py` | `experiments/head_selection/screen.py` |
