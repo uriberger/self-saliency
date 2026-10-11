@@ -89,7 +89,7 @@ people's work, all Apache-2.0-compatible, and are marked as such in their own he
 |---|---|
 | `training/grpo/trl_patch/` | HuggingFace **TRL** (Apache-2.0). `grpo_trainer_qwen3.py` and `grpo_vlm_qwen3.py` are modified copies of its GRPO trainer and VLM example; the files carry TRL's copyright header and `env/patches/trl.sh` installs them into a checkout rather than vendoring one |
 | `env/patches/transformers_patch/sdpa_attention_tf5x.py` | HuggingFace **transformers** (Apache-2.0). A modified copy of `transformers/integrations/sdpa_attention.py` at commit `612c371a`, the build `env/grpo.txt` pins. The one change is the identity trick that makes SDPA return attention weights; `env/patches/transformers.sh` installs it over the stock file |
-| `baselines/ease/` | **EASE** on top of **EasyR1**/**verl** (Apache-2.0). The method files are untouched; what is here patches their reward interface and an import, and drives their trainer |
+| `baselines/ease/` | **EASE** on top of **EasyR1**/**verl** (Apache-2.0), from [Nrich-sunny/Attend-to-Evidence](https://github.com/Nrich-sunny/Attend-to-Evidence), pinned at `b90f8330`. Cloned at install time, not vendored. The method files are untouched; what is here patches their reward interface and an import, and drives their trainer |
 | `baselines/vga/` | **VGA**, reimplemented as an inference-time patch on Qwen3-VL (Appendix D.1) |
 | `evaluation/lmms_eval` | **lmms-eval** — **MIT** for the pipeline, **Apache-2.0** for `lmms_eval/tasks` and `lmms_eval/models`, per its own `LICENSE`. A pinned submodule of a fork carrying task definitions and answer-parser fixes that are not upstream |
 | `training/coldstart/` | driven by **LLaMA-Factory** (Apache-2.0), cloned rather than vendored |

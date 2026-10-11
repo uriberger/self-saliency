@@ -74,6 +74,24 @@ git clone https://github.com/hiyouga/LLaMA-Factory third_party/LLaMA-Factory
 conda run -n selfsal-sft pip install -e third_party/LLaMA-Factory
 ```
 
+For the EASE and DAPO baselines (Appendix D.3). EASE is the authors' EasyR1/verl fork,
+Apache-2.0, and it is cloned and patched like the other two:
+
+```bash
+git clone https://github.com/Nrich-sunny/Attend-to-Evidence third_party/ease_repo
+git -C third_party/ease_repo checkout b90f83301c9c6738651ef151da6dbb696d5bcaa7
+export EASE_REPO=$PWD/third_party/ease_repo
+
+bash baselines/ease/setup_env.sh   # builds the `ease` conda env against it
+bash baselines/ease/patch_repo.sh --repo "$EASE_REPO"
+```
+
+`b90f8330` is the commit the paper's EASE and DAPO arms ran against. Every script under
+`baselines/ease/` resolves the checkout from `$EASE_REPO` first, so exporting it is what
+makes the location above work; `third_party/ease_repo` is already in `.gitignore`.
+`patch_repo.sh` makes two additive edits and leaves `verl/workers/actor/` — the EASE
+method itself — byte-identical.
+
 ## 3. Data
 
 Nothing large is tracked. `SELFSAL_DATA` points at where it lives; it defaults to

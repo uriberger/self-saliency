@@ -215,7 +215,7 @@ a different model. Same argument as `selfsal/data/prompt.py` makes for the polic
 `LICENSE` is Apache-2.0. Note the derived work:
 
 * `training/grpo/trl_patch/` derives from HuggingFace TRL (Apache-2.0)
-* `baselines/ease/` patches EasyR1/verl
+* `baselines/ease/` patches EasyR1/verl, from `github.com/Nrich-sunny/Attend-to-Evidence` (Apache-2.0)
 
 Each is compatible. **Done:** the README now has a "Derived work, and its licences"
 section naming all of them, plus `baselines/vga/`, the pinned lmms-eval fork and
