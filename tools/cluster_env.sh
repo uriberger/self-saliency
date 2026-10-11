@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Cluster-portable resolution of the two settings that differ between the machines this
 # repo runs on. SOURCE this (do not execute it) from a launcher, after REPO is set:
 #

@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Nothing here may reach back into the archive repos.
 
 The port moved files that used to load their neighbours by relative path -- the probes

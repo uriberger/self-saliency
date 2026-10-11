@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Derive CUDA_HOME and fix PATH so the CUDA toolkit and the active conda env's
 # interpreter coexist without shadowing each other.
 #

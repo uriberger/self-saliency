@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """`selfsal` must score exactly what the paper's runs scored.
 
 `selfsal/saliency/score.py` and `selfsal/grounding/mask.py` were extracted from the

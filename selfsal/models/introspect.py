@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 # Ported from the archive's vlm/saliency.py. `models/families.py` is the other half of
 # this: what differs BETWEEN model families for the Section 5 analysis, where this is
 # what can be read off any one of them generically -- layer and head counts, the image

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Check the bootstrap error bars against the closed-form ones they replace.
 
 The results table reads each score's error bar off a formula (see eval_stats),

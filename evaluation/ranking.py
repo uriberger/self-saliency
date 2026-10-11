@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Rank models by their average per-benchmark rank across the lmms-eval suite.
 
 For every benchmark in BENCHMARKS the selected models are sorted by score

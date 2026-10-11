@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Section 3.5: which attention heads the saliency score reads.  Selects (22,28) and (22,31).
 #
 #   bash experiments/head_selection/run.sh --out-dir DIR                  # the whole screen

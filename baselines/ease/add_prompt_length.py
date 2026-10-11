@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Add the `prompt_length` column to EASE's train/val parquet, in parallel.
 
 Their `scripts/prepare_ease_dataset.py --model_path ...` already computes this

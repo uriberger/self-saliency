@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Extract ONLY the referenced LLaVA-CoT images from image.zip, in parallel.
 The zip holds the full 1.39M-file pool; the cold-start JSON needs 50,411 unique files.
 Parallel process workers each open the zip read-only and extract their chunk."""

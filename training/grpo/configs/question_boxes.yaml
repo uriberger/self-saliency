@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # question boxes -- Table 5, mean score 63.33.
 #
 # The other half of the ablation: keep everything, but ground the QUESTION instead of

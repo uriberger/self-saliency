@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """The evaluation side, held against the paper.
 
 Three things are checked, and each guards a failure that is silent rather than loud.

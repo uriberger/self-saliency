@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """The attention collector's numerical core, against the archive and against itself.
 
 `selfsal/saliency/maps.py` was extracted from an attention-EDIT framework that the

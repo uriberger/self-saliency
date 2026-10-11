@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """The saliency score phi, Equation 1 -- and the Appendix C variant.
 
 This module is the reason `selfsal` is one package. Two things must compute the same

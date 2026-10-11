@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 import os, time
 os.environ.setdefault("HF_HUB_DISABLE_XET", "1")
 from huggingface_hub import snapshot_download

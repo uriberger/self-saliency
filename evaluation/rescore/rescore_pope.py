@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """GPU-free re-score of a cached POPE samples file using the (patched) real metric.
 
 The response cache stores per-sample results, so a metric change (yes/no label

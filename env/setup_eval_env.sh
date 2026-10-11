@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Build the `lmms_eval` conda env on this cluster (linux-aarch64, GB200 / sm_100).
 #
 # Why this exists instead of `conda env create -f lmms_eval.environment.yml`:

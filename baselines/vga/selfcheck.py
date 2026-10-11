@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """
 vga_selfcheck.py — rung 2 of the wiki's validation ladder: is the injection wired
 up, and is it inert when it should be?

@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Patch a transformers-5.x install with ONLY the SDPA identity trick (no modeling-file
 # replacement -- transformers 5.x threads attn weights up generically via the record-outputs
 # hook system, so the whole-file modeling patch that Qwen2.5-VL needed is NOT required here).

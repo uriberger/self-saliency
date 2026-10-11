@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Patch vLLM 0.11.0 for transformers 5.x compatibility (Qwen3-VL).
 #
 # transformers 5.x moved/removed attributes that vLLM 0.11.0 reads directly, crashing the

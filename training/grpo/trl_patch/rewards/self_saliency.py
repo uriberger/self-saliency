@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """R_sal: the self-grounded saliency reward (Section 3.4).
 
 Per completion: segment the chain into steps, keep the `observe` ones, ground each one's

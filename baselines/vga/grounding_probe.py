@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """
 vga_grounding_probe.py — rung 1 of the wiki's ladder, the go/no-go.
 

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # The 25-benchmark evaluation suite (Table 1), and the protocol of Appendix A.3.
 #
 # Every paper column was produced by running this list against one checkpoint. The task

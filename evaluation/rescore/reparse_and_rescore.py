@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Re-parse final_answer from response and recompute is_correct for target files.
 
 Applies the current parse_response (which now handles a missing </think> tag when

@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Is the self-grounding loop hackable -- does the policy change WHAT IT SAYS so that the
 saliency reward gets easier, rather than looking where it says it is looking?
 

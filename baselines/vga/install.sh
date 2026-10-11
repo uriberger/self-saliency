@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Register the VGA model wrapper in an lmms-eval checkout. Idempotent, reversible.
 #
 #   bash install_lmms_vga.sh [--lmms-eval-dir DIR] [--copy] [--uninstall] [--check]

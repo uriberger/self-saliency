@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Ask SLURM for a node and run one EASE arm on it. Same `_job.sh` split as
 # launch_sink_location_job.sh: this builds a runner and hands it to submit_job;
 # launch_ease_train.sh is what runs inside the allocation.

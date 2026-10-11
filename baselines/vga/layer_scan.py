@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """
 vga_layer_scan.py — pick VGA's ``start_layer`` on Qwen3-VL, instead of assuming it.
 

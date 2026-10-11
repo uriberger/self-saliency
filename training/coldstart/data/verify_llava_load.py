@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Real LLaMA-Factory data-load verify on the mulberry cold-start subset (CPU, no model weights).
 Confirms: LF parses the Saliency-R1 mulberry JSON, resolves images from disk, and the
 qwen3_vl_nothink template + Qwen3VLPlugin produce input_ids + pixel_values."""

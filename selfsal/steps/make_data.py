@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Generate step-classification training data using a closed LLM (default: Gemini 2.5 Pro).
 
 Reads reasoning chains from non-pod_prompt JSONL files in results/inference/,

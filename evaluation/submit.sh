@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Submit an lmms-eval benchmark job replicating the Saliency-R1 evaluation
 # (arXiv 2604.04500 §4.3: "The evaluation utilizes the lmms-eval framework").
 # Default task suite = the paper's Table 2 benchmarks: MMMU-Pro, MMBench (en

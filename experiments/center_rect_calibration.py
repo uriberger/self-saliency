@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """If DINO's per-step union were a FIXED CENTRED RECTANGLE, how much would we lose?
 
 The overlap reward calls a detector once per observe step, on that step's own sentence,

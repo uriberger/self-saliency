@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Print the lmms-eval tasks that have FINISHED under an output directory.
 
 A task is considered finished when a `*_results.json` written by lmms-eval

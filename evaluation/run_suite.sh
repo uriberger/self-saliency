@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Run lmms-eval on every benchmark listed in a file, for one model, resumably.
 #
 # Each benchmark is run as its OWN lmms_eval invocation. This gives three

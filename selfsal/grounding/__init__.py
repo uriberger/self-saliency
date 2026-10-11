@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Localising the objects a reasoning step mentions (Section 3.3).
 
 `dino` pulls in transformers and is imported lazily, so the mask helpers stay usable in

@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Reasoning-step segmentation and classification (Section 3.2, Appendix A.1)."""
 
 from .classifier import (ID2LABEL, LABEL2ID, LABELS, StepClassifier, build_input,

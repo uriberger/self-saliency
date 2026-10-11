@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Recompute the per-sample ``correct`` field of existing result JSONL files.
 
 Older results were scored with a raw bidirectional substring match, which

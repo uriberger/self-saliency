@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Qwen3-VL with Vision-Guided Attention applied while it answers.
 
 `qwen3_vl` with one thing added: `vlm.vga.install()` from the vlm_reasoning repo

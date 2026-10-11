@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """A repo-relative path in the docs must be a file that is here.
 
 `docs/reproduce.md` is one row per table and figure in the paper, and `docs/provenance.md`

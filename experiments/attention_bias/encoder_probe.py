@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Does the vision encoder mark extreme grid positions -- with the content held constant?
 
 `docs/sink-location-cross-model.md` established that the border preference is positional

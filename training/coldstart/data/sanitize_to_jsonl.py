@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Convert a Saliency-R1 cold JSON (single-line array, with stray unescaped control
 chars in some strings) into clean JSONL that HF datasets/pyarrow reads reliably."""
 import json, sys, re

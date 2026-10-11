@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Evaluate the FLAN-T5 POD step classifier that gates the overlap reward.
 
 The deployed checkpoint (checkpoint/steps_classifier/best, 4-class, include_chain=True)

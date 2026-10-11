@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """R_llm: the LLM-as-a-judge accuracy reward (Section 3.4, Appendix A.2).
 
 GPT-4o-mini is shown the question, the ground-truth answer and the model's extracted

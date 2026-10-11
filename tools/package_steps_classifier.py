@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Package the step classifier for a Hugging Face repository.
 
     python tools/package_steps_classifier.py --ckpt checkpoint/steps_classifier/best \

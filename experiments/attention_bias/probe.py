@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Is the sink in the outer ring, or is the outer ring just the background?
 
 `docs/sink-location-by-image-type.md` is the design; `sink_location.py` is the

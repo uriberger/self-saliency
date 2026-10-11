@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Precomputed per-question regions, for the `question_boxes` ablation (Section 5.3).
 
 One box list per dataset ROW, grounded once on the row's question before training starts

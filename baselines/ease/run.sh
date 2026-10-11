@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Run one arm of the EASE replication on saliency-r1-8k, inside an existing
 # allocation. baselines/ease/submit.sh is what asks SLURM for the allocation.
 #

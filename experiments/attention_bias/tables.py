@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Three arms x three query sets: the patch-set tables and the nine heatmaps.
 
     python sink_location_xmodel_tables.py --dirs A,B,C --out-dir DIR

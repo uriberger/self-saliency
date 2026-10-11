@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Run a reasoning VLM on a visual reasoning benchmark and record per-sample
 reasoning chains plus correctness.
 

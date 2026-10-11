@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Section 5: where inside the picture the attention piles up.  Table 4, Figure 4, Table 8.
 #
 #   bash experiments/attention_bias/run.sh --stage corpus   --out-dir DIR

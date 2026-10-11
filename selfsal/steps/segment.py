@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Reasoning chain -> atomic steps -> the observe steps, with their token spans.
 
 Appendix A.1: "We segment the reasoning chain at sentence-final punctuation marks and

@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Validate CUDA_HOME on the *execution* node, before launching training.
 #
 # The GRPO / cold-start launchers run DeepSpeed, whose op builder JIT-compiles

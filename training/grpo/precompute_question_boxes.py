@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Ground each dataset row ONCE, on its question, and write the boxes for training to read.
 
 This builds the input file the `question_boxes` arm of Section 5.3 trains against:

@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Grounding-DINO as an HTTP sidecar, for the GRPO reward.
 
 The trainer's layout puts the detector on a GPU of its own beside vLLM, outside the

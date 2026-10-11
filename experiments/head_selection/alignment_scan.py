@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Phase 0 of the hack-resistant reward search: score every head for box alignment.
 
 The reward heads (22,28)/(22,31) were picked by correlation with *correctness*, and

@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Re-score banked `mathvision_testmini` results with the current parser.
 
 The sibling of scripts/rescore_reasoning_tasks.py, for the one benchmark that

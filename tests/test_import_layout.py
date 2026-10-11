@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Every import in trl_patch/ must still resolve after the patch script moves the file.
 
 `training/grpo/trl_patch/` is the tracked source; a TRL checkout is what executes; and

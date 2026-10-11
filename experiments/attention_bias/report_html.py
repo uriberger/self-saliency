@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Render the sink-location results as one self-contained HTML page.
 
     python sink_location_html.py --cold outputs/sink_location/coldstart \

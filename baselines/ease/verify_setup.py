@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Preflight for an EASE run: everything that can fail without a GPU.
 
 Run by `launch_ease_train.sh --preflight`, which hands it the exact override

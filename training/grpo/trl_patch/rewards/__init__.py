@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """The reward functions of Section 3.4, as TRL reward callables.
 
     R = a_format*R_format + a_sal*R_sal + a_direct*R_direct + a_llm*R_llm

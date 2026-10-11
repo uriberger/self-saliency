@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Re-score cached p3 (SalBench) lmms-eval runs with the fixed answer-token
 normalization in salbench/utils.py.
 

@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Re-score cached MMMU-Pro lmms-eval runs after the random-fallback fix.
 
 ``_task_utils/mmmu_mcq_utils.py`` used to return ``random.choice(all_choices)``

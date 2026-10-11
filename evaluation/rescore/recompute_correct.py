@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Recompute the 'correct' field in all inference result JSONL files.
 
 Uses the same parse_response / is_correct logic as run_experiment.py.

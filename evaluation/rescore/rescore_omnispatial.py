@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Re-score cached OmniSpatial lmms-eval runs with the fixed answer parser.
 
 The original scorer accepted only a literal ``Answer: X`` line and, finding

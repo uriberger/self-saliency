@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Where the model LOOKS, where the human says the answer IS, and what the model TALKS about.
 
     python sink_three_legs.py --dirs A,B,C --out DIR/three_legs.txt

@@ -212,12 +212,33 @@ a different model. Same argument as `selfsal/data/prompt.py` makes for the polic
 
 ## 6. Licence
 
-`LICENSE` is Apache-2.0. Note the derived work:
+`LICENSE` is Apache-2.0, under NVIDIA's copyright. Note the derived work:
 
 * `training/grpo/trl_patch/` derives from HuggingFace TRL (Apache-2.0)
+* `env/patches/transformers_patch/sdpa_attention_tf5x.py` derives from HuggingFace
+  transformers (Apache-2.0)
 * `baselines/ease/` patches EasyR1/verl, from `github.com/Nrich-sunny/Attend-to-Evidence` (Apache-2.0)
+* `evaluation/lmms_eval` is MIT (pipeline) + Apache-2.0 (`tasks/`, `models/`)
 
-Each is compatible. **Done:** the README now has a "Derived work, and its licences"
-section naming all of them, plus `baselines/vga/`, the pinned lmms-eval fork and
-LLaMA-Factory, and the corpora and models used under their own terms — so the
-acknowledgement is not only in the file headers.
+Each is compatible. `ATTRIBUTION.md` is the full list, with upstream URL, version or
+commit, licence and copyright holder for each. The README's "Derived work, and its
+licences" section is the short version, and names `baselines/vga/` and LLaMA-Factory as
+well as the corpora and models used under their own terms.
+
+**Headers.** Every source file this repository authored — `.py`, `.sh`, `.yaml`, `.toml` —
+carries the NVIDIA SPDX pair:
+
+```
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+```
+
+The TRL- and transformers-derived files keep their upstream HuggingFace copyright block
+and carry `# Modified by NVIDIA` plus the same pair beneath it.
+
+**Two files deliberately carry no header**, because their origin is unconfirmed:
+`assets/validate_palette.js` and `assets/sink_location_template.html`. Both arrived from
+the archive repository, and the JavaScript one refers in its own docstring to checks "the
+skill enforces", which suggests it was generated from or adapted from a tooling
+template rather than written here. Confirm authorship, then either attribute them or add
+the NVIDIA header. Until then they must not be assumed to be ours.

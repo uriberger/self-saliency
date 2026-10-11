@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Where the attention goes, beside where the human boxes ARE -- as two maps of one shape.
 
     python sink_box_coverage.py --dirs A,B,C,D --out-dir DIR

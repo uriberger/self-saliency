@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Every flag an experiment runner passes must be one the program it runs accepts.
 
 `docs/reproduce.md` gives one command per table and figure, and for three of them that

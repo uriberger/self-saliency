@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Attention -> patch map (Section 3.3), and the score over it (Equation 1).
 
 `maps` needs torch and is imported lazily, so `from selfsal.saliency import phi` works

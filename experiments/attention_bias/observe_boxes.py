@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Ground each OBSERVE step of a stored completion, and say where those boxes sit.
 
     python sink_observe_boxes.py --scan-dir DIR --out DIR/observe_boxes.jsonl

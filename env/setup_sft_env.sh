@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Create the `selfsal-sft` conda env: the cold start, via LLaMA-Factory.
 #
 #   bash env/setup_sft_env.sh [env-name]

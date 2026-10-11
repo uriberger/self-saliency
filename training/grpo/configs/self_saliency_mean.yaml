@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # SELF-SALIENCY_mean -- Table 7 (Appendix C), mean score 63.17.
 #
 # The saliency score's denominator becomes the map's MEAN instead of its peak. It does

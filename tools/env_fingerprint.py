@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Print a diffable fingerprint of the environment that actually runs GRPO training.
 
 Run it on two clusters and `diff` the outputs. Anything that differs is a reason a

@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Shared driver for the per-suite benchmark scripts
 # (eval_saliency_r1_benchmarks.sh, eval_our_benchmarks.sh).
 #

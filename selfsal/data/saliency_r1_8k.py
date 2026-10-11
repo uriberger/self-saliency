@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """The GRPO corpus, and the 100-row holdout every arm was trained against (Section 4.1).
 
     from selfsal.data.saliency_r1_8k import load_corpus, train_holdout_split

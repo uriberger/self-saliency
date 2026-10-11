@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Re-score banked lmms-eval `*_reasoning` results with the current parser.
 
 Every task built on `lmms_eval/tasks/_task_utils/reasoning_utils.py` scores a

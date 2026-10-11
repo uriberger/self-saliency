@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Stage one of our merged checkpoints so transformers 4.57.0 can load it.
 #
 # Our checkpoints were written by transformers 5.13.0.dev0. The `ease` env is

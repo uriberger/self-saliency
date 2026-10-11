@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Merge a LoRA adapter into the base model and save the full merged weights."""
 import sys
 # Setting to None makes importlib.util.find_spec return None → deepspeed treated as absent

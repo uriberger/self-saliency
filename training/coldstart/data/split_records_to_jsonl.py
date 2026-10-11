@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Robustly split a Saliency-R1 cold JSON array into records by the per-record start
 marker `{"image": "`, validating each record independently. Isolates malformed records
 (e.g. unescaped quotes) instead of letting one poison the whole file. Writes clean JSONL."""

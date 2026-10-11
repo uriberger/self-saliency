@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Everything the sink-location experiment knows about the model it is measuring.
 
 `docs/sink-location-by-image-type.md` is the design and `sink_location.py` is the

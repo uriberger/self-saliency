@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Offline probe of the attention-overlap reward: no training, no optimizer.
 
 Generates completions from one or more checkpoints on the *same* prompts and reports,

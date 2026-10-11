@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # SELF-SALIENCY -- Table 2 "Ours", mean score 64.26. The paper's headline arm.
 #
 # Archive run: grpo-coldstart_..._merged-overlap__wov0.4_2head_trmean  (checkpoint-3990)

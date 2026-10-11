@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Export saliency-r1-8k into the raw layout EASE's converter reads.
 
 EASE (arXiv:2605.30912) trains on its own evidence-box pools, which were never

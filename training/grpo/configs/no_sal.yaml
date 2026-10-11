@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # No-Sal -- Table 2, mean score 63.47. The same procedure with no saliency objective,
 # so a gain over it is the reward's and not post-training's.
 #

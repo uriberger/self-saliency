@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Section 4.4: what the trained model changed -- its text, or its attention.  Table 3.
 #
 #   bash experiments/trained_model/run.sh --arm coldstart=CKPT --arm self_saliency=CKPT \

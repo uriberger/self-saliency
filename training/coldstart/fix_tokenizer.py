@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Make a cold-start checkpoint loadable by the `laser` env. Idempotent.
 
     python fix_coldstart_tokenizer.py <checkpoint-dir> [...]

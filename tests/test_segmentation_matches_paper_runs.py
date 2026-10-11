@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Appendix A.1's segmentation must split chains exactly as the paper's runs did.
 
 Where the sentence boundaries fall decides which fragments get classified, which decides

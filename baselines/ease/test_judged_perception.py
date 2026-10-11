@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Regression test for the span gate in judged_perception.py.
 
 The cases are real: they are read out of a run's own

@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Submit the Saliency-R1 COLD-START SFT (Qwen3-VL-8B-Instruct) via ADLR submit_job,
 # with auto-resume so it survives the wall-clock limit. Mirrors launch_grpo_job.sh but
 # runs LLaMA-Factory (llamafactory-cli train <yaml>) in the `sr1_coldstart` conda env on

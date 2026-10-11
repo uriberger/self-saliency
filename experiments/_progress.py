@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Shard progress with an ETA, and the monitor that aggregates shards into one line.
 
 Every GPU stage in `experiments/` is embarrassingly parallel over its unit -- a picture,

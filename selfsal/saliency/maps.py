@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Attention -> a saliency map over image patches (Section 3.3).
 
 For a generated token `t` and an image patch `p`, `sal_t(p)` is the attention weight `t`

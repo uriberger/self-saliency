@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Create the `selfsal-grpo` conda env: GRPO training, every attention probe, Section 5.
 #
 #   bash env/setup_grpo_env.sh [env-name]

@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Load an arm config, resolve `extends`, and check it is internally consistent.
 
     python -m training.grpo.config training/grpo/configs/self_saliency.yaml

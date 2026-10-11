@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Phase 0 gate: is there a head-set with BOTH box alignment AND correctness signal?
 
 Consumes the per-sample x per-head arrays written by head_alignment_scan.py and

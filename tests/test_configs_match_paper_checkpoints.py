@@ -1,4 +1,5 @@
-# Copyright 2026 NVIDIA. Apache-2.0.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Each arm config must describe the run whose number is in the paper.
 
 A config file is a claim: "launching this reproduces Table 2's `Ours` column". Nothing
