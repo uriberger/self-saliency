@@ -113,17 +113,81 @@ Two things to check before publishing:
 
 ## 5. Model weights
 
-The paper promises weights as well as code. They are not in this repository and should
-not be: the adapters are ~116 MB each and the merged models are far larger. A Hugging Face
-repository per arm, linked from `docs/reproduce.md`, is the obvious home.
-
-**There are TEN models, not nine.** The tenth is the step classifier, and it is the one
-that blocks everything else.
+The paper promises weights as well as code. **Two models go out, not ten.** They are not in
+this repository and should not be; a Hugging Face repository each, linked from
+`docs/reproduce.md`, is the home.
 
 | | size | note |
 |---|---|---|
-| the nine arms and bases | ~153 GB | cold start, six adapters, EASE, DAPO |
+| **SELF-SALIENCY 8B** | ~16 GB | the Table 2 flagship, mean 64.26. Merged, not an adapter — see below |
 | **step classifier** | **422 MB** | **a clone cannot train or probe without it** |
+
+An earlier plan released ten: the cold start, six GRPO adapters, EASE, DAPO and the
+classifier. That is no longer the plan, and the two sections below say what the narrower
+one costs so nobody has to rediscover it.
+
+### Why the flagship ships merged
+
+`training/grpo/configs/self_saliency.yaml` trains a **rank-16 LoRA adapter** — 116 MB, on
+`q_proj` and `v_proj` — and its base is
+`coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged`, an SFT checkpoint of ours.
+Publishing that adapter on its own would ship 116 MB nobody can load, because the base is
+not on the Hub and is not being published either.
+
+So the released artefact is the merge. `tools/merge_lora.py` produces it:
+
+```bash
+python tools/merge_lora.py \
+    --base   checkpoint/coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged \
+    --adapter checkpoint/<the self_saliency run>/checkpoint-3990 \
+    --output /tmp/self-saliency-8b
+```
+
+It loads with `from_pretrained` and needs nothing else, which is the point.
+
+What that costs, stated plainly: **a reader cannot re-run GRPO from the paper's exact
+starting point**, because the starting point is not published. The recipe is here —
+`training/coldstart/configs/qwen3_vl_8b.yaml`, two public corpora, LLaMA-Factory — so it
+can be rebuilt, but that is an 8B supervised run rather than a download, and a rebuild
+will not be bit-identical to the checkpoint the published adapter was trained on.
+
+The flagship still needs what the classifier already has: a model card, and a packaging
+step. `tools/package_steps_classifier.py` and `docs/model_cards/steps_classifier.md` are
+the pattern; there is no equivalent for the flagship yet. Its card must carry the prompt
+contract — `selfsal/data/prompt.py`'s `SYSTEM_PROMPT` is what the cold start was
+supervised against and what `evaluation/suite.yaml` evaluates under, so a reader prompting
+it differently is measuring a different policy.
+
+### What is not published, and what that forecloses
+
+The other eight stay unreleased: the cold-start base, the five remaining GRPO adapters
+(`no_sal`, `center_rect`, `question_boxes`, `saliency_r1`, `self_saliency_mean`), and the
+EASE and DAPO baselines.
+
+Every number they produced is still here. `evaluation/results/` carries their
+`results.json` and `python evaluation/tables.py` rebuilds Tables 2, 5 and 7 from them with
+no GPU and no downloads. What is foreclosed is *re-measuring* them:
+
+* **The ablation rows of Table 2 can be read, not re-evaluated.** Checking one means
+  retraining it from its config.
+* **Appendix D.3's paired comparison** — (EASE − DAPO) against (SELF-SALIENCY − No-Sal) —
+  needs four checkpoints, of which one is published. It becomes a retraining exercise,
+  and `baselines/ease/` is the only route to two of the four.
+* **Section 4.4** (`experiments/trained_model/`) asks whether the text moves or the
+  attention does, by comparing arms. With one arm released it degenerates to a
+  single-model probe unless the others are retrained.
+
+The configs themselves are unaffected: all six stay in `training/grpo/configs/`, and
+`tests/test_configs_match_paper_checkpoints.py` still checks each against its published
+run's `training_args.bin`, `adapter_config.json` and `trainer_state.json`. The arms remain
+fully specified; only their weights stop shipping.
+
+**Still to do:** `docs/reproduce.md`'s arms table lists ten rows and implies a checkpoint
+behind each. It needs a column, or a note, marking which row is downloadable (one) and
+which are retrain-only (the rest). Leaving it as it stands reads as a promise of nine
+checkpoints that will not exist.
+
+### The step classifier is the one that blocks everything else
 
 The GRPO trainer loads it to segment every chain, and so do all four attention probes: no
 classifier, no saliency reward, no Section 5. It is also not derivable from what is

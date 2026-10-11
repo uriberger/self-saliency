@@ -96,7 +96,7 @@ already requires it.
 
 The step classifier's checkpoint is needed by training and by every probe — it finds the
 *observe* steps, which are the only ones the saliency reward scores. **Download it**
-(422 MB; see the arms table in [reproduce.md](reproduce.md) for the link), then either
+(422 MB; [publishing.md](publishing.md) §5 is what ships and where), then either
 point `SELFSAL_STEPS_CKPT` at it or put it in `checkpoint/steps_classifier/best`:
 
 ```bash

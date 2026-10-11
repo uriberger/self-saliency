@@ -7,8 +7,8 @@
 The classifier is needed by GRPO training and by every probe, and it is NOT derivable
 from anything else in the repository: `selfsal/steps/make_data.py` distils its labels
 from a model no public OpenAI endpoint serves, and from reasoning chains that are not
-released either. So it has to be published, and it is the tenth model, not one of the
-nine in docs/publishing.md section 5.
+released either. So it has to be published. It is one of the TWO models that ship -- the
+other is the merged flagship -- see docs/publishing.md section 5.
 
 WHAT THIS DOES, AND THE ONE THING IT CHANGES. The encoder, tokenizer and cfg.json are
 copied verbatim -- the encoder is a stock T5EncoderModel and loads with
