@@ -91,7 +91,7 @@ people's work, all Apache-2.0-compatible, and are marked as such in their own he
 | `env/patches/transformers_patch/sdpa_attention_tf5x.py` | HuggingFace **transformers** (Apache-2.0). A modified copy of `transformers/integrations/sdpa_attention.py` at commit `612c371a`, the build `env/grpo.txt` pins. The one change is the identity trick that makes SDPA return attention weights; `env/patches/transformers.sh` installs it over the stock file |
 | `baselines/ease/` | **EASE** on top of **EasyR1**/**verl** (Apache-2.0). The method files are untouched; what is here patches their reward interface and an import, and drives their trainer |
 | `baselines/vga/` | **VGA**, reimplemented as an inference-time patch on Qwen3-VL (Appendix D.1) |
-| `evaluation/lmms_eval` | **lmms-eval** (Apache-2.0), a pinned submodule of a fork carrying task definitions and answer-parser fixes that are not upstream |
+| `evaluation/lmms_eval` | **lmms-eval** — **MIT** for the pipeline, **Apache-2.0** for `lmms_eval/tasks` and `lmms_eval/models`, per its own `LICENSE`. A pinned submodule of a fork carrying task definitions and answer-parser fixes that are not upstream |
 | `training/coldstart/` | driven by **LLaMA-Factory** (Apache-2.0), cloned rather than vendored |
 
 The corpora are used under their own terms: Saliency-R1-8K, Visual-CoT, LLaVA-CoT,

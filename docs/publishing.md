@@ -212,7 +212,7 @@ a different model. Same argument as `selfsal/data/prompt.py` makes for the polic
 
 ## 6. Licence
 
-`LICENSE` is Apache-2.0, matching every file header. Note the derived work:
+`LICENSE` is Apache-2.0. Note the derived work:
 
 * `training/grpo/trl_patch/` derives from HuggingFace TRL (Apache-2.0)
 * `baselines/ease/` patches EasyR1/verl
