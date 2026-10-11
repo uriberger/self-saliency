@@ -83,7 +83,9 @@ first**, starting with the fact that the git history is authored under a real na
 ## Derived work, and its licences
 
 This repository is Apache-2.0 (see [LICENSE](LICENSE)). Parts of it are derived from other
-people's work, all Apache-2.0-compatible, and are marked as such in their own headers:
+people's work, all under compatible permissive licences, and are marked as such in their
+own headers. **[ATTRIBUTION.md](ATTRIBUTION.md) is the complete list**, with upstream URL,
+version or commit, licence and copyright holder for each; this table is the summary:
 
 | here | derived from |
 |---|---|
