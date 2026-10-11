@@ -160,8 +160,8 @@ it differently is measuring a different policy.
 
 ### What is not published, and what that forecloses
 
-The other eight stay unreleased: the cold-start base, the five remaining GRPO adapters
-(`no_sal`, `center_rect`, `question_boxes`, `saliency_r1`, `self_saliency_mean`), and the
+The other eight stay unreleased: the cold-start base, the four remaining GRPO adapters
+(`no_sal`, `center_rect`, `question_boxes`, `self_saliency_mean`), and the
 EASE and DAPO baselines.
 
 Every number they produced is still here. `evaluation/results/` carries their
@@ -215,7 +215,6 @@ a different model. Same argument as `selfsal/data/prompt.py` makes for the polic
 `LICENSE` is Apache-2.0, matching every file header. Note the derived work:
 
 * `training/grpo/trl_patch/` derives from HuggingFace TRL (Apache-2.0)
-* `baselines/saliency_r1/reward.py` derives from the Saliency-R1 authors' repository
 * `baselines/ease/` patches EasyR1/verl
 
 Each is compatible. **Done:** the README now has a "Derived work, and its licences"

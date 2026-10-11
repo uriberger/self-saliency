@@ -50,8 +50,6 @@ CHECKPOINTS = {
         "grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-rect-frac",
     "question_boxes":
         "grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-question-boxes",
-    "saliency_r1":
-        "grpo-coldstart_qwen3_vl_8b_instruct_sft_epoch2_lr5e5_merged-saliency-r1-qwen3",
 }
 
 pytestmark = pytest.mark.skipif(

@@ -544,7 +544,7 @@ class GRPOTrainer(Trainer):
         optimizers: tuple[Optional[torch.optim.Optimizer], Optional[torch.optim.lr_scheduler.LambdaLR]] = (None, None),
         peft_config: Optional["PeftConfig"] = None,
         reforward_saliency: bool = True,
-        reward_variant: str = "saliency_r1",
+        reward_variant: str = "ours",
         overlap_layer: int = 22,
         overlap_heads=(28, 31),
         token_reduction: str = "mean",
@@ -554,8 +554,8 @@ class GRPOTrainer(Trainer):
         # --- R_sal config (reward_variant="ours"; Section 3.4) ---
         self.reward_variant = reward_variant
         # Whether the saliency term is scored PER OBSERVE STEP, which is what decides
-        # whether the per-case re-forward below runs at all. True only for "ours":
-        # "saliency_r1" scores one map for the whole completion and "none" scores none.
+        # whether the per-case re-forward below runs at all. True only for "ours";
+        # "none" installs no saliency term and scores nothing.
         self._per_step_reward = reward_variant == "ours"
         # Score the overlap reward on natural (photographic) rows only; non-natural rows
         # fall back to format + accuracy + judge. See think_overlap_reward's docstring.
@@ -1440,17 +1440,13 @@ class GRPOTrainer(Trainer):
         # This allows for dynamic reward shaping based on training progress.
         reward_kwargs["trainer_state"] = self.state
 
-        # Only the saliency reward consumes ground-truth boxes. The "ours" (attention
-        # overlap) and "none" variants derive their signal from the attention map and
-        # Grounding-DINO alone, so datasets without box annotations are usable there.
+        # No reward here consumes ground-truth boxes: "ours" (attention overlap) and
+        # "none" derive their signal from the attention map and Grounding-DINO alone, so
+        # datasets without box annotations are usable. `bbox_list` is still forwarded --
+        # every reward takes **kwargs, and the column is what selfsal.data.boxed_corpus
+        # reads for Section 5.
         if "bbox" in inputs[0]:
             bbox_list = [i["bbox"] for i in inputs]
-        elif self.reward_variant == "saliency_r1":
-            raise KeyError(
-                "reward_variant='saliency_r1' requires a 'bbox' column in the dataset, "
-                "but none was found. Use --reward_variant ours|none to train on data "
-                "without box annotations."
-            )
         else:
             bbox_list = [None] * len(inputs)
         question_list = [i['problem'] for i in inputs]

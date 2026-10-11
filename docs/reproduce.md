@@ -18,8 +18,15 @@ published number.
 | question boxes | 63.33 | `…-question-boxes` | `training/grpo/configs/question_boxes.yaml` |
 | center rect | 63.38 | `…-rect-frac` | `training/grpo/configs/center_rect.yaml` |
 | No-Sal | 63.45 | `…-no-saliency_saliency_r1_8k` | `training/grpo/configs/no_sal.yaml` |
-| Saliency-R1 | 63.59 | `…-saliency-r1-qwen3` | `training/grpo/configs/saliency_r1.yaml` |
+| Saliency-R1 | 63.59 | `…-saliency-r1-qwen3` | removed from this repo — see below |
 | **SELF-SALIENCY** | **64.26** | `…overlap__wov0.4_2head_trmean` | `training/grpo/configs/self_saliency.yaml` |
+
+The **Saliency-R1 row is banked, not runnable**. That arm's reward was the Saliency-R1
+authors' own code, and it has been removed from this repository; its config and its reward
+went with it. `evaluation/results/` still carries the run, so `evaluation/tables.py`
+renders the row and `tests/test_eval_scorers.py` still checks the 63.59, but there is no
+longer a config here that reproduces it. Appendix D.2 is a reading of the table, not
+something a clone can re-run.
 
 The published mean for *center rect* is 63.39 against 63.38 recomputed; the gap is
 rounding in the MME `/2800` rescale, not a different run.

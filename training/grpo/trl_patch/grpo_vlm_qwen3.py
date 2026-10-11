@@ -20,8 +20,8 @@ DO NOT LAUNCH THIS BY HAND. The arm is the config:
     bash training/grpo/run.sh center_rect --dry-run     # print the command, launch nothing
 
 `training/grpo/run.sh` reads `training/grpo/configs/<arm>.yaml` through
-`training.grpo.config`, which is the ONLY producer of the flags below. Six arms, six YAML
-files, one projection -- so the configs, the checks against the published checkpoints, and
+`training.grpo.config`, which is the ONLY producer of the flags below. Five arms, five
+YAML files, one projection -- so the configs, the checks against the published checkpoints, and
 what actually reaches this script are one implementation rather than three that agree.
 The flags themselves are documented in `trl/scripts/utils.py`; the environment is
 `docs/install.md`; the patch script that installs this file into a TRL checkout is
@@ -60,7 +60,7 @@ from trl import (
     get_peft_config,
     get_quantization_config,
 )
-from trl.rewards import think_format_reward, think_saliency_reward
+from trl.rewards import think_format_reward
 
 # The method package. Everything reached here is shared with something outside training
 # and must not be a second copy of it: the judge with the offline re-scoring tools, the
@@ -109,8 +109,7 @@ if __name__ == "__main__":
     ################
     # Defaults to the paper's corpus, so existing launchers keep working unchanged.
     # --dataset_name points the same pipeline at any other VQA corpus exposing the
-    # columns this script consumes: `problem`, `solution` and `image`, plus `bbox`
-    # when --reward_variant saliency_r1.
+    # columns this script consumes: `problem`, `solution` and `image`.
     #
     # The loader and the carve live in `selfsal.data.saliency_r1_8k` rather than here,
     # because the offline `precompute_question_boxes.py` has to load the SAME corpus the
@@ -220,10 +219,10 @@ if __name__ == "__main__":
     # Reward function selection
     ################
     # The saliency term takes the SECOND slot, so --reward_weights lines up positionally
-    # whichever of the two it is:
+    # whether or not it is installed:
     #
-    #   ours | saliency_r1   ->  [format, saliency, direct, judge]
-    #   none                 ->  [format,           direct, judge]
+    #   ours   ->  [format, saliency, direct, judge]
+    #   none   ->  [format,           direct, judge]
     #
     # `none` is not the paper's No-Sal arm. That one ran `ours` with alpha_sal = 0, so the
     # term was installed, scored, logged and weighted zero -- the same gradient, but the
@@ -276,11 +275,6 @@ if __name__ == "__main__":
                                 box_threshold=script_args.box_threshold,
                                 max_image_side=MAX_IMAGE_SIDE)
         reward_funcs = [think_format_reward, self_saliency_reward, accuracy_reward, openai_reward]
-    elif script_args.reward_variant == "saliency_r1":
-        # Appendix D.2's baseline reward, on the question-level box the corpus ships. The
-        # trainer refuses a dataset with no `bbox` column rather than scoring against
-        # nothing.
-        reward_funcs = [think_format_reward, think_saliency_reward, accuracy_reward, openai_reward]
     elif script_args.reward_variant == "none":
         # No saliency term at all: format + accuracy + judge. The trainer skips the
         # attention re-forward entirely, so this is also the cheap variant.

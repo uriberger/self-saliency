@@ -40,7 +40,7 @@ class ScriptArguments:
     The first block is upstream TRL's and is shared with every other example script in
     the checkout, so it stays as upstream has it. The second block, from
     `reforward_saliency` down, is this repository's: the knobs of Section 3.4's saliency
-    reward. There is one for each thing the six arm configs in `training/grpo/configs/`
+    reward. There is one for each thing the five arm configs in `training/grpo/configs/`
     vary, and nothing else -- `training.grpo.config.training_flags` is the only producer
     of these flags, and `tests/test_entry_script_arguments.py` holds the two in step in
     both directions.
@@ -104,20 +104,18 @@ class ScriptArguments:
         },
     )
     reward_variant: str = field(
-        default="saliency_r1",
+        default="ours",
         metadata={
             "help": "WHICH SALIENCY TERM takes the second slot of reward_funcs. "
             "'ours' = R_sal, Section 3.4: raw observe->patch attention at --overlap_layer "
             "meaned over --overlap_heads, scored per observe step against that step's own "
-            "grounded region by --overlap_metric. 'saliency_r1' = the Appendix D.2 "
-            "baseline's whole-completion rollout saliency against the question-level box "
-            "shipped with the corpus. 'none' = format + accuracy + judge only, which also "
-            "skips the attention re-forward entirely. "
+            "grounded region by --overlap_metric. 'none' = format + accuracy + judge only, "
+            "which also skips the attention re-forward entirely. "
             "Note that the paper's No-Sal arm is NOT 'none': it ran 'ours' at alpha_sal 0, "
             "so the term was installed and weighted zero. The gradient is the same and the "
             "checkpoint on disk is the one the number came from -- see "
             "training/grpo/configs/no_sal.yaml.",
-            "choices": ["saliency_r1", "ours", "none"],
+            "choices": ["ours", "none"],
         },
     )
     token_reduction: str = field(

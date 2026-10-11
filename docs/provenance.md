@@ -27,7 +27,7 @@ Checked against the originals rather than eyeballed:
 | Appendix A.1 segmentation | 4,000 randomised chains |
 | image preparation | 42 cases over 7 sizes x 6 image modes, pixel-identical |
 | attention capture | the fused path, and that the explicit softmax reproduces it |
-| the six arm configs | against `training_args.bin`, `adapter_config.json`, `trainer_state.json` and the reached step count |
+| the five arm configs | against `training_args.bin`, `adapter_config.json`, `trainer_state.json` and the reached step count |
 | the 25-benchmark suite | all ten arms reproduce their published mean |
 
 Four things the port turned up that were not visible from the outside:
@@ -94,7 +94,7 @@ Two WandB callbacks in the GRPO entry script went with them: `ValidationAccuracy
 `BenchmarkResultsCallback` (mini-benchmark scores produced out of process). Both read
 inputs that only the dropped builders produce — `A build_grpo_sets.py --build-val` and
 `A run_bench_eval.sh` / `A eval_mini/` — so neither could be satisfied from this
-repository, and neither is reachable from any of the six arm configs. Their `--val_sets_dir`
+repository, and neither is reachable from any of the five arm configs. Their `--val_sets_dir`
 and `--val_eval_steps` flags went too. Training is byte-identical without them; the one
 thing worth carrying forward was the note on why the vLLM prompt needs an explicit image
 placeholder, which now sits at the conversion site in `grpo_trainer_qwen3.py`.
@@ -148,10 +148,9 @@ patch could not run.
 | `grpo/trl_patch/grpo_trainer_qwen3.py` | `A trl/grpo_trainer_qwen3.py` |
 | `grpo/trl_patch/grpo_vlm_qwen3.py` | `A trl/grpo_vlm_qwen3.py` |
 | `grpo/trl_patch/rewards/self_saliency.py` | `A trl/rewards/overlap_rewards.py` |
-| `grpo/trl_patch/rewards/saliency_r1.py` | `A trl/rewards/saliency_rewards.py` |
 | `grpo/trl_patch/rewards/{format,answer}.py` | `A trl/rewards/{format,answer_format}_rewards.py` |
 | `grpo/trl_patch/{scripts,models}/utils.py` | `A trl/{scripts,models}/utils.py` |
-| `grpo/run.sh` + the six `grpo/configs/` YAMLs | `A launch_grpo_qwen3_overlap_colocated_job.sh`, split |
+| `grpo/run.sh` + the five `grpo/configs/` YAMLs | `A launch_grpo_qwen3_overlap_colocated_job.sh`, split |
 | `grpo/precompute_question_boxes.py` | `A precompute_question_boxes.py` |
 
 R_llm is not in that table: it is `selfsal/judge.py` (from `A trl/rewards/openai_rewards.py`),
@@ -161,7 +160,7 @@ the same reason — it is a FILE FORMAT, and `grpo/precompute_question_boxes.py`
 the reward reads.
 
 The 2,377-line launcher parsed 72 flags, roughly 47 of them for experiments outside
-the paper. Here the six paper arms are six YAML files and the runner is thin.
+the paper. Here the paper arms are one YAML file each and the runner is thin.
 
 ## experiments/
 
@@ -185,7 +184,6 @@ the paper. Here the six paper arms are six YAML files and the runner is thin.
 | Here | From |
 |---|---|
 | `vga/` | `V vlm/vga.py`, `V lmms_eval_plugin/qwen3_vl_vga.py`, `V install_lmms_vga.sh`, `V analysis/vga_*.py` |
-| `saliency_r1/` | `A trl/rewards/saliency_rewards.py` + a GRPO config |
 | `ease/` | `A ease/`, `A {setup_ease_env,patch_ease_repo,launch_ease_train*,prepare_ease_saliency_data,download_ease_sources,merge_ease_checkpoint,stage_ease_checkpoint}.sh`, `A {export_saliency_r1_8k_for_ease,add_ease_prompt_length,verify_ease_setup}.py` |
 
 ## evaluation/

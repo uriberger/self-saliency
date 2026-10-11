@@ -18,7 +18,7 @@ checked against what.
 
 ```bash
 pytest                                              # 2,300+ CPU tests, no GPU
-python -m training.grpo.config --all                # the six arms of the paper
+python -m training.grpo.config --all                # the five arms of the paper
 bash training/grpo/run.sh self_saliency --dry-run   # the plan, without launching
 python evaluation/tables.py                         # rebuild Table 2 from banked results
 ```
@@ -42,7 +42,7 @@ experiments/
   attention_bias/ §5              the border-ring result across four VLMs
   trained_model/  §4.4            does the text move, or does the attention?
 
-baselines/        App D           VGA, Saliency-R1, EASE (+ the DAPO reference)
+baselines/        App D           VGA, EASE (+ the DAPO reference)
 evaluation/       §4.2, App A/B   the 25-benchmark suite, its scorers, its error bars
 ```
 
@@ -89,7 +89,6 @@ people's work, all Apache-2.0-compatible, and are marked as such in their own he
 |---|---|
 | `training/grpo/trl_patch/` | HuggingFace **TRL** (Apache-2.0). `grpo_trainer_qwen3.py` and `grpo_vlm_qwen3.py` are modified copies of its GRPO trainer and VLM example; the files carry TRL's copyright header and `env/patches/trl.sh` installs them into a checkout rather than vendoring one |
 | `env/patches/transformers_patch/sdpa_attention_tf5x.py` | HuggingFace **transformers** (Apache-2.0). A modified copy of `transformers/integrations/sdpa_attention.py` at commit `612c371a`, the build `env/grpo.txt` pins. The one change is the identity trick that makes SDPA return attention weights; `env/patches/transformers.sh` installs it over the stock file |
-| `baselines/saliency_r1/reward.py` and `training/grpo/trl_patch/rewards/saliency_r1.py` | the **Saliency-R1** authors' reward, from [their repository](https://github.com/peterant330/Saliency_R1), kept as released so the Appendix D.2 arm differs from ours in the attention term alone |
 | `baselines/ease/` | **EASE** on top of **EasyR1**/**verl** (Apache-2.0). The method files are untouched; what is here patches their reward interface and an import, and drives their trainer |
 | `baselines/vga/` | **VGA**, reimplemented as an inference-time patch on Qwen3-VL (Appendix D.1) |
 | `evaluation/lmms_eval` | **lmms-eval** (Apache-2.0), a pinned submodule of a fork carrying task definitions and answer-parser fixes that are not upstream |

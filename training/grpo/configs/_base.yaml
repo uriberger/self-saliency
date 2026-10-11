@@ -1,4 +1,4 @@
-# Everything the six paper arms share. An arm file overrides only what it changes,
+# Everything the paper arms share. An arm file overrides only what it changes,
 # so the diff between two arms IS the experimental difference.
 #
 # Every value here was read back off the runs rather than taken from a launcher
@@ -63,8 +63,8 @@ grpo:
 # length.
 # Generation backend. vLLM runs as a sidecar on its own GPU; `hf` generates in-process
 # with the policy, which frees that GPU for training. Read back off each run's
-# training_args.bin (`use_vllm`), not assumed -- the Saliency-R1 arm is `hf`, which is
-# how all eight of its GPUs could train.
+# training_args.bin (`use_vllm`), not assumed. All five arms here are vllm; the field
+# stays because `hf` is a real alternative and the value is evidence, not a default.
 generation: vllm
 
 training_ranks: 6                            # -> 1,330 steps/epoch -> 3,990 total

@@ -13,7 +13,7 @@ the published checkpoints by `test_configs_match_paper_checkpoints.py`, but that
 "config.py emits the right VALUES". Whether anything downstream would ACCEPT them was
 untested, and all three seams were broken at once after the port:
 
-  * `--overlap_metric phi` -- what config.py emits for five of the six arms -- was not
+  * `--overlap_metric phi` -- what config.py emits for four of the five arms -- was not
     among the declared choices, which were still the research tree's `mean_in`,
     `mean_in_v2`, `auroc`, `logratio`. argparse rejects an invalid choice, so five arms
     died at argument parsing.

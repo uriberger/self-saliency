@@ -24,7 +24,7 @@ CONFIG_DIR = Path(__file__).resolve().parent / "configs"
 
 #: Every arm the paper reports, in the order they appear in Tables 2 and 5.
 ARMS = ("self_saliency", "self_saliency_mean", "no_sal",
-        "center_rect", "question_boxes", "saliency_r1")
+        "center_rect", "question_boxes")
 
 # TRAIN_ROWS is saliency-r1-8k less the 100-row holdout, and is imported rather than
 # written here because the holdout is applied by the entry script and its size is what
@@ -98,7 +98,7 @@ def validate(cfg: dict) -> list[str]:
         if float(sal.get("alpha", 0)) == 0.0 and cfg.get("name") != "no_sal":
             problems.append("alpha 0.0 on an arm that is not no_sal: the saliency term "
                             "would be installed and contribute nothing")
-    elif kind != "saliency_r1":
+    else:
         problems.append(f"unknown saliency kind {kind!r}")
 
     lora = cfg["lora"]
@@ -115,7 +115,7 @@ def reward_weights(cfg: dict) -> list[float] | None:
     r = cfg["reward"]
     w = [float(r["format"]["alpha"]), float(r["saliency"]["alpha"]),
          float(r["direct"]["alpha"]), float(r["judge"]["alpha"])]
-    # All-ones is expressed as None upstream, and the Saliency-R1 arm was run that way.
+    # All-ones is expressed as None upstream.
     return None if all(x == 1.0 for x in w) else w
 
 
@@ -255,10 +255,6 @@ def training_flags(cfg: dict, output_dir: str) -> list[str]:
         args += ["--reward_weights", *(str(w) for w in weights)]
     if cfg.get("generation", "vllm") == "vllm":
         args += ["--use_vllm", "--vllm_mode", "server"]
-
-    if sal.get("kind") == "saliency_r1":
-        args += ["--reward_variant", "saliency_r1"]
-        return args
 
     args += [
         "--reward_variant", "ours",

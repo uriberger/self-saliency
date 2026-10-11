@@ -150,7 +150,7 @@ path. Note the `/v1/chat/completions` on one and not the other.
 
 ```bash
 pytest                                        # 3,800+ CPU tests, no GPU
-python -m training.grpo.config --all          # the six arms and their settings
+python -m training.grpo.config --all          # the five arms and their settings
 bash training/grpo/run.sh self_saliency --dry-run
 ```
 
