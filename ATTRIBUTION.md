@@ -119,20 +119,7 @@ leaves `verl/workers/actor/` — the EASE method itself — byte-identical, and
 
 ---
 
-## 4. Files of unconfirmed origin
-
-This file carries **no NVIDIA copyright header**, deliberately, because authorship has not
-been confirmed. Do not assume it is NVIDIA's.
-
-| Path | What | Status |
-|---|---|---|
-| `assets/validate_palette.js` | Data-visualisation palette validator (OKLCH / OKLab / CVD / WCAG checks) | Arrived from the archive repository. Its docstring refers to checks "the skill enforces", which suggests generation from or adaptation of a tooling template. **Origin unconfirmed.** |
-
-See [docs/publishing.md](docs/publishing.md) §6.
-
----
-
-## 5. Models and corpora
+## 4. Models and corpora
 
 Used under their own terms; none are redistributed by this repository.
 

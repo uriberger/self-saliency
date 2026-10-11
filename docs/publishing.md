@@ -236,11 +236,9 @@ carries the NVIDIA SPDX pair:
 The TRL- and transformers-derived files keep their upstream HuggingFace copyright block
 and carry `# Modified by NVIDIA` plus the same pair beneath it.
 
-**One file deliberately carries no header**, because its origin is unconfirmed:
-`assets/validate_palette.js`. It arrived from the archive repository and refers in its own
-docstring to checks "the skill enforces", which suggests it was generated from or adapted
-from a tooling template rather than written here. Confirm authorship, then either attribute
-it or add the NVIDIA header. Until then it must not be assumed to be ours.
-
-`assets/sink_location_template.html` had the same problem and was removed, together with
-`experiments/attention_bias/report_html.py`, which existed only to fill it.
+**Every tracked source file now carries a header.** The two that did not --
+`assets/validate_palette.js` and `assets/sink_location_template.html` -- had unconfirmed
+origin and were removed rather than attributed, and `assets/` is gone with them. Their only
+consumers went too: `experiments/attention_bias/report_html.py`, which existed only to fill
+the template, and the dead HTML block in `experiments/trained_model/probe.py`, which
+imported a `probe_html` module that was never ported from the archive.

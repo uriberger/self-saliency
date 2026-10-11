@@ -1016,12 +1016,14 @@ def render(out_dir: Path, markdown: bool = False):
     payload = {"config": cfg, "models": merged}
     (out_dir / "probe_merged.json").write_text(json.dumps(payload, indent=1))
 
-    # HTML is the primary report: the thing worth looking at is which sentences became
-    # scored observe steps and what each was worth, shown in place in the text.
-    from probe_html import write_html
+    print(f"wrote {out_dir / 'probe_merged.json'}")
 
-    write_html(payload, out_dir / "probe_report.html", REPO / "assets/validate_palette.js")
-    print(f"wrote {out_dir / 'probe_report.html'} and probe_merged.json")
+    # THE HTML REPORT IS GONE, and this is where it was. It was rendered by
+    # `probe_html.write_html` -- a module that never came across from the archive -- against
+    # `assets/validate_palette.js`, whose origin could not be confirmed and which has been
+    # removed. The import raised ModuleNotFoundError right here, which also put the Markdown
+    # report below out of reach, so dropping it is what lets `--render` finish at all.
+    # `probe_merged.json` carries everything the page showed.
     if not markdown:
         return
 
